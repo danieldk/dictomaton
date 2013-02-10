@@ -15,6 +15,7 @@
 package eu.danieldk.fsadict;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Assert;
@@ -25,7 +26,7 @@ public class DictionaryTest {
 	private List<String> d_words1;
 	private List<String> d_words2;
 	private Dictionary d_dict;
-	
+
 	@SuppressWarnings("serial")
 	@Before
 	public void initialize() throws DictionaryBuilderException
@@ -39,7 +40,7 @@ public class DictionaryTest {
 			add("zeven");
 			add("zoeven");
 		}};
-		
+
 		d_words2 = new ArrayList<String>(){{
 			add("als");
 			add("allen");
@@ -49,7 +50,7 @@ public class DictionaryTest {
 			add("zepen");
 			add("zoef");
 		}};
-		
+
 		DictionaryBuilder builder = new DictionaryBuilder();
 		builder.addAll(d_words1);
 		d_dict = builder.build();
@@ -61,11 +62,20 @@ public class DictionaryTest {
 		for (String word: d_words1)
 			Assert.assertTrue(d_dict.contains(word));
 	}
-	
+
 	@Test
 	public void doesNotContainWordsTest()
 	{
 		for (String word: d_words2)
 			Assert.assertTrue(!d_dict.contains(word));
+	}
+
+	@Test
+	public void iterationTest()
+	{
+		List<CharSequence> listFromIteration = new LinkedList<CharSequence>();
+		for (CharSequence seq: d_dict)
+			listFromIteration.add(seq);
+		Assert.assertEquals(d_words1, listFromIteration);
 	}
 }

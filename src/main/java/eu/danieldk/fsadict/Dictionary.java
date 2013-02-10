@@ -14,28 +14,31 @@
 
 package eu.danieldk.fsadict;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.Stack;
 
 /**
  * A finite state dictionary. Dictionaries of this type can are constructed
  * using {@link DictionaryBuilder}.
  * 
- * @author Daniël de Kok 
+ * @author Daniël de Kok
  */
-public class Dictionary {
+public class Dictionary implements Iterable<CharSequence> {
 	// Offset in the transition table of the given state. E.g. d_stateOffsets[3] = 10
 	// means that state 3 starts at index 10 in the transition table.
 	protected final int[] d_stateOffsets;
-	
+
 	// Note: we do not use an array of transition instances to represent the
 	//       transition table, since this would require an additional pointer
 	//       for each transition. Instead, we maintain the table as two parallel
 	//       arrays.
-	
+
 	protected final char[] d_transitionChars;
 	protected final int[] d_transtitionTo;
 	protected final Set<Integer> d_finalStates;
-	
+
 	/**
 	 * Check whether the dictionary contains the given sequence.
 	 * @param seq
@@ -47,12 +50,20 @@ public class Dictionary {
 		for (int i = 0; i < seq.length(); i++)
 		{
 			state = next(state, seq.charAt(i));
-			
+
 			if (state == -1)
 				return false;
 		}
-		
+
 		return d_finalStates.contains(state);
+	}
+
+	/**
+	 * Get an iterator over the character sequences in the dictionary.
+	 */
+	@Override
+	public Iterator<CharSequence> iterator() {
+		return new DictionaryIterator();
 	}
 
 	/**
@@ -62,22 +73,92 @@ public class Dictionary {
 	public String toDot()
 	{
 		StringBuilder dotBuilder = new StringBuilder();
-		
+
 		dotBuilder.append("digraph G {\n");
-		
+
 		for (int state = 0; state < d_stateOffsets.length; ++state)
 		{
 			for (int trans = d_stateOffsets[state]; trans < transitionsUpperBound(state); ++trans)
 				dotBuilder.append(String.format("%d -> %d [label=\"%c\"]\n",
 						state, d_transtitionTo[trans], d_transitionChars[trans]));
-			
+
 			if (d_finalStates.contains(state))
 				dotBuilder.append(String.format("%d [peripheries=2];\n", state));
 		}
-		
+
 		dotBuilder.append("}");
-		
+
 		return dotBuilder.toString();
+	}
+
+	private class DictionaryIterator implements Iterator<CharSequence>
+	{
+		private final Stack<StateStringPair> d_stack;
+		private String d_nextSeq;
+
+		public DictionaryIterator()
+		{
+			d_stack = new Stack<StateStringPair>();
+			d_stack.push(new StateStringPair(0, ""));
+			d_nextSeq = null;
+		}
+
+		@Override
+		public boolean hasNext() {
+			StateStringPair pair;
+			while (d_stack.size() != 0)
+			{
+				pair = d_stack.pop();
+				int state = pair.getState();
+				String string = pair.getString();
+
+				// Put states reachable through outgoing transitions on the stack.
+				for (int trans = transitionsUpperBound(state) - 1; trans >= d_stateOffsets[state]; --trans)
+					d_stack.push(new StateStringPair(d_transtitionTo[trans], string + d_transitionChars[trans]));
+
+				if (d_finalStates.contains(state))
+				{
+					d_nextSeq = string;
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		@Override
+		public CharSequence next() {
+			if (d_nextSeq == null)
+				throw new NoSuchElementException();
+
+			return d_nextSeq;
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+	}
+
+	private class StateStringPair
+	{
+		private final int d_state;
+		private final String d_string;
+
+		public StateStringPair(int state, String string)
+		{
+			d_state = state;
+			d_string = string;
+		}
+
+		public int getState() {
+			return d_state;
+		}
+
+		public String getString() {
+			return d_string;
+		}
+
 	}
 
 	/**
@@ -121,12 +202,12 @@ public class Dictionary {
 	{
 		int start = d_stateOffsets[state];
 		int end = transitionsUpperBound(state) - 1;
-		
+
 		// Binary search
 		while (end >= start)
 		{
 			int mid = start + ((end - start) / 2);
-		
+
 			if (d_transitionChars[mid] > c)
 				end = mid - 1;
 			else if (d_transitionChars[mid] < c)
@@ -134,7 +215,7 @@ public class Dictionary {
 			else
 				return mid;
 		}
-	
+
 		return -1;
 	}
 
@@ -148,10 +229,10 @@ public class Dictionary {
 	private int next(int state, char c)
 	{
 		int trans = findTransition(state, c);
-		
+
 		if (trans == -1)
 			return -1;
-		
+
 		return d_transtitionTo[trans];
 	}
 
