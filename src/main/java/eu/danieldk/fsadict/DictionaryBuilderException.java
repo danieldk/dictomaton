@@ -1,4 +1,4 @@
-// Copyright 2013 Daniël de Kok
+// Copyright 2013 Daniel de Kok
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,6 +14,11 @@
 
 package eu.danieldk.fsadict;
 
+/**
+ * Exception indicating an error in the dictionary construction process.
+ * 
+ * @author Daniel de Kok
+ */
 public class DictionaryBuilderException extends Exception {
 	private static final long serialVersionUID = -7158239181823665910L;
 

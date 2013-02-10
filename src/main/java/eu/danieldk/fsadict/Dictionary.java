@@ -1,4 +1,4 @@
-// Copyright 2013 Daniël de Kok
+// Copyright 2013 Daniel de Kok
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ import java.util.Stack;
 
 /**
  * A finite state dictionary. Dictionaries of this type can are constructed
- * using {@link DictionaryBuilder}.
+ * using {@link DictionaryBuilder#build()}.
  * 
- * @author Daniël de Kok
+ * @author Daniel de Kok
  */
 public class Dictionary implements Iterable<CharSequence>, Serializable {
 	private static final long serialVersionUID = 3199608511519213621L;

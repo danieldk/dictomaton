@@ -1,4 +1,4 @@
-// Copyright 2013 Daniël de Kok
+// Copyright 2013 Daniel de Kok
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import java.util.TreeMap;
 public class State {
 	private final TreeMap<Character, State> transitions;
 	private boolean d_final;
-	
+
 	public State()
 	{
 		transitions = new TreeMap<Character, State>();
@@ -31,7 +31,7 @@ public class State {
 	{
 		transitions.put(c, s);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -65,33 +65,33 @@ public class State {
 	{
 		return d_final;
 	}
-	
+
 	public boolean hasOutgoing()
 	{
 		return transitions.size() != 0;
 	}
-	
+
 	public State lastState()
 	{
 		return transitions.lastEntry().getValue();
 	}
-	
+
 	public void setLastState(State s)
 	{
 		Entry<Character, State> entry = transitions.lastEntry();
 		transitions.put(entry.getKey(), s);
 	}
-	
+
 	public TreeMap<Character, State> transitions()
 	{
 		return transitions;
 	}
-	
+
 	public State move(Character c)
 	{
 		return transitions.get(c);
 	}
-	
+
 	void setFinal(boolean finalState)
 	{
 		d_final = finalState;
