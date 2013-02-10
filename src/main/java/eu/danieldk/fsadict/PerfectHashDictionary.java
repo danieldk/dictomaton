@@ -17,6 +17,8 @@ package eu.danieldk.fsadict;
 import java.util.Set;
 
 public class PerfectHashDictionary extends Dictionary {
+	private static final long serialVersionUID = 7948604785670437984L;
+
 	private final int[] d_stateNSuffixes;
 
 	/**

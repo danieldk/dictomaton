@@ -14,6 +14,7 @@
 
 package eu.danieldk.fsadict;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -25,7 +26,9 @@ import java.util.Stack;
  * 
  * @author Daniël de Kok
  */
-public class Dictionary implements Iterable<CharSequence> {
+public class Dictionary implements Iterable<CharSequence>, Serializable {
+	private static final long serialVersionUID = 3199608511519213621L;
+
 	// Offset in the transition table of the given state. E.g. d_stateOffsets[3] = 10
 	// means that state 3 starts at index 10 in the transition table.
 	protected final int[] d_stateOffsets;
