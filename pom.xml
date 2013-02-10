@@ -2,22 +2,45 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>eu.danieldk</groupId>
-  <artifactId>fsadict</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
-  <name>fsadict</name>
-  <url>http://bitbucket.org/danieldk/fsadict</url>
+	<groupId>eu.danieldk</groupId>
+	<artifactId>fsadict</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>fsadict</name>
+	<description>Finite state disctionaries and perfect hash automata.</description>
+	<url>http://bitbucket.org/danieldk/fsadict</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<scm>
+		<url>git@bitbucket.org:danieldk/fsadict-java.git</url>
+		<connection>scm:git:git@bitbucket.org:danieldk/fsadict-java.git</connection>
+		<developerConnection>scm:git:git@bitbucket.org:danieldk/fsadict-java.git</developerConnection>
+	</scm>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
-    </dependency>
-  </dependencies>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>danieldk</id>
+			<name>Daniël de Kok</name>
+			<email>me@danieldk.eu</email>
+		</developer>
+	</developers>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+		</dependency>
+	</dependencies>
 </project>
