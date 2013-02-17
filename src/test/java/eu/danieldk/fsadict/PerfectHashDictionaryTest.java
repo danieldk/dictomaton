@@ -24,7 +24,7 @@ import org.junit.Test;
 public class PerfectHashDictionaryTest {
 	private List<String> d_words1;
 	private List<String> d_words2;
-	private PerfectHashDictionary d_dict;
+	private PerfectHashDictionaryIntIntImpl d_dict;
 	
 	@SuppressWarnings("serial")
 	@Before

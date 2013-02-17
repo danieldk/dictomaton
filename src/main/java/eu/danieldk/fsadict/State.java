@@ -17,7 +17,7 @@ package eu.danieldk.fsadict;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-public class State {
+class State {
 	private final TreeMap<Character, State> transitions;
 	private boolean d_final;
 

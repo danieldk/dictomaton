@@ -22,10 +22,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class DictionaryTest {
+public class DictionaryIntIntImplTest {
 	private List<String> d_words1;
 	private List<String> d_words2;
-	private Dictionary d_dict;
+	private DictionaryIntIntImpl d_dict;
 
 	@SuppressWarnings("serial")
 	@Before

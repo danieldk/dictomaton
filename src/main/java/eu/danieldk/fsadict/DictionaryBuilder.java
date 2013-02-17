@@ -14,20 +14,14 @@
 
 package eu.danieldk.fsadict;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Queue;
-import java.util.Set;
 
 /**
  * This class is used to construct a dictionary in the form of a minimized
  * deterministic finite state automaton. This builder can create a normal
- * dictionary automaton ({@link Dictionary} or a perfect hash automaton
- * ({@link PerfectHashDictionary}).
+ * dictionary automaton ({@link DictionaryIntIntImpl} or a perfect hash automaton
+ * ({@link PerfectHashDictionaryIntIntImpl}).
  * <p/>
  * The workflow is simple:
  * 
@@ -111,7 +105,7 @@ public class DictionaryBuilder {
 	 * Create a dictionary automaton. This also finalizes the {@link DictionaryBuilder}.
 	 * @return
 	 */
-	public Dictionary build()
+	public DictionaryIntIntImpl build()
 	{
 		return build(false);
 	}
@@ -120,9 +114,9 @@ public class DictionaryBuilder {
 	 * Create a perfect hash automaton. This also finalizes the {@link DictionaryBuilder}.
 	 * @return
 	 */
-	public PerfectHashDictionary buildPerfectHash()
+	public PerfectHashDictionaryIntIntImpl buildPerfectHash()
 	{
-		return (PerfectHashDictionary) build(true);
+		return (PerfectHashDictionaryIntIntImpl) build(true);
 	}
 
 	private void finalizeDictionary()
@@ -177,7 +171,7 @@ public class DictionaryBuilder {
 		s.setFinal(true);
 	}
 
-	private Dictionary build(boolean perfectHash)
+	private DictionaryIntIntImpl build(boolean perfectHash)
 	{
 		finalizeDictionary();
 
@@ -213,9 +207,9 @@ public class DictionaryBuilder {
 		}
 
 		if (perfectHash)
-			return new PerfectHashDictionary(offsets, transChars, transTo, finalStates);
+			return new PerfectHashDictionaryIntIntImpl(offsets, transChars, transTo, finalStates);
 		else
-			return new Dictionary(offsets, transChars, transTo, finalStates);
+			return new DictionaryIntIntImpl(offsets, transChars, transTo, finalStates);
 	}
 
 	private Map<State, Integer> numberedStates()
