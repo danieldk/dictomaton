@@ -24,7 +24,7 @@ import java.util.Set;
  *
  * @author Daniel de Kok
  */
-class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl {
+class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements PerfectHashDictionary {
 	private static final long serialVersionUID = 7948604785670437984L;
 
 	private final int[] d_stateNSuffixes;

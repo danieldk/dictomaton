@@ -22,7 +22,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class DictionaryIntIntImplTest {
+public class DictionaryTest {
 	private List<String> d_words1;
 	private List<String> d_words2;
 	private Dictionary d_dict;
