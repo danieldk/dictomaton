@@ -14,9 +14,6 @@
 
 package eu.danieldk.fsadict;
 
-import eu.danieldk.fsadict.Dictionary;
-
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
