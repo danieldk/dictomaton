@@ -25,7 +25,7 @@ import org.junit.Test;
 public class DictionaryIntIntImplTest {
 	private List<String> d_words1;
 	private List<String> d_words2;
-	private DictionaryIntIntImpl d_dict;
+	private Dictionary d_dict;
 
 	@SuppressWarnings("serial")
 	@Before

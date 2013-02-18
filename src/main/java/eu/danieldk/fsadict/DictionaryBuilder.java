@@ -20,8 +20,8 @@ import java.util.Map.Entry;
 /**
  * This class is used to construct a dictionary in the form of a minimized
  * deterministic finite state automaton. This builder can create a normal
- * dictionary automaton ({@link DictionaryIntIntImpl} or a perfect hash automaton
- * ({@link PerfectHashDictionaryIntIntImpl}).
+ * dictionary automaton ({@link Dictionary} or a perfect hash automaton
+ * ({@link PerfectHashDictionary}).
  * <p/>
  * The workflow is simple:
  * 
@@ -105,7 +105,7 @@ public class DictionaryBuilder {
 	 * Create a dictionary automaton. This also finalizes the {@link DictionaryBuilder}.
 	 * @return
 	 */
-	public DictionaryIntIntImpl build()
+	public Dictionary build()
 	{
 		return build(false);
 	}
@@ -114,9 +114,9 @@ public class DictionaryBuilder {
 	 * Create a perfect hash automaton. This also finalizes the {@link DictionaryBuilder}.
 	 * @return
 	 */
-	public PerfectHashDictionaryIntIntImpl buildPerfectHash()
+	public PerfectHashDictionary buildPerfectHash()
 	{
-		return (PerfectHashDictionaryIntIntImpl) build(true);
+		return (PerfectHashDictionary) build(true);
 	}
 
 	private void finalizeDictionary()
@@ -171,7 +171,7 @@ public class DictionaryBuilder {
 		s.setFinal(true);
 	}
 
-	private DictionaryIntIntImpl build(boolean perfectHash)
+	private Dictionary build(boolean perfectHash)
 	{
 		finalizeDictionary();
 
