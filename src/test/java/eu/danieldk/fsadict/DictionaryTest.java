@@ -76,6 +76,7 @@ public class DictionaryTest {
         DictionaryBuilder builder = new DictionaryBuilder();
         Dictionary dict = builder.build();
         Assert.assertFalse(dict.contains("foo"));
+        Assert.assertEquals(0, dict.size());
     }
 
 	@Test
@@ -86,4 +87,10 @@ public class DictionaryTest {
 			listFromIteration.add(seq);
 		Assert.assertEquals(d_words1, listFromIteration);
 	}
+
+    @Test
+    public void sizeTest()
+    {
+        Assert.assertEquals(7, d_dict.size());
+    }
 }

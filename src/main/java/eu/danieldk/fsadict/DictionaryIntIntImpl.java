@@ -27,7 +27,7 @@ import java.util.Stack;
  * using {@link eu.danieldk.fsadict.DictionaryBuilder#build()}.
  *
  * This class uses integers (int) for transition and state numbers.
- * 
+ *
  * @author Daniel de Kok
  */
 class DictionaryIntIntImpl implements Dictionary {
@@ -72,6 +72,25 @@ class DictionaryIntIntImpl implements Dictionary {
 	public Iterator<CharSequence> iterator() {
 		return new DictionaryIterator();
 	}
+
+    /**
+     * Get the number of sequences in the automaton. This method is slow for
+     * {@link Dictionary} instances, since it needs to traverse the automaton.
+     *
+     * @return Number of sequences.
+     */
+    public int size()
+    {
+        int nSeqs = 0;
+        Iterator<CharSequence> iter = iterator();
+        while (iter.hasNext())
+        {
+            ++nSeqs;
+            iter.next();
+        }
+
+        return nSeqs;
+    }
 
 	/**
 	 * Give the Graphviz dot representation of this automaton.
@@ -170,7 +189,7 @@ class DictionaryIntIntImpl implements Dictionary {
 
 	/**
 	 * Construct a dictionary.
-	 * 
+	 *
 	 * @param stateOffsets Per-state offset in the transition table.
 	 * @param transitionChars Transition table (characters).
 	 * @param transitionTo Transition table (to-transitions).
@@ -187,7 +206,7 @@ class DictionaryIntIntImpl implements Dictionary {
 
 	/**
 	 * Calculate the upper bound for this state in the transition table.
-	 * 
+	 *
 	 * @param state
 	 * @return
 	 */
@@ -200,7 +219,7 @@ class DictionaryIntIntImpl implements Dictionary {
 	/**
 	 * Find the transition for the given character in the given state. Since the
 	 * transitions are ordered by character, we can use a binary search.
-	 * 
+	 *
 	 * @param state
 	 * @param c
 	 * @return
@@ -228,7 +247,7 @@ class DictionaryIntIntImpl implements Dictionary {
 
 	/**
 	 * Get the next state, given a character.
-	 * 
+	 *
 	 * @param state
 	 * @param c
 	 * @return

@@ -119,6 +119,18 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
 		return null;
 	}
 
+    /**
+     * Get the number of sequences in the automaton.
+     *
+     * @return Number of sequences.
+     */
+    @Override
+    public int size()
+    {
+        // The size is simply the number of suffixes of the initial state.
+        return d_stateNSuffixes[0];
+    }
+
 	/**
 	 * Give the Graphviz dot representation of this automaton. States will also list the
 	 * number of suffixes 'under' that state.

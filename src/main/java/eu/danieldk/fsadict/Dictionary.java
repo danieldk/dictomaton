@@ -29,6 +29,12 @@ public interface Dictionary extends Iterable<CharSequence>, Serializable {
     public Iterator<CharSequence> iterator();
 
     /**
+     * Get the number of sequences in the automaton.
+     * @return Number of sequences.
+     */
+    public int size();
+
+    /**
      * Give the Graphviz dot representation of this automaton.
      * @return
      */

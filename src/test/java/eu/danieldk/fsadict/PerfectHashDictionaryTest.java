@@ -62,6 +62,13 @@ public class PerfectHashDictionaryTest {
         PerfectHashDictionary dict = builder.buildPerfectHash();
         Assert.assertEquals(-1, dict.number("foo"));
         Assert.assertNull(dict.sequence(1));
+        Assert.assertEquals(0, dict.size());
+    }
+
+    @Test
+    public void sizeTest()
+    {
+        Assert.assertEquals(7, d_dict.size());
     }
 
 	@Test
