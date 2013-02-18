@@ -18,6 +18,14 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class DictionaryBuilderTest {
+    @Test
+    public void emptyDictionaryTest()
+    {
+        DictionaryBuilder builder = new DictionaryBuilder();
+        builder.build();
+        builder.buildPerfectHash();
+    }
+
 	@Test(expected = DictionaryBuilderException.class)
 	public void incorrectOrderTest() throws DictionaryBuilderException {
 		DictionaryBuilder builder = new DictionaryBuilder();

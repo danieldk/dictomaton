@@ -238,10 +238,14 @@ public class DictionaryBuilder {
 	{
 		State child = s.lastState();
 
+        // If someone is constructing an empty lexicon, we don't have any outgoing
+        // transitions on the start state.
+        if (child == null)
+            return;
+
+        // Grandchildren may require replacement as well.
 		if (child.hasOutgoing())
-		{
 			replaceOrRegister(child);
-		}
 
 		State replacement = d_register.get(child);
 		if (replacement != null)

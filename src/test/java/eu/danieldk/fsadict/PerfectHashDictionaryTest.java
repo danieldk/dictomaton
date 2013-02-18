@@ -55,6 +55,15 @@ public class PerfectHashDictionaryTest {
 		d_dict = builder.buildPerfectHash();
 	}
 
+    @Test
+    public void emptyTest()
+    {
+        DictionaryBuilder builder = new DictionaryBuilder();
+        PerfectHashDictionary dict = builder.buildPerfectHash();
+        Assert.assertEquals(-1, dict.number("foo"));
+        Assert.assertNull(dict.sequence(1));
+    }
+
 	@Test
 	public void toNumberTest()
 	{

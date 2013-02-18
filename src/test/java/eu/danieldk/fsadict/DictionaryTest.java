@@ -70,6 +70,14 @@ public class DictionaryTest {
 			Assert.assertTrue(!d_dict.contains(word));
 	}
 
+    @Test
+    public void emptyTest()
+    {
+        DictionaryBuilder builder = new DictionaryBuilder();
+        Dictionary dict = builder.build();
+        Assert.assertFalse(dict.contains("foo"));
+    }
+
 	@Test
 	public void iterationTest()
 	{

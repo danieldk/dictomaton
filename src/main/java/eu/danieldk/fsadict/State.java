@@ -73,7 +73,11 @@ class State {
 
 	public State lastState()
 	{
-		return transitions.lastEntry().getValue();
+        Entry<Character, State> last = transitions.lastEntry();
+        if (last == null)
+            return null;
+
+		return last.getValue();
 	}
 
 	public void setLastState(State s)
