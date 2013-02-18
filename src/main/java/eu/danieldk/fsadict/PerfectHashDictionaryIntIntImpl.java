@@ -119,16 +119,10 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
 		return null;
 	}
 
-    /**
-     * Get the number of sequences in the automaton.
-     *
-     * @return Number of sequences.
-     */
     @Override
     public int size()
     {
-        // The size is simply the number of suffixes of the initial state.
-        return d_stateNSuffixes[0];
+        return d_nSeqs;
     }
 
 	/**
@@ -161,12 +155,13 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
 	}
 
 	/**
-	 * @see DictionaryIntIntImpl#DictionaryIntIntImpl(int[], char[], int[], Set)
+	 * @see DictionaryIntIntImpl#DictionaryIntIntImpl(int[], char[], int[], Set, int)
 	 */
 	protected PerfectHashDictionaryIntIntImpl(int[] stateOffsets, char[] transitionChars,
-                                              int[] transitionTo, Set<Integer> finalStates)
+                                              int[] transitionTo, Set<Integer> finalStates,
+                                              int nSeqs)
 	{
-		super(stateOffsets, transitionChars, transitionTo, finalStates);
+		super(stateOffsets, transitionChars, transitionTo, finalStates, nSeqs);
 
 		d_stateNSuffixes = new int[d_stateOffsets.length];
 		for (int i = 0; i < d_stateNSuffixes.length; ++i)

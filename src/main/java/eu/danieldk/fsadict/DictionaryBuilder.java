@@ -46,6 +46,7 @@ public class DictionaryBuilder {
 	private final State d_startState;
 	private final Map<State, State> d_register;
 	private String d_prevSeq;
+    private int d_nSeqs;
 	private boolean d_finalized;
 
 	/**
@@ -55,6 +56,7 @@ public class DictionaryBuilder {
 	{
 		d_startState = new State();
 		d_register = new HashMap<State, State>();
+        d_nSeqs = 0;
 		d_finalized = false;
 	}
 
@@ -88,6 +90,8 @@ public class DictionaryBuilder {
 			replaceOrRegister(curState);
 
 		addSuffix(curState, seq.substring(i));
+
+        ++d_nSeqs;
 	}
 
 	/**
@@ -207,9 +211,9 @@ public class DictionaryBuilder {
 		}
 
 		if (perfectHash)
-			return new PerfectHashDictionaryIntIntImpl(offsets, transChars, transTo, finalStates);
+			return new PerfectHashDictionaryIntIntImpl(offsets, transChars, transTo, finalStates, d_nSeqs);
 		else
-			return new DictionaryIntIntImpl(offsets, transChars, transTo, finalStates);
+			return new DictionaryIntIntImpl(offsets, transChars, transTo, finalStates, d_nSeqs);
 	}
 
 	private Map<State, Integer> numberedStates()

@@ -42,6 +42,7 @@ class DictionaryIntIntImpl implements Dictionary {
 	protected final char[] d_transitionChars;
 	protected final int[] d_transtitionTo;
 	protected final Set<Integer> d_finalStates;
+    protected final int d_nSeqs;
 
 	/**
 	 * Check whether the dictionary contains the given sequence.
@@ -70,23 +71,9 @@ class DictionaryIntIntImpl implements Dictionary {
 		return new DictionaryIterator();
 	}
 
-    /**
-     * Get the number of sequences in the automaton. This method is slow for
-     * {@link Dictionary} instances, since it needs to traverse the automaton.
-     *
-     * @return Number of sequences.
-     */
     public int size()
     {
-        int nSeqs = 0;
-        Iterator<String> iter = iterator();
-        while (iter.hasNext())
-        {
-            ++nSeqs;
-            iter.next();
-        }
-
-        return nSeqs;
+        return d_nSeqs;
     }
 
 	/**
@@ -193,12 +180,14 @@ class DictionaryIntIntImpl implements Dictionary {
 	 * @param finalStates Set of final states.
 	 */
 	protected DictionaryIntIntImpl(int[] stateOffsets, char[] transitionChars,
-                                   int[] transitionTo, Set<Integer> finalStates)
+                                   int[] transitionTo, Set<Integer> finalStates,
+                                   int nSeqs)
 	{
 		d_stateOffsets = stateOffsets;
 		d_transitionChars = transitionChars;
 		d_transtitionTo = transitionTo;
 		d_finalStates = finalStates;
+        d_nSeqs = nSeqs;
 	}
 
 	/**
