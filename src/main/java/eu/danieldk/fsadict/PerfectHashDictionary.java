@@ -4,7 +4,7 @@ package eu.danieldk.fsadict;
  * Perfect hash dictionary interface. A perfect hash dictionary provides
  * the functionality of a {@link Dictionary}, plus:
  * <ul>
- *     <li>A hash code for each sequence in the dictionary ({@link #number(CharSequence)}).</li>
+ *     <li>A hash code for each sequence in the dictionary ({@link #number(String)}).</li>
  *     <li>The character sequence of a given hash ({@link #sequence(int)}).</li>
  * </ul>
  */
@@ -15,7 +15,7 @@ public interface PerfectHashDictionary extends Dictionary {
      * @param seq
      * @return
      */
-    public int number(CharSequence seq);
+    public int number(String seq);
 
     /**
      * Compute the sequence corresponding to the given hash code.
@@ -23,5 +23,5 @@ public interface PerfectHashDictionary extends Dictionary {
      * @param hashCode
      * @return
      */
-    public CharSequence sequence(int hashCode);
+    public String sequence(int hashCode);
 }

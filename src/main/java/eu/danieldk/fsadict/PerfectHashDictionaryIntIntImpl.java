@@ -34,7 +34,7 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
 	 * @param seq
 	 * @return
 	 */
-	public int number(CharSequence seq)
+	public int number(String seq)
 	{
 		int state = 0;
 		int num = 0;
@@ -69,7 +69,7 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
 	 * @param hashCode
 	 * @return
 	 */
-	public CharSequence sequence(int hashCode)
+	public String sequence(int hashCode)
 	{
 		if (hashCode <= 0)
 			return null;

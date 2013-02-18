@@ -14,19 +14,19 @@ import java.util.Iterator;
  *
  * @author Daniel de Kok
  */
-public interface Dictionary extends Iterable<CharSequence>, Serializable {
+public interface Dictionary extends Iterable<String>, Serializable {
     /**
      * Check whether the dictionary contains the given sequence.
      * @param seq
      * @return
      */
-    public boolean contains(CharSequence seq);
+    public boolean contains(String seq);
 
     /**
      * Get an iterator over the character sequences in the dictionary.
      */
     @Override
-    public Iterator<CharSequence> iterator();
+    public Iterator<String> iterator();
 
     /**
      * Get the number of sequences in the automaton.

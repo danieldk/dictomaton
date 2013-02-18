@@ -51,7 +51,7 @@ class DictionaryIntIntImpl implements Dictionary {
 	 * @param seq
 	 * @return
 	 */
-	public boolean contains(CharSequence seq)
+	public boolean contains(String seq)
 	{
 		int state = 0;
 		for (int i = 0; i < seq.length(); i++)
@@ -69,7 +69,7 @@ class DictionaryIntIntImpl implements Dictionary {
 	 * Get an iterator over the character sequences in the dictionary.
 	 */
 	@Override
-	public Iterator<CharSequence> iterator() {
+	public Iterator<String> iterator() {
 		return new DictionaryIterator();
 	}
 
@@ -82,7 +82,7 @@ class DictionaryIntIntImpl implements Dictionary {
     public int size()
     {
         int nSeqs = 0;
-        Iterator<CharSequence> iter = iterator();
+        Iterator<String> iter = iterator();
         while (iter.hasNext())
         {
             ++nSeqs;
@@ -117,7 +117,7 @@ class DictionaryIntIntImpl implements Dictionary {
 		return dotBuilder.toString();
 	}
 
-	private class DictionaryIterator implements Iterator<CharSequence>
+	private class DictionaryIterator implements Iterator<String>
 	{
 		private final Stack<StateStringPair> d_stack;
 		private String d_nextSeq;
@@ -153,7 +153,7 @@ class DictionaryIntIntImpl implements Dictionary {
 		}
 
 		@Override
-		public CharSequence next() {
+		public String next() {
 			if (d_nextSeq == null)
 				throw new NoSuchElementException();
 
