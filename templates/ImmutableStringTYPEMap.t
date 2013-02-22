@@ -4,13 +4,16 @@ import eu.danieldk.fsadict.DictionaryBuilder;
 import eu.danieldk.fsadict.DictionaryBuilderException;
 import eu.danieldk.fsadict.PerfectHashDictionary;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
 
 /**
  * An immutable mapping from {@link String} to ##UNBOXED_TYPE##.
  */
-public class ImmutableString##TYPE_NAME##Map {
+public class ImmutableString##TYPE_NAME##Map implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private PerfectHashDictionary d_keys;
     private ##UNBOXED_TYPE##[] d_values;
 
