@@ -30,7 +30,7 @@ public class ImmutableString##TYPE_NAME##Map implements Serializable {
         /**
          * Put a key/value pair.
          */
-        public Builder put(String key, ##BOXED_TYPE## value) {
+        public synchronized Builder put(String key, ##BOXED_TYPE## value) {
             d_map.put(key, value);
             return this;
         }
@@ -38,7 +38,7 @@ public class ImmutableString##TYPE_NAME##Map implements Serializable {
         /**
          * Put all key/value pairs from a {@link Map}.
          */
-        public Builder putAll(Map<String, ##BOXED_TYPE##> map) {
+        public synchronized Builder putAll(Map<String, ##BOXED_TYPE##> map) {
             d_map.putAll(map);
             return this;
         }
@@ -46,7 +46,7 @@ public class ImmutableString##TYPE_NAME##Map implements Serializable {
         /**
          * Construct a {@link ImmutableString##TYPE_NAME##Map}.
          */
-        public ImmutableString##TYPE_NAME##Map build() throws DictionaryBuilderException {
+        public synchronized ImmutableString##TYPE_NAME##Map build() throws DictionaryBuilderException {
             DictionaryBuilder dictBuilder = new DictionaryBuilder();
             dictBuilder.addAll(d_map.keySet());
             PerfectHashDictionary dict = dictBuilder.buildPerfectHash();
