@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * An immutable mapping from {@link String} to byte.
+ * An immutable mapping from {@link String} to <tt>byte</tt>.
  */
 public class ImmutableStringByteMap implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -32,7 +32,10 @@ public class ImmutableStringByteMap implements Serializable {
     private byte[] d_values;
 
     /**
-     * A builder for {@link ImmutableStringByteMap}.
+     * A builder for {@link ImmutableStringByteMap}. Mappings
+     * can be added to the builder using the {@link #put} and
+     * {@link #putAll} methods. The {@link ImmutableStringByteMap}
+     * can then be constructed using the {@link #build} method.
      */
     public static class Builder {
         private TreeMap<String, Byte> d_map;

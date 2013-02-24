@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * An immutable mapping from {@link String} to double.
+ * An immutable mapping from {@link String} to <tt>double</tt>.
  */
 public class ImmutableStringDoubleMap implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -32,7 +32,10 @@ public class ImmutableStringDoubleMap implements Serializable {
     private double[] d_values;
 
     /**
-     * A builder for {@link ImmutableStringDoubleMap}.
+     * A builder for {@link ImmutableStringDoubleMap}. Mappings
+     * can be added to the builder using the {@link #put} and
+     * {@link #putAll} methods. The {@link ImmutableStringDoubleMap}
+     * can then be constructed using the {@link #build} method.
      */
     public static class Builder {
         private TreeMap<String, Double> d_map;

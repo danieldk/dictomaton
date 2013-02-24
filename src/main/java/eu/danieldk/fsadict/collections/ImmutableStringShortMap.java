@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * An immutable mapping from {@link String} to short.
+ * An immutable mapping from {@link String} to <tt>short</tt>.
  */
 public class ImmutableStringShortMap implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -32,7 +32,10 @@ public class ImmutableStringShortMap implements Serializable {
     private short[] d_values;
 
     /**
-     * A builder for {@link ImmutableStringShortMap}.
+     * A builder for {@link ImmutableStringShortMap}. Mappings
+     * can be added to the builder using the {@link #put} and
+     * {@link #putAll} methods. The {@link ImmutableStringShortMap}
+     * can then be constructed using the {@link #build} method.
      */
     public static class Builder {
         private TreeMap<String, Short> d_map;

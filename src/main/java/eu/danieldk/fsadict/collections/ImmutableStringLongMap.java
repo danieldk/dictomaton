@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * An immutable mapping from {@link String} to long.
+ * An immutable mapping from {@link String} to <tt>long</tt>.
  */
 public class ImmutableStringLongMap implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -32,7 +32,10 @@ public class ImmutableStringLongMap implements Serializable {
     private long[] d_values;
 
     /**
-     * A builder for {@link ImmutableStringLongMap}.
+     * A builder for {@link ImmutableStringLongMap}. Mappings
+     * can be added to the builder using the {@link #put} and
+     * {@link #putAll} methods. The {@link ImmutableStringLongMap}
+     * can then be constructed using the {@link #build} method.
      */
     public static class Builder {
         private TreeMap<String, Long> d_map;

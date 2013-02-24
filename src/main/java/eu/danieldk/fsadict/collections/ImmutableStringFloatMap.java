@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * An immutable mapping from {@link String} to float.
+ * An immutable mapping from {@link String} to <tt>float</tt>.
  */
 public class ImmutableStringFloatMap implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -32,7 +32,10 @@ public class ImmutableStringFloatMap implements Serializable {
     private float[] d_values;
 
     /**
-     * A builder for {@link ImmutableStringFloatMap}.
+     * A builder for {@link ImmutableStringFloatMap}. Mappings
+     * can be added to the builder using the {@link #put} and
+     * {@link #putAll} methods. The {@link ImmutableStringFloatMap}
+     * can then be constructed using the {@link #build} method.
      */
     public static class Builder {
         private TreeMap<String, Float> d_map;

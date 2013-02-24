@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * An immutable mapping from {@link String} to char.
+ * An immutable mapping from {@link String} to <tt>char</tt>.
  */
 public class ImmutableStringCharMap implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -32,7 +32,10 @@ public class ImmutableStringCharMap implements Serializable {
     private char[] d_values;
 
     /**
-     * A builder for {@link ImmutableStringCharMap}.
+     * A builder for {@link ImmutableStringCharMap}. Mappings
+     * can be added to the builder using the {@link #put} and
+     * {@link #putAll} methods. The {@link ImmutableStringCharMap}
+     * can then be constructed using the {@link #build} method.
      */
     public static class Builder {
         private TreeMap<String, Character> d_map;

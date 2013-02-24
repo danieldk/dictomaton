@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * An immutable mapping from {@link String} to boolean.
+ * An immutable mapping from {@link String} to <tt>boolean</tt>.
  */
 public class ImmutableStringBooleanMap implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -32,7 +32,10 @@ public class ImmutableStringBooleanMap implements Serializable {
     private boolean[] d_values;
 
     /**
-     * A builder for {@link ImmutableStringBooleanMap}.
+     * A builder for {@link ImmutableStringBooleanMap}. Mappings
+     * can be added to the builder using the {@link #put} and
+     * {@link #putAll} methods. The {@link ImmutableStringBooleanMap}
+     * can then be constructed using the {@link #build} method.
      */
     public static class Builder {
         private TreeMap<String, Boolean> d_map;
