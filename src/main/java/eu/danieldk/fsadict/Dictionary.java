@@ -17,8 +17,8 @@ import java.util.Iterator;
 public interface Dictionary extends Iterable<String>, Serializable {
     /**
      * Check whether the dictionary contains the given sequence.
-     * @param seq
-     * @return
+     * @param seq The sequence to look up.
+     * @return <tt>true</tt> if the dictionary contains the sequence.
      */
     public boolean contains(String seq);
 
@@ -36,7 +36,7 @@ public interface Dictionary extends Iterable<String>, Serializable {
 
     /**
      * Give the Graphviz dot representation of this automaton.
-     * @return
+     * @return Dot representation of the automaton.
      */
     public String toDot();
 }

@@ -96,7 +96,7 @@ public class DictionaryBuilder {
 
 	/**
 	 * Add all sequences from a lexicographically sorted collection.
-	 * @param seqs
+	 * @param seqs A collection of sequences.
 	 * @throws DictionaryBuilderException
 	 */
 	public void addAll(Collection<String> seqs) throws DictionaryBuilderException
@@ -107,7 +107,7 @@ public class DictionaryBuilder {
 
 	/**
 	 * Create a dictionary automaton. This also finalizes the {@link DictionaryBuilder}.
-	 * @return
+	 * @return A finite state dictionary.
 	 */
 	public Dictionary build()
 	{
@@ -116,7 +116,7 @@ public class DictionaryBuilder {
 
 	/**
 	 * Create a perfect hash automaton. This also finalizes the {@link DictionaryBuilder}.
-	 * @return
+	 * @return A perfect hash automaton.
 	 */
 	public PerfectHashDictionary buildPerfectHash()
 	{
@@ -135,7 +135,7 @@ public class DictionaryBuilder {
 	/**
 	 * Obtain a Graphviz dot representation of the automaton. This finalizes the
 	 * {@link DictionaryBuilder}.
-	 * @return
+	 * @return Dot representation of the automaton.
 	 */
 	public String toDot()
 	{

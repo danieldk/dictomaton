@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * An immutable mapping from {@link String} to ##UNBOXED_TYPE##.
+ * An immutable mapping from {@link String} to <tt>##UNBOXED_TYPE##</tt>.
  */
 public class ImmutableString##TYPE_NAME##Map implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -32,7 +32,10 @@ public class ImmutableString##TYPE_NAME##Map implements Serializable {
     private ##UNBOXED_TYPE##[] d_values;
 
     /**
-     * A builder for {@link ImmutableString##TYPE_NAME##Map}.
+     * A builder for {@link ImmutableString##TYPE_NAME##Map}. Mappings
+     * can be added to the builder using the {@link #put} and
+     * {@link #putAll} methods. The {@link ImmutableString##TYPE_NAME##Map}
+     * can then be constructed using the {@link #build} method.
      */
     public static class Builder {
         private TreeMap<String, ##BOXED_TYPE##> d_map;
