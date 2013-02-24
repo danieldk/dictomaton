@@ -14,10 +14,8 @@
 
 package eu.danieldk.fsadict;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.Stack;
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * A finite state dictionary. Dictionaries of this type can are constructed
@@ -39,44 +37,103 @@ class DictionaryIntIntImpl implements Dictionary {
 	//       for each transition. Instead, we maintain the table as two parallel
 	//       arrays.
 
-	protected final char[] d_transitionChars;
-	protected final int[] d_transtitionTo;
-	protected final Set<Integer> d_finalStates;
+    protected final char[] d_transitionChars;
+    protected final int[] d_transtitionTo;
+    protected final Set<Integer> d_finalStates;
     protected final int d_nSeqs;
 
-	/**
-	 * Check whether the dictionary contains the given sequence.
-	 * @param seq
-	 * @return
-	 */
-	public boolean contains(String seq)
-	{
-		int state = 0;
-		for (int i = 0; i < seq.length(); i++)
-		{
-			state = next(state, seq.charAt(i));
+    @Override
+    public boolean add(String s) {
+        throw new UnsupportedOperationException();
+    }
 
-			if (state == -1)
-				return false;
-		}
+    @Override
+    public boolean addAll(Collection<? extends String> c) {
+        throw new UnsupportedOperationException();
+    }
 
-		return d_finalStates.contains(state);
-	}
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * Get an iterator over the character sequences in the dictionary.
-	 */
+    @Override
+    public boolean contains(Object o) {
+        if (o == null)
+            return false;
+
+        if (!(o instanceof String))
+            return false;
+
+        String seq = (String) o;
+
+        return containsSeq(seq);
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        for (Object o: c)
+            if (!contains(o))
+                return false;
+
+        return true;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
 	@Override
 	public Iterator<String> iterator() {
 		return new DictionaryIterator();
 	}
 
+    @Override
+    public boolean remove(Object o) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public int size()
     {
         return d_nSeqs;
     }
 
-	/**
+    @Override
+    public Object[] toArray() {
+        return toArray(new Object[0]);
+    }
+
+    @Override
+    public <T> T[] toArray(T[] a) {
+        T[] r = a.length >= d_nSeqs ? a : (T[]) Array.newInstance(a.getClass().getComponentType(), d_nSeqs);
+
+        Iterator<String> iter = iterator();
+        int idx = 0;
+
+        while (iter.hasNext()) {
+            r[idx] = (T) iter.next();
+            ++idx;
+        }
+
+        if (r.length > d_nSeqs)
+            r[size()] = null;
+
+        return r;
+    }
+
+    /**
 	 * Give the Graphviz dot representation of this automaton.
 	 * @return
 	 */
@@ -103,9 +160,9 @@ class DictionaryIntIntImpl implements Dictionary {
 
 	private class DictionaryIterator implements Iterator<String>
 	{
-		private final Stack<StateStringPair> d_stack;
-		private String d_nextSeq;
 
+        private final Stack<StateStringPair> d_stack;
+        private String d_nextSeq;
 		public DictionaryIterator()
 		{
 			d_stack = new Stack<StateStringPair>();
@@ -148,13 +205,13 @@ class DictionaryIntIntImpl implements Dictionary {
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
-	}
 
+    }
 	private class StateStringPair
 	{
-		private final int d_state;
-		private final String d_string;
 
+        private final int d_state;
+        private final String d_string;
 		public StateStringPair(int state, String string)
 		{
 			d_state = state;
@@ -230,6 +287,25 @@ class DictionaryIntIntImpl implements Dictionary {
 
 		return -1;
 	}
+
+    /**
+     * Check whether the dictionary contains the given sequence.
+     * @param seq
+     * @return
+     */
+    private boolean containsSeq(String seq)
+    {
+        int state = 0;
+        for (int i = 0; i < seq.length(); i++)
+        {
+            state = next(state, seq.charAt(i));
+
+            if (state == -1)
+                return false;
+        }
+
+        return d_finalStates.contains(state);
+    }
 
 	/**
 	 * Get the next state, given a character.

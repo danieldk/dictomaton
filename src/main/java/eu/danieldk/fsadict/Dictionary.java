@@ -2,6 +2,7 @@ package eu.danieldk.fsadict;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Finite state dictionary interface. A dictionary provides the following
@@ -14,26 +15,7 @@ import java.util.Iterator;
  *
  * @author Daniel de Kok
  */
-public interface Dictionary extends Iterable<String>, Serializable {
-    /**
-     * Check whether the dictionary contains the given sequence.
-     * @param seq The sequence to look up.
-     * @return <tt>true</tt> if the dictionary contains the sequence.
-     */
-    public boolean contains(String seq);
-
-    /**
-     * Get an iterator over the character sequences in the dictionary.
-     */
-    @Override
-    public Iterator<String> iterator();
-
-    /**
-     * Get the number of sequences in the automaton.
-     * @return Number of sequences.
-     */
-    public int size();
-
+public interface Dictionary extends Set<String>, Serializable {
     /**
      * Give the Graphviz dot representation of this automaton.
      * @return Dot representation of the automaton.

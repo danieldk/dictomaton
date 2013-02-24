@@ -56,12 +56,37 @@ public class DictionaryTest {
 		d_dict = builder.build();
 	}
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void addTest()
+    {
+        d_dict.add("foo");
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void addAllTest()
+    {
+        d_dict.addAll(d_words2);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void clearTest()
+    {
+        d_dict.clear();
+    }
+
 	@Test
-	public void containsWordsTest()
+	public void containsTest()
 	{
 		for (String word: d_words1)
 			Assert.assertTrue(d_dict.contains(word));
 	}
+
+    @Test
+    public void containsAllTest()
+    {
+        Assert.assertTrue(d_dict.containsAll(d_words1));
+        Assert.assertFalse(d_dict.containsAll(d_words2));
+    }
 
 	@Test
 	public void doesNotContainWordsTest()
@@ -79,6 +104,15 @@ public class DictionaryTest {
         Assert.assertEquals(0, dict.size());
     }
 
+    @Test
+    public void isEmptyTest()
+    {
+        Assert.assertFalse(d_dict.isEmpty());
+        DictionaryBuilder builder = new DictionaryBuilder();
+        Dictionary dict = builder.build();
+        Assert.assertTrue(dict.isEmpty());
+    }
+
 	@Test
 	public void iterationTest()
 	{
@@ -88,9 +122,40 @@ public class DictionaryTest {
 		Assert.assertEquals(d_words1, listFromIteration);
 	}
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void removeTest()
+    {
+        d_dict.remove("foo");
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void removeAllTest()
+    {
+        d_dict.removeAll(d_words1);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void retainAllTest()
+    {
+        d_dict.retainAll(d_words1);
+    }
+
     @Test
     public void sizeTest()
     {
         Assert.assertEquals(7, d_dict.size());
+    }
+
+    @Test
+    public void toArrayTest()
+    {
+        Object[] check = d_words1.toArray();
+        Assert.assertArrayEquals(check, d_dict.toArray());
+
+        Object[] check2 = new Object[d_dict.size() + 2];
+        Object[] conv = d_dict.toArray(check2);
+
+        Assert.assertTrue(check2 == conv);
+        Assert.assertTrue(check2[d_dict.size()] == null);
     }
 }
