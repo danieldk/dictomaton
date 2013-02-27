@@ -20,25 +20,36 @@ import java.util.TreeMap;
 class State {
 	private final TreeMap<Character, State> transitions;
 	private boolean d_final;
+    private boolean d_recomputeHash;
+    private int d_cachedHash;
 
 	public State()
 	{
 		transitions = new TreeMap<Character, State>();
 		d_final = false;
+        d_recomputeHash = true;
 	}
 
 	public void addTransition(Character c, State s)
 	{
 		transitions.put(c, s);
+        d_recomputeHash = true;
 	}
 
 	@Override
 	public int hashCode() {
+        if (!d_recomputeHash)
+            return d_cachedHash;
+
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (d_final ? 1231 : 1237);
 		result = prime * result
 				+ ((transitions == null) ? 0 : transitions.hashCode());
+
+        d_recomputeHash = false;
+        d_cachedHash = result;
+
 		return result;
 	}
 
@@ -46,10 +57,13 @@ class State {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
+
 		if (obj == null)
 			return false;
+
 		if (getClass() != obj.getClass())
 			return false;
+
 		State other = (State) obj;
 		if (d_final != other.d_final)
 			return false;
@@ -84,6 +98,7 @@ class State {
 	{
 		Entry<Character, State> entry = transitions.lastEntry();
 		transitions.put(entry.getKey(), s);
+        d_recomputeHash = true;
 	}
 
 	public TreeMap<Character, State> transitions()
@@ -99,5 +114,6 @@ class State {
 	void setFinal(boolean finalState)
 	{
 		d_final = finalState;
+        d_recomputeHash = true;
 	}
 }
