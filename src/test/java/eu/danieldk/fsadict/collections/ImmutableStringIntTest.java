@@ -1,9 +1,11 @@
 package eu.danieldk.fsadict.collections;
 
 import eu.danieldk.fsadict.DictionaryBuilderException;
+import eu.danieldk.fsadict.categories.Tests;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +13,7 @@ import java.util.Map;
 /**
  * Unit tests for {@link ImmutableStringIntMap}.
  */
+@Category(Tests.class)
 public class ImmutableStringIntTest {
     private Map<String, Integer> d_check1;
     private Map<String, Integer> d_check2;
