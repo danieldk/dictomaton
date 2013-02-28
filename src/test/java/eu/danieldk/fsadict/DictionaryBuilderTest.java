@@ -53,14 +53,15 @@ public class DictionaryBuilderTest {
 		builder.add("zeven");
 		builder.add("zoeven");
 		
-		String check = "digraph G { 12 -> 11 [label=\"v\"]; 0 -> 1 [label=\"a\"]; 0 -> 2 [label=\"z\"]; " +
-				"10 -> 15 [label=\"e\"]; 20 -> 18 [label=\"w\"]; 9 -> 14 [label=\"m\"]; 19 -> 20 [label=\"u\"]; " +
-				"18 [peripheries=2]; 11 -> 16 [label=\"e\"]; 8 -> 13 [label=\"n\"]; 14 -> 17 [label=\"e\"]; " +
-				"4 -> 8 [label=\"o\"]; 7 -> 11 [label=\"e\"]; 13 -> 11 [label=\"d\"]; 1 -> 3 [label=\"l\"]; " +
-				"1 -> 4 [label=\"v\"]; 6 -> 12 [label=\"e\"]; 15 -> 18 [label=\"r\"]; 2 -> 5 [label=\"e\"]; " +
-				"2 -> 6 [label=\"o\"]; 16 -> 18 [label=\"n\"]; 17 -> 19 [label=\"e\"]; 3 [peripheries=2]; " +
-				"3 -> 7 [label=\"l\"]; 5 -> 9 [label=\"e\"]; 5 -> 10 [label=\"k\"]; 5 -> 11 [label=\"v\"]; }";
-		
+		String check = "digraph G { 0 -> 1 [label=\"a\"]; 0 -> 2 [label=\"z\"]; 1 -> 3 [label=\"l\"]; " +
+                "1 -> 4 [label=\"v\"]; 2 -> 5 [label=\"e\"]; 2 -> 6 [label=\"o\"]; 3 [peripheries=2]; " +
+                "3 -> 7 [label=\"l\"]; 4 -> 8 [label=\"o\"]; 5 -> 9 [label=\"e\"]; 5 -> 10 [label=\"k\"]; " +
+                "5 -> 11 [label=\"v\"]; 6 -> 12 [label=\"e\"]; 7 -> 11 [label=\"e\"]; 8 -> 13 [label=\"n\"]; " +
+                "9 -> 14 [label=\"m\"]; 10 -> 15 [label=\"e\"]; 11 -> 16 [label=\"e\"]; 12 -> 11 [label=\"v\"]; " +
+                "13 -> 11 [label=\"d\"]; 14 -> 17 [label=\"e\"]; 15 -> 18 [label=\"r\"]; 16 -> 18 [label=\"n\"]; " +
+                "17 -> 19 [label=\"e\"]; 18 [peripheries=2]; 19 -> 20 [label=\"u\"]; 20 -> 18 [label=\"w\"]; }";
+
+
 		Assert.assertEquals(check, builder.toDot().replace('\n', ' '));
 	}
 }

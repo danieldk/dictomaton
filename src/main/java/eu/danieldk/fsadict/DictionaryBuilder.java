@@ -144,17 +144,25 @@ public class DictionaryBuilder {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("digraph G {\n");
 
-		Map<State, Integer> states = numberedStates();
-		for (Entry<State, Integer> numberedState: states.entrySet())
-		{
-			State s = numberedState.getKey();
-			Integer sn = numberedState.getValue();
+		Map<State, Integer> stateNumbers = numberedStates();
+
+        // We want to traverse states a fixed order, so that the output is predictable. We
+        // could also store the numbered states in a TreeMap, but State doesn't implement
+        // Comparable, and I wouldn't even know what that would mean ;).
+        State[] states = new State[stateNumbers.size()];
+
+        for (Entry<State, Integer> numberedState: stateNumbers.entrySet())
+            states[numberedState.getValue()] = numberedState.getKey();
+
+        for (int stateNumber = 0; stateNumber < states.length; ++stateNumber) {
+			State s = states[stateNumber];
 
 			if (s.isFinal())
-				stringBuilder.append(String.format("%d [peripheries=2];\n", numberedState.getValue()));
+				stringBuilder.append(String.format("%d [peripheries=2];\n", stateNumber));
 
 			for (Entry<Character, State> trans: s.transitions().entrySet())
-				stringBuilder.append(String.format("%d -> %d [label=\"%c\"];\n", sn, states.get(trans.getValue()), trans.getKey()));
+				stringBuilder.append(String.format("%d -> %d [label=\"%c\"];\n", stateNumber,
+                        stateNumbers.get(trans.getValue()), trans.getKey()));
 		}
 
 		stringBuilder.append("}");
