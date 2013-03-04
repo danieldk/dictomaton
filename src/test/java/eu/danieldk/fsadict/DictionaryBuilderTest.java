@@ -14,9 +14,12 @@
 
 package eu.danieldk.fsadict;
 
+import eu.danieldk.fsadict.categories.Tests;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
+@Category(Tests.class)
 public class DictionaryBuilderTest {
     @Test
     public void emptyDictionaryTest()

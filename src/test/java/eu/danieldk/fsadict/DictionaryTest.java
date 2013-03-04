@@ -18,10 +18,13 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import eu.danieldk.fsadict.categories.Tests;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
+@Category(Tests.class)
 public class DictionaryTest {
 	private List<String> d_words1;
 	private List<String> d_words2;
