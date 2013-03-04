@@ -21,24 +21,19 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.*;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 @Category(Benchmarks.class)
 public class DictionaryBuilderBenchmark extends AbstractBenchmark {
-    private List<String> d_words1;
-    private List<String> d_words2;
-    private Dictionary d_dict;
-    private static SortedSet d_wordsLong;
-    private List<String> d_wordsLong2;
+    private static SortedSet<String> d_wordsLong;
 
     @BeforeClass
-    public static void initializeExpensive() throws IOException
-    {
-        d_wordsLong = loadWordList("eu/danieldk/fsadict/web2");
+    public static void initializeExpensive() throws IOException {
+        d_wordsLong = Util.loadWordList("eu/danieldk/fsadict/web2-1");
+        d_wordsLong.addAll(Util.loadWordList("eu/danieldk/fsadict/web2-2"));
     }
 
     @Before
@@ -56,24 +51,5 @@ public class DictionaryBuilderBenchmark extends AbstractBenchmark {
         DictionaryBuilder builder = new DictionaryBuilder();
         builder.addAll(d_wordsLong);
         builder.build();
-    }
-
-    private static SortedSet<String> loadWordList(String resourceName) throws IOException {
-        InputStream in = ClassLoader.getSystemResourceAsStream(resourceName);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-        TreeSet<String> words = new TreeSet<String>();
-
-        try {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                words.add(line.trim());
-            }
-
-        } finally {
-            reader.close();
-        }
-
-        return words;
     }
 }
