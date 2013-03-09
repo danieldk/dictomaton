@@ -10,6 +10,10 @@ automata. Two types of dictionaries are supported:
  * Perfect hash dictionaries, that also provide a unique hash for each
    character sequence that is in the dictionary.
 
+*fsadict-java* also contains maps from Strings to primitive types, where
+keys are stored in a perfect hash dictionary and the values in a flat array
+for compact and fast storage.
+
 ## Benchmarks
 
 Benchmarks are in a different test group than normal unit tests. You can run
