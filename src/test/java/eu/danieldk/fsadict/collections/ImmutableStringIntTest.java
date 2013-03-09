@@ -7,8 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Unit tests for {@link ImmutableStringIntMap}.
@@ -48,9 +47,7 @@ public class ImmutableStringIntTest {
     }
 
     @Test
-    public void getOrElseTest() throws DictionaryBuilderException
-
-    {
+    public void getOrElseTest() throws DictionaryBuilderException {
         ImmutableStringIntMap test = new ImmutableStringIntMap.Builder().putAll(d_check1).build();
 
         for (Map.Entry<String, Integer> entry : d_check1.entrySet())
@@ -58,6 +55,19 @@ public class ImmutableStringIntTest {
 
         for (Map.Entry<String, Integer> entry : d_check2.entrySet())
             Assert.assertEquals(-1, test.getOrElse(entry.getKey(), -1));
+    }
+
+    @Test
+    public void iteratorTest() throws DictionaryBuilderException {
+        ImmutableStringIntMap test = new ImmutableStringIntMap.Builder().putAll(d_check1).build();
+
+        Set<String> isiKeys = new HashSet<String>();
+        Iterator<String> iter = test.keyIterator();
+        while (iter.hasNext())
+            isiKeys.add(iter.next());
+
+
+        Assert.assertEquals(d_check1.keySet(), isiKeys);
     }
 
 
