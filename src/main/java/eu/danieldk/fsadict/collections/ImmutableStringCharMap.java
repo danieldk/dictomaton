@@ -65,9 +65,7 @@ public class ImmutableStringCharMap implements Serializable {
          * Construct a {@link ImmutableStringCharMap}.
          */
         public synchronized ImmutableStringCharMap build() throws DictionaryBuilderException {
-            DictionaryBuilder dictBuilder = new DictionaryBuilder();
-            dictBuilder.addAll(d_map.keySet());
-            PerfectHashDictionary dict = dictBuilder.buildPerfectHash();
+            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
 
             char[] values = new char[d_map.size()];
 

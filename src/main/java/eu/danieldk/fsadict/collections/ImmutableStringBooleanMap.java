@@ -65,9 +65,7 @@ public class ImmutableStringBooleanMap implements Serializable {
          * Construct a {@link ImmutableStringBooleanMap}.
          */
         public synchronized ImmutableStringBooleanMap build() throws DictionaryBuilderException {
-            DictionaryBuilder dictBuilder = new DictionaryBuilder();
-            dictBuilder.addAll(d_map.keySet());
-            PerfectHashDictionary dict = dictBuilder.buildPerfectHash();
+            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
 
             boolean[] values = new boolean[d_map.size()];
 

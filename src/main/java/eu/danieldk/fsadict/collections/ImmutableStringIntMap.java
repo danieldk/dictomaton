@@ -65,9 +65,7 @@ public class ImmutableStringIntMap implements Serializable {
          * Construct a {@link ImmutableStringIntMap}.
          */
         public synchronized ImmutableStringIntMap build() throws DictionaryBuilderException {
-            DictionaryBuilder dictBuilder = new DictionaryBuilder();
-            dictBuilder.addAll(d_map.keySet());
-            PerfectHashDictionary dict = dictBuilder.buildPerfectHash();
+            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
 
             int[] values = new int[d_map.size()];
 

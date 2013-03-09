@@ -65,9 +65,7 @@ public class ImmutableStringLongMap implements Serializable {
          * Construct a {@link ImmutableStringLongMap}.
          */
         public synchronized ImmutableStringLongMap build() throws DictionaryBuilderException {
-            DictionaryBuilder dictBuilder = new DictionaryBuilder();
-            dictBuilder.addAll(d_map.keySet());
-            PerfectHashDictionary dict = dictBuilder.buildPerfectHash();
+            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
 
             long[] values = new long[d_map.size()];
 

@@ -65,9 +65,7 @@ public class ImmutableStringShortMap implements Serializable {
          * Construct a {@link ImmutableStringShortMap}.
          */
         public synchronized ImmutableStringShortMap build() throws DictionaryBuilderException {
-            DictionaryBuilder dictBuilder = new DictionaryBuilder();
-            dictBuilder.addAll(d_map.keySet());
-            PerfectHashDictionary dict = dictBuilder.buildPerfectHash();
+            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
 
             short[] values = new short[d_map.size()];
 

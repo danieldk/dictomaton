@@ -65,9 +65,7 @@ public class ImmutableStringDoubleMap implements Serializable {
          * Construct a {@link ImmutableStringDoubleMap}.
          */
         public synchronized ImmutableStringDoubleMap build() throws DictionaryBuilderException {
-            DictionaryBuilder dictBuilder = new DictionaryBuilder();
-            dictBuilder.addAll(d_map.keySet());
-            PerfectHashDictionary dict = dictBuilder.buildPerfectHash();
+            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
 
             double[] values = new double[d_map.size()];
 

@@ -65,9 +65,7 @@ public class ImmutableStringFloatMap implements Serializable {
          * Construct a {@link ImmutableStringFloatMap}.
          */
         public synchronized ImmutableStringFloatMap build() throws DictionaryBuilderException {
-            DictionaryBuilder dictBuilder = new DictionaryBuilder();
-            dictBuilder.addAll(d_map.keySet());
-            PerfectHashDictionary dict = dictBuilder.buildPerfectHash();
+            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
 
             float[] values = new float[d_map.size()];
 

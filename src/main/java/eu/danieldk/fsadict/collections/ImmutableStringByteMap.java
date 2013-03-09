@@ -65,9 +65,7 @@ public class ImmutableStringByteMap implements Serializable {
          * Construct a {@link ImmutableStringByteMap}.
          */
         public synchronized ImmutableStringByteMap build() throws DictionaryBuilderException {
-            DictionaryBuilder dictBuilder = new DictionaryBuilder();
-            dictBuilder.addAll(d_map.keySet());
-            PerfectHashDictionary dict = dictBuilder.buildPerfectHash();
+            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
 
             byte[] values = new byte[d_map.size()];
 
