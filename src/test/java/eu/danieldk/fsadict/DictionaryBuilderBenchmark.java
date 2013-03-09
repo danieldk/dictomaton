@@ -48,8 +48,6 @@ public class DictionaryBuilderBenchmark extends AbstractBenchmark {
 
     @Test
     public void dictionaryConstructionTest() throws DictionaryBuilderException {
-        DictionaryBuilder builder = new DictionaryBuilder();
-        builder.addAll(d_wordsLong);
-        builder.build();
+        new DictionaryBuilder().addAll(d_wordsLong).build();
     }
 }

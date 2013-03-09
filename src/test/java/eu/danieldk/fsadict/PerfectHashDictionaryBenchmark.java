@@ -22,9 +22,7 @@ public class PerfectHashDictionaryBenchmark extends AbstractBenchmark {
         d_words1 = Util.loadWordList("eu/danieldk/fsadict/web2-1");
         d_words2 = Util.loadWordList("eu/danieldk/fsadict/web2-2");
 
-        DictionaryBuilder builder = new DictionaryBuilder();
-        builder.addAll(d_words1);
-        d_dict = builder.buildPerfectHash();
+        d_dict = new DictionaryBuilder().addAll(d_words1).buildPerfectHash();
     }
 
     @Test

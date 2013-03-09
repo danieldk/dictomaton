@@ -52,9 +52,7 @@ public class DictionaryBenchmarks extends AbstractBenchmark {
 
     @Test
     public void dictionaryConstructionTest() throws DictionaryBuilderException {
-        DictionaryBuilder builder = new DictionaryBuilder();
-        builder.addAll(d_wordsLong);
-        builder.build();
+        new DictionaryBuilder().addAll(d_wordsLong).build();
     }
 
     private static SortedSet<String> loadWordList(String resourceName) throws IOException {

@@ -22,41 +22,30 @@ import org.junit.experimental.categories.Category;
 @Category(Tests.class)
 public class DictionaryBuilderTest {
     @Test
-    public void emptyDictionaryTest()
-    {
+    public void emptyDictionaryTest() {
         DictionaryBuilder builder = new DictionaryBuilder();
         builder.build();
         builder.buildPerfectHash();
     }
 
-	@Test(expected = DictionaryBuilderException.class)
-	public void incorrectOrderTest() throws DictionaryBuilderException {
-		DictionaryBuilder builder = new DictionaryBuilder();
-		builder.add("ziezo");
-		builder.add("oeps");
-	}
-	
-	@Test(expected = DictionaryBuilderException.class)
-	public void addToFinalizedTest() throws DictionaryBuilderException {
-		DictionaryBuilder builder = new DictionaryBuilder();
-		builder.add("oeps");
-		builder.toDot();
-		builder.add("oeps");
-	}
+    @Test(expected = DictionaryBuilderException.class)
+    public void incorrectOrderTest() throws DictionaryBuilderException {
+        DictionaryBuilder builder = new DictionaryBuilder().add("ziezo").add("oeps");
+    }
 
-	@Test
-	public void testDot() throws DictionaryBuilderException {
-		DictionaryBuilder builder = new DictionaryBuilder();
-		
-		builder.add("al");
-		builder.add("alleen");
-		builder.add("avonden");
-		builder.add("zeemeeuw");
-		builder.add("zeker");
-		builder.add("zeven");
-		builder.add("zoeven");
-		
-		String check = "digraph G { 0 -> 1 [label=\"a\"]; 0 -> 2 [label=\"z\"]; 1 -> 3 [label=\"l\"]; " +
+    @Test(expected = DictionaryBuilderException.class)
+    public void addToFinalizedTest() throws DictionaryBuilderException {
+        DictionaryBuilder builder = new DictionaryBuilder().add("oeps");
+        builder.toDot();
+        builder.add("oeps");
+    }
+
+    @Test
+    public void testDot() throws DictionaryBuilderException {
+        DictionaryBuilder builder = new DictionaryBuilder().add("al").add("alleen").add("avonden").add("zeemeeuw")
+                .add("zeker").add("zeven").add("zoeven");
+
+        String check = "digraph G { 0 -> 1 [label=\"a\"]; 0 -> 2 [label=\"z\"]; 1 -> 3 [label=\"l\"]; " +
                 "1 -> 4 [label=\"v\"]; 2 -> 5 [label=\"e\"]; 2 -> 6 [label=\"o\"]; 3 [peripheries=2]; " +
                 "3 -> 7 [label=\"l\"]; 4 -> 8 [label=\"o\"]; 5 -> 9 [label=\"e\"]; 5 -> 10 [label=\"k\"]; " +
                 "5 -> 11 [label=\"v\"]; 6 -> 12 [label=\"e\"]; 7 -> 11 [label=\"e\"]; 8 -> 13 [label=\"n\"]; " +
@@ -65,6 +54,6 @@ public class DictionaryBuilderTest {
                 "17 -> 19 [label=\"e\"]; 18 [peripheries=2]; 19 -> 20 [label=\"u\"]; 20 -> 18 [label=\"w\"]; }";
 
 
-		Assert.assertEquals(check, builder.toDot().replace('\n', ' '));
-	}
+        Assert.assertEquals(check, builder.toDot().replace('\n', ' '));
+    }
 }

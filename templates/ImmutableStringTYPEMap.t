@@ -65,9 +65,7 @@ public class ImmutableString##TYPE_NAME##Map implements Serializable {
          * Construct a {@link ImmutableString##TYPE_NAME##Map}.
          */
         public synchronized ImmutableString##TYPE_NAME##Map build() throws DictionaryBuilderException {
-            DictionaryBuilder dictBuilder = new DictionaryBuilder();
-            dictBuilder.addAll(d_map.keySet());
-            PerfectHashDictionary dict = dictBuilder.buildPerfectHash();
+            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
 
             ##UNBOXED_TYPE##[] values = new ##UNBOXED_TYPE##[d_map.size()];
 

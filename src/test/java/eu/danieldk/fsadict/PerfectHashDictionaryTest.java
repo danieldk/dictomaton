@@ -52,17 +52,14 @@ public class PerfectHashDictionaryTest {
 			add("zepen");
 			add("zoef");
 		}};
-		
-		DictionaryBuilder builder = new DictionaryBuilder();
-		builder.addAll(d_words1);
-		d_dict = builder.buildPerfectHash();
+
+		d_dict = new DictionaryBuilder().addAll(d_words1).buildPerfectHash();
 	}
 
     @Test
     public void emptyTest()
     {
-        DictionaryBuilder builder = new DictionaryBuilder();
-        PerfectHashDictionary dict = builder.buildPerfectHash();
+        PerfectHashDictionary dict = new DictionaryBuilder().buildPerfectHash();
         Assert.assertEquals(-1, dict.number("foo"));
         Assert.assertNull(dict.sequence(1));
         Assert.assertEquals(0, dict.size());

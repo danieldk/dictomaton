@@ -54,9 +54,7 @@ public class DictionaryTest {
 			add("zoef");
 		}};
 
-		DictionaryBuilder builder = new DictionaryBuilder();
-		builder.addAll(d_words1);
-		d_dict = builder.build();
+		d_dict = new DictionaryBuilder().addAll(d_words1).build();
 	}
 
     @Test(expected = UnsupportedOperationException.class)
@@ -101,8 +99,7 @@ public class DictionaryTest {
     @Test
     public void emptyTest()
     {
-        DictionaryBuilder builder = new DictionaryBuilder();
-        Dictionary dict = builder.build();
+        Dictionary dict = new DictionaryBuilder().build();
         Assert.assertFalse(dict.contains("foo"));
         Assert.assertEquals(0, dict.size());
     }
@@ -111,8 +108,7 @@ public class DictionaryTest {
     public void isEmptyTest()
     {
         Assert.assertFalse(d_dict.isEmpty());
-        DictionaryBuilder builder = new DictionaryBuilder();
-        Dictionary dict = builder.build();
+        Dictionary dict = new DictionaryBuilder().build();
         Assert.assertTrue(dict.isEmpty());
     }
 
