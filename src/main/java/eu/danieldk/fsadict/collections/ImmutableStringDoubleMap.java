@@ -19,6 +19,7 @@ import eu.danieldk.fsadict.DictionaryBuilderException;
 import eu.danieldk.fsadict.PerfectHashDictionary;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -102,5 +103,13 @@ public class ImmutableStringDoubleMap implements Serializable {
             return defaultValue;
 
         return d_values[hash - 1];
+    }
+
+    /**
+     * Get an iterator over the keys in the mapping.
+     */
+    public Iterator<String> keyIterator()
+    {
+        return d_keys.iterator();
     }
 }
