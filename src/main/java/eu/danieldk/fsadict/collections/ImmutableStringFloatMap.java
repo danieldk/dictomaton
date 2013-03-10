@@ -19,14 +19,12 @@ import eu.danieldk.fsadict.DictionaryBuilderException;
 import eu.danieldk.fsadict.PerfectHashDictionary;
 
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * An immutable mapping from {@link String} to <tt>float</tt>.
  */
-public class ImmutableStringFloatMap implements Serializable {
+public class ImmutableStringFloatMap extends AbstractMap<String, Float> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private PerfectHashDictionary d_keys;
@@ -39,6 +37,7 @@ public class ImmutableStringFloatMap implements Serializable {
      * can then be constructed using the {@link #build} method.
      */
     public static class Builder {
+
         private TreeMap<String, Float> d_map;
 
         public Builder() {
@@ -75,6 +74,79 @@ public class ImmutableStringFloatMap implements Serializable {
 
             return new ImmutableStringFloatMap(dict, values);
         }
+
+    }
+
+    private class EntrySet extends AbstractSet<Entry<String, Float>> {
+        private class EntrySetIterator implements Iterator<Entry<String, Float>> {
+            private final Iterator<String> d_keyIter;
+
+            public EntrySetIterator() {
+                d_keyIter = d_keys.iterator();
+            }
+
+            @Override
+            public boolean hasNext() {
+                return d_keyIter.hasNext();
+            }
+
+            @Override
+            public Entry<String, Float> next() {
+                String key = d_keyIter.next();
+                int idx = d_keys.number(key) - 1;
+                return new SimpleEntry<String, Float>(key, d_values[idx]);
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            if (o == null)
+                return false;
+
+            if (!(o instanceof Entry))
+                return false;
+
+            Entry e = (Entry) o;
+
+            // Values are primitive and cannot be null.
+            if (e.getKey() == null || e.getKey() == null)
+                return false;
+
+            if (!(e.getKey() instanceof String) || !(e.getValue() instanceof Float))
+                return false;
+
+            String key = (String) e.getKey();
+            Float value = (Float) e.getValue();
+
+            int hash = d_keys.number(key);
+
+            // Does not contain the key.
+            if (hash == -1)
+                return false;
+
+            return d_values[hash - 1] == value.floatValue();
+
+        }
+
+        @Override
+        public boolean isEmpty()  {
+            return d_keys.isEmpty();
+        }
+
+        @Override
+        public Iterator<Entry<String, Float>> iterator() {
+            return new EntrySetIterator();
+        }
+
+        @Override
+        public int size() {
+            return d_keys.size();
+        }
     }
 
     private ImmutableStringFloatMap(PerfectHashDictionary keys, float[] values) {
@@ -82,17 +154,23 @@ public class ImmutableStringFloatMap implements Serializable {
         d_values = values;
     }
 
-    /**
-     * Check whether the map contains the given {@link String} as a
-     * key.
-     */
-    public boolean contains(String key) {
-        int hash = d_keys.number(key);
-        return hash != -1;
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean containsKey(Object o) {
+        return d_keys.contains(o);
+    }
+
+    @Override
+    public Set<Entry<String, Float>> entrySet() {
+        return new EntrySet();
     }
 
     /**
-     * Get the value associated with a key. Return a default value is it
+     * Get the value associated with a key, returning a default value is it
      * is not in the mapping.
      */
     public float getOrElse(String key, float defaultValue) {
@@ -103,11 +181,40 @@ public class ImmutableStringFloatMap implements Serializable {
         return d_values[hash - 1];
     }
 
+    @Override
+    public boolean isEmpty() {
+        return d_keys.isEmpty();
+    }
+
+    @Override
+    public Set<String> keySet() {
+        return d_keys;
+    }
+
+    @Override
+    public Float put(String k, Float v) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void putAll(Map<? extends String, ? extends Float> m) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Float remove(Object key) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int size() {
+        return d_keys.size();
+    }
+
     /**
      * Get an iterator over the keys in the mapping.
      */
-    public Iterator<String> keyIterator()
-    {
+    public Iterator<String> keyIterator() {
         return d_keys.iterator();
     }
 }

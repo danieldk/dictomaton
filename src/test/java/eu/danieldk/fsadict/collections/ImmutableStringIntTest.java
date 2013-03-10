@@ -39,10 +39,10 @@ public class ImmutableStringIntTest {
         ImmutableStringIntMap test = new ImmutableStringIntMap.Builder().putAll(d_check1).build();
 
         for (Map.Entry<String, Integer> entry : d_check1.entrySet())
-            Assert.assertTrue(test.contains(entry.getKey()));
+            Assert.assertTrue(test.containsKey(entry.getKey()));
 
         for (Map.Entry<String, Integer> entry : d_check2.entrySet())
-            Assert.assertFalse(test.contains(entry.getKey()));
+            Assert.assertFalse(test.containsKey(entry.getKey()));
 
     }
 
