@@ -20,22 +20,22 @@ import java.util.*;
 /**
  * A finite state dictionary. Dictionaries of this type can are constructed
  * using {@link eu.danieldk.fsadict.DictionaryBuilder#build()}.
- *
+ * <p/>
  * This class uses integers (int) for transition and state numbers.
  *
  * @author Daniel de Kok
  */
-class DictionaryIntIntImpl implements Dictionary {
-	private static final long serialVersionUID = 3199608511519213621L;
+class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
+    private static final long serialVersionUID = 3199608511519213621L;
 
-	// Offset in the transition table of the given state. E.g. d_stateOffsets[3] = 10
-	// means that state 3 starts at index 10 in the transition table.
-	protected final int[] d_stateOffsets;
+    // Offset in the transition table of the given state. E.g. d_stateOffsets[3] = 10
+    // means that state 3 starts at index 10 in the transition table.
+    protected final int[] d_stateOffsets;
 
-	// Note: we do not use an array of transition instances to represent the
-	//       transition table, since this would require an additional pointer
-	//       for each transition. Instead, we maintain the table as two parallel
-	//       arrays.
+    // Note: we do not use an array of transition instances to represent the
+    //       transition table, since this would require an additional pointer
+    //       for each transition. Instead, we maintain the table as two parallel
+    //       arrays.
 
     protected final char[] d_transitionChars;
     protected final int[] d_transtitionTo;
@@ -72,7 +72,7 @@ class DictionaryIntIntImpl implements Dictionary {
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        for (Object o: c)
+        for (Object o : c)
             if (!contains(o))
                 return false;
 
@@ -84,10 +84,10 @@ class DictionaryIntIntImpl implements Dictionary {
         return size() == 0;
     }
 
-	@Override
-	public Iterator<String> iterator() {
-		return new DictionaryIterator();
-	}
+    @Override
+    public Iterator<String> iterator() {
+        return new DictionaryIterator();
+    }
 
     @Override
     public boolean remove(Object o) {
@@ -105,8 +105,7 @@ class DictionaryIntIntImpl implements Dictionary {
     }
 
     @Override
-    public int size()
-    {
+    public int size() {
         return d_nSeqs;
     }
 
@@ -134,170 +133,167 @@ class DictionaryIntIntImpl implements Dictionary {
     }
 
     /**
-	 * Give the Graphviz dot representation of this automaton.
-	 * @return
-	 */
-	public String toDot()
-	{
-		StringBuilder dotBuilder = new StringBuilder();
+     * Give the Graphviz dot representation of this automaton.
+     *
+     * @return
+     */
+    public String toDot() {
+        StringBuilder dotBuilder = new StringBuilder();
 
-		dotBuilder.append("digraph G {\n");
+        dotBuilder.append("digraph G {\n");
 
-		for (int state = 0; state < d_stateOffsets.length; ++state)
-		{
-			for (int trans = d_stateOffsets[state]; trans < transitionsUpperBound(state); ++trans)
-				dotBuilder.append(String.format("%d -> %d [label=\"%c\"]\n",
-						state, d_transtitionTo[trans], d_transitionChars[trans]));
+        for (int state = 0; state < d_stateOffsets.length; ++state) {
+            for (int trans = d_stateOffsets[state]; trans < transitionsUpperBound(state); ++trans)
+                dotBuilder.append(String.format("%d -> %d [label=\"%c\"]\n",
+                        state, d_transtitionTo[trans], d_transitionChars[trans]));
 
-			if (d_finalStates.contains(state))
-				dotBuilder.append(String.format("%d [peripheries=2];\n", state));
-		}
+            if (d_finalStates.contains(state))
+                dotBuilder.append(String.format("%d [peripheries=2];\n", state));
+        }
 
-		dotBuilder.append("}");
+        dotBuilder.append("}");
 
-		return dotBuilder.toString();
-	}
+        return dotBuilder.toString();
+    }
 
-	private class DictionaryIterator implements Iterator<String>
-	{
+    private class DictionaryIterator implements Iterator<String> {
 
         private final Stack<StateStringPair> d_stack;
         private String d_nextSeq;
-		public DictionaryIterator()
-		{
-			d_stack = new Stack<StateStringPair>();
-			d_stack.push(new StateStringPair(0, ""));
-			d_nextSeq = null;
-		}
+        private int d_seqsRemaining;
 
-		@Override
-		public boolean hasNext() {
-			StateStringPair pair;
-			while (d_stack.size() != 0)
-			{
-				pair = d_stack.pop();
-				int state = pair.getState();
-				String string = pair.getString();
+        public DictionaryIterator() {
+            d_stack = new Stack<StateStringPair>();
+            d_stack.push(new StateStringPair(0, ""));
+            d_nextSeq = null;
+            d_seqsRemaining = d_nSeqs;
+        }
 
-				// Put states reachable through outgoing transitions on the stack.
-				for (int trans = transitionsUpperBound(state) - 1; trans >= d_stateOffsets[state]; --trans)
-					d_stack.push(new StateStringPair(d_transtitionTo[trans], string + d_transitionChars[trans]));
+        @Override
+        public boolean hasNext() {
+            if (d_seqsRemaining == 0)
+                return false;
 
-				if (d_finalStates.contains(state))
-				{
-					d_nextSeq = string;
-					return true;
-				}
-			}
+            return true;
+        }
 
-			return false;
-		}
+        @Override
+        public String next() {
+            if (d_seqsRemaining == 0)
+                throw new NoSuchElementException();
 
-		@Override
-		public String next() {
-			if (d_nextSeq == null)
-				throw new NoSuchElementException();
+            StateStringPair pair;
+            while (d_stack.size() != 0) {
+                pair = d_stack.pop();
+                int state = pair.getState();
+                String string = pair.getString();
 
-			return d_nextSeq;
-		}
+                // Put states reachable through outgoing transitions on the stack.
+                for (int trans = transitionsUpperBound(state) - 1; trans >= d_stateOffsets[state]; --trans)
+                    d_stack.push(new StateStringPair(d_transtitionTo[trans], string + d_transitionChars[trans]));
 
-		@Override
-		public void remove() {
-			throw new UnsupportedOperationException();
-		}
+                if (d_finalStates.contains(state)) {
+                    --d_seqsRemaining;
+                    return string;
+                }
+            }
+
+            // Impossible to reach.
+            throw new NoSuchElementException();
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
 
     }
-	private class StateStringPair
-	{
+
+    private class StateStringPair {
 
         private final int d_state;
         private final String d_string;
-		public StateStringPair(int state, String string)
-		{
-			d_state = state;
-			d_string = string;
-		}
 
-		public int getState() {
-			return d_state;
-		}
+        public StateStringPair(int state, String string) {
+            d_state = state;
+            d_string = string;
+        }
 
-		public String getString() {
-			return d_string;
-		}
+        public int getState() {
+            return d_state;
+        }
 
-	}
+        public String getString() {
+            return d_string;
+        }
 
-	/**
-	 * Construct a dictionary.
-	 *
-	 * @param stateOffsets Per-state offset in the transition table.
-	 * @param transitionChars Transition table (characters).
-	 * @param transitionTo Transition table (to-transitions).
-	 * @param finalStates Set of final states.
-	 */
-	protected DictionaryIntIntImpl(int[] stateOffsets, char[] transitionChars,
+    }
+
+    /**
+     * Construct a dictionary.
+     *
+     * @param stateOffsets    Per-state offset in the transition table.
+     * @param transitionChars Transition table (characters).
+     * @param transitionTo    Transition table (to-transitions).
+     * @param finalStates     Set of final states.
+     */
+    protected DictionaryIntIntImpl(int[] stateOffsets, char[] transitionChars,
                                    int[] transitionTo, Set<Integer> finalStates,
-                                   int nSeqs)
-	{
-		d_stateOffsets = stateOffsets;
-		d_transitionChars = transitionChars;
-		d_transtitionTo = transitionTo;
-		d_finalStates = finalStates;
+                                   int nSeqs) {
+        d_stateOffsets = stateOffsets;
+        d_transitionChars = transitionChars;
+        d_transtitionTo = transitionTo;
+        d_finalStates = finalStates;
         d_nSeqs = nSeqs;
-	}
+    }
 
-	/**
-	 * Calculate the upper bound for this state in the transition table.
-	 *
-	 * @param state
-	 * @return
-	 */
-	protected int transitionsUpperBound(int state)
-	{
-		return state + 1 < d_stateOffsets.length ? d_stateOffsets[state + 1] :
-			d_transitionChars.length;
-	}
+    /**
+     * Calculate the upper bound for this state in the transition table.
+     *
+     * @param state
+     * @return
+     */
+    protected int transitionsUpperBound(int state) {
+        return state + 1 < d_stateOffsets.length ? d_stateOffsets[state + 1] :
+                d_transitionChars.length;
+    }
 
-	/**
-	 * Find the transition for the given character in the given state. Since the
-	 * transitions are ordered by character, we can use a binary search.
-	 *
-	 * @param state
-	 * @param c
-	 * @return
-	 */
-	protected int findTransition(int state, char c)
-	{
-		int start = d_stateOffsets[state];
-		int end = transitionsUpperBound(state) - 1;
+    /**
+     * Find the transition for the given character in the given state. Since the
+     * transitions are ordered by character, we can use a binary search.
+     *
+     * @param state
+     * @param c
+     * @return
+     */
+    protected int findTransition(int state, char c) {
+        int start = d_stateOffsets[state];
+        int end = transitionsUpperBound(state) - 1;
 
-		// Binary search
-		while (end >= start)
-		{
-			int mid = start + ((end - start) / 2);
+        // Binary search
+        while (end >= start) {
+            int mid = start + ((end - start) / 2);
 
-			if (d_transitionChars[mid] > c)
-				end = mid - 1;
-			else if (d_transitionChars[mid] < c)
-				start = mid + 1;
-			else
-				return mid;
-		}
+            if (d_transitionChars[mid] > c)
+                end = mid - 1;
+            else if (d_transitionChars[mid] < c)
+                start = mid + 1;
+            else
+                return mid;
+        }
 
-		return -1;
-	}
+        return -1;
+    }
 
     /**
      * Check whether the dictionary contains the given sequence.
+     *
      * @param seq
      * @return
      */
-    private boolean containsSeq(String seq)
-    {
+    private boolean containsSeq(String seq) {
         int state = 0;
-        for (int i = 0; i < seq.length(); i++)
-        {
+        for (int i = 0; i < seq.length(); i++) {
             state = next(state, seq.charAt(i));
 
             if (state == -1)
@@ -307,21 +303,20 @@ class DictionaryIntIntImpl implements Dictionary {
         return d_finalStates.contains(state);
     }
 
-	/**
-	 * Get the next state, given a character.
-	 *
-	 * @param state
-	 * @param c
-	 * @return
-	 */
-	private int next(int state, char c)
-	{
-		int trans = findTransition(state, c);
+    /**
+     * Get the next state, given a character.
+     *
+     * @param state
+     * @param c
+     * @return
+     */
+    private int next(int state, char c) {
+        int trans = findTransition(state, c);
 
-		if (trans == -1)
-			return -1;
+        if (trans == -1)
+            return -1;
 
-		return d_transtitionTo[trans];
-	}
+        return d_transtitionTo[trans];
+    }
 
 }
