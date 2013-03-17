@@ -15,6 +15,7 @@
 package eu.danieldk.fsadict;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -120,6 +121,14 @@ public class DictionaryTest {
 			listFromIteration.add(seq);
 		Assert.assertEquals(d_words1, listFromIteration);
 	}
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void iteratorRemoveTest()
+    {
+        Iterator<String> iter = d_dict.iterator();
+        if (iter.hasNext())
+            iter.remove();
+    }
 
     @Test(expected = UnsupportedOperationException.class)
     public void removeTest()
