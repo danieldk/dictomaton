@@ -30,7 +30,7 @@ public class DictionaryBenchmarks extends AbstractBenchmark {
     private List<String> d_words1;
     private List<String> d_words2;
     private Dictionary d_dict;
-    private static SortedSet d_wordsLong;
+    private static SortedSet<String> d_wordsLong;
     private List<String> d_wordsLong2;
 
 

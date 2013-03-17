@@ -159,13 +159,11 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
     private class DictionaryIterator implements Iterator<String> {
 
         private final Stack<StateStringPair> d_stack;
-        private String d_nextSeq;
         private int d_seqsRemaining;
 
         public DictionaryIterator() {
             d_stack = new Stack<StateStringPair>();
             d_stack.push(new StateStringPair(0, ""));
-            d_nextSeq = null;
             d_seqsRemaining = d_nSeqs;
         }
 
