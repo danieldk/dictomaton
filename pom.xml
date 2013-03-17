@@ -34,7 +34,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <groups>eu.danieldk.fsadict.categories.Tests</groups>
+        <junit.groups>eu.danieldk.fsadict.categories.Tests</junit.groups>
     </properties>
 
     <build>
@@ -56,7 +56,7 @@
                         <include>**/*Test.java</include>
                         <include>**/*Benchmark.java</include>
                     </includes>
-                    <groups>${groups}</groups>
+                    <groups>${junit.groups}</groups>
                 </configuration>
             </plugin>
         </plugins>

@@ -19,4 +19,4 @@ for compact and fast storage.
 Benchmarks are in a different test group than normal unit tests. You can run
 benchmarks via Maven, adding the Benchmarks group:
 
-    mvn test -Dgroups=eu.danieldk.fsadict.categories.Benchmarks
+    mvn test -Djunit.groups=eu.danieldk.fsadict.categories.Benchmarks
