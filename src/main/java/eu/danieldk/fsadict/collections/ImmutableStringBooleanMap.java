@@ -149,6 +149,19 @@ public class ImmutableStringBooleanMap extends AbstractMap<String, Boolean> impl
         }
     }
 
+
+    private class BooleanArrayList extends AbstractList<Boolean> {
+        @Override
+        public Boolean get(int index) {
+            return d_values[index];
+        }
+
+        @Override
+        public int size() {
+            return d_values.length;
+        }
+    }
+
     private ImmutableStringBooleanMap(PerfectHashDictionary keys, boolean[] values) {
         d_keys = keys;
         d_values = values;
@@ -216,5 +229,10 @@ public class ImmutableStringBooleanMap extends AbstractMap<String, Boolean> impl
      */
     public Iterator<String> keyIterator() {
         return d_keys.iterator();
+    }
+
+    @Override
+    public Collection<Boolean> values() {
+        return new BooleanArrayList();
     }
 }

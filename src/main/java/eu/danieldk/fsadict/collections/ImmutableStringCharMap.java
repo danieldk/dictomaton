@@ -149,6 +149,19 @@ public class ImmutableStringCharMap extends AbstractMap<String, Character> imple
         }
     }
 
+
+    private class CharArrayList extends AbstractList<Character> {
+        @Override
+        public Character get(int index) {
+            return d_values[index];
+        }
+
+        @Override
+        public int size() {
+            return d_values.length;
+        }
+    }
+
     private ImmutableStringCharMap(PerfectHashDictionary keys, char[] values) {
         d_keys = keys;
         d_values = values;
@@ -216,5 +229,10 @@ public class ImmutableStringCharMap extends AbstractMap<String, Character> imple
      */
     public Iterator<String> keyIterator() {
         return d_keys.iterator();
+    }
+
+    @Override
+    public Collection<Character> values() {
+        return new CharArrayList();
     }
 }

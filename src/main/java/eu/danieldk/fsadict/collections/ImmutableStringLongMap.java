@@ -149,6 +149,19 @@ public class ImmutableStringLongMap extends AbstractMap<String, Long> implements
         }
     }
 
+
+    private class LongArrayList extends AbstractList<Long> {
+        @Override
+        public Long get(int index) {
+            return d_values[index];
+        }
+
+        @Override
+        public int size() {
+            return d_values.length;
+        }
+    }
+
     private ImmutableStringLongMap(PerfectHashDictionary keys, long[] values) {
         d_keys = keys;
         d_values = values;
@@ -216,5 +229,10 @@ public class ImmutableStringLongMap extends AbstractMap<String, Long> implements
      */
     public Iterator<String> keyIterator() {
         return d_keys.iterator();
+    }
+
+    @Override
+    public Collection<Long> values() {
+        return new LongArrayList();
     }
 }

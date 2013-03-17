@@ -149,6 +149,19 @@ public class ImmutableStringDoubleMap extends AbstractMap<String, Double> implem
         }
     }
 
+
+    private class DoubleArrayList extends AbstractList<Double> {
+        @Override
+        public Double get(int index) {
+            return d_values[index];
+        }
+
+        @Override
+        public int size() {
+            return d_values.length;
+        }
+    }
+
     private ImmutableStringDoubleMap(PerfectHashDictionary keys, double[] values) {
         d_keys = keys;
         d_values = values;
@@ -216,5 +229,10 @@ public class ImmutableStringDoubleMap extends AbstractMap<String, Double> implem
      */
     public Iterator<String> keyIterator() {
         return d_keys.iterator();
+    }
+
+    @Override
+    public Collection<Double> values() {
+        return new DoubleArrayList();
     }
 }

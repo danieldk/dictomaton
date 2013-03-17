@@ -149,6 +149,19 @@ public class ImmutableStringFloatMap extends AbstractMap<String, Float> implemen
         }
     }
 
+
+    private class FloatArrayList extends AbstractList<Float> {
+        @Override
+        public Float get(int index) {
+            return d_values[index];
+        }
+
+        @Override
+        public int size() {
+            return d_values.length;
+        }
+    }
+
     private ImmutableStringFloatMap(PerfectHashDictionary keys, float[] values) {
         d_keys = keys;
         d_values = values;
@@ -216,5 +229,10 @@ public class ImmutableStringFloatMap extends AbstractMap<String, Float> implemen
      */
     public Iterator<String> keyIterator() {
         return d_keys.iterator();
+    }
+
+    @Override
+    public Collection<Float> values() {
+        return new FloatArrayList();
     }
 }

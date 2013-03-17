@@ -149,6 +149,19 @@ public class ImmutableStringShortMap extends AbstractMap<String, Short> implemen
         }
     }
 
+
+    private class ShortArrayList extends AbstractList<Short> {
+        @Override
+        public Short get(int index) {
+            return d_values[index];
+        }
+
+        @Override
+        public int size() {
+            return d_values.length;
+        }
+    }
+
     private ImmutableStringShortMap(PerfectHashDictionary keys, short[] values) {
         d_keys = keys;
         d_values = values;
@@ -216,5 +229,10 @@ public class ImmutableStringShortMap extends AbstractMap<String, Short> implemen
      */
     public Iterator<String> keyIterator() {
         return d_keys.iterator();
+    }
+
+    @Override
+    public Collection<Short> values() {
+        return new ShortArrayList();
     }
 }

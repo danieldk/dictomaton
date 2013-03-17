@@ -149,6 +149,19 @@ public class ImmutableStringIntMap extends AbstractMap<String, Integer> implemen
         }
     }
 
+
+    private class IntArrayList extends AbstractList<Integer> {
+        @Override
+        public Integer get(int index) {
+            return d_values[index];
+        }
+
+        @Override
+        public int size() {
+            return d_values.length;
+        }
+    }
+
     private ImmutableStringIntMap(PerfectHashDictionary keys, int[] values) {
         d_keys = keys;
         d_values = values;
@@ -216,5 +229,10 @@ public class ImmutableStringIntMap extends AbstractMap<String, Integer> implemen
      */
     public Iterator<String> keyIterator() {
         return d_keys.iterator();
+    }
+
+    @Override
+    public Collection<Integer> values() {
+        return new IntArrayList();
     }
 }

@@ -149,6 +149,19 @@ public class ImmutableStringByteMap extends AbstractMap<String, Byte> implements
         }
     }
 
+
+    private class ByteArrayList extends AbstractList<Byte> {
+        @Override
+        public Byte get(int index) {
+            return d_values[index];
+        }
+
+        @Override
+        public int size() {
+            return d_values.length;
+        }
+    }
+
     private ImmutableStringByteMap(PerfectHashDictionary keys, byte[] values) {
         d_keys = keys;
         d_values = values;
@@ -216,5 +229,10 @@ public class ImmutableStringByteMap extends AbstractMap<String, Byte> implements
      */
     public Iterator<String> keyIterator() {
         return d_keys.iterator();
+    }
+
+    @Override
+    public Collection<Byte> values() {
+        return new ByteArrayList();
     }
 }
