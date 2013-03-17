@@ -18,102 +18,93 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 class State {
-	private final TreeMap<Character, State> transitions;
-	private boolean d_final;
+    private final TreeMap<Character, State> transitions;
+    private boolean d_final;
     private boolean d_recomputeHash;
     private int d_cachedHash;
 
-	public State()
-	{
-		transitions = new TreeMap<Character, State>();
-		d_final = false;
+    public State() {
+        transitions = new TreeMap<Character, State>();
+        d_final = false;
         d_recomputeHash = true;
-	}
+    }
 
-	public void addTransition(Character c, State s)
-	{
-		transitions.put(c, s);
+    public void addTransition(Character c, State s) {
+        transitions.put(c, s);
         d_recomputeHash = true;
-	}
+    }
 
-	@Override
-	public int hashCode() {
+    @Override
+    public int hashCode() {
         if (!d_recomputeHash)
             return d_cachedHash;
 
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (d_final ? 1231 : 1237);
-		result = prime * result
-				+ ((transitions == null) ? 0 : transitions.hashCode());
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (d_final ? 1231 : 1237);
+        result = prime * result
+                + ((transitions == null) ? 0 : transitions.hashCode());
 
         d_recomputeHash = false;
         d_cachedHash = result;
 
-		return result;
-	}
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
 
-		if (obj == null)
-			return false;
+        if (obj == null)
+            return false;
 
-		if (getClass() != obj.getClass())
-			return false;
+        if (getClass() != obj.getClass())
+            return false;
 
-		State other = (State) obj;
-		if (d_final != other.d_final)
-			return false;
-		if (transitions == null) {
-			if (other.transitions != null)
-				return false;
-		} else if (!transitions.equals(other.transitions))
-			return false;
-		return true;
-	}
+        State other = (State) obj;
+        if (d_final != other.d_final)
+            return false;
+        if (transitions == null) {
+            if (other.transitions != null)
+                return false;
+        } else if (!transitions.equals(other.transitions))
+            return false;
+        return true;
+    }
 
-	public boolean isFinal()
-	{
-		return d_final;
-	}
+    public boolean isFinal() {
+        return d_final;
+    }
 
-	public boolean hasOutgoing()
-	{
-		return transitions.size() != 0;
-	}
+    public boolean hasOutgoing() {
+        return transitions.size() != 0;
+    }
 
-	public State lastState()
-	{
+    public State lastState() {
         Entry<Character, State> last = transitions.lastEntry();
         if (last == null)
             return null;
 
-		return last.getValue();
-	}
+        return last.getValue();
+    }
 
-	public void setLastState(State s)
-	{
-		Entry<Character, State> entry = transitions.lastEntry();
-		transitions.put(entry.getKey(), s);
+    public void setLastState(State s) {
+        Entry<Character, State> entry = transitions.lastEntry();
+        transitions.put(entry.getKey(), s);
         d_recomputeHash = true;
-	}
+    }
 
-	public TreeMap<Character, State> transitions()
-	{
-		return transitions;
-	}
+    public TreeMap<Character, State> transitions() {
+        return transitions;
+    }
 
-	public State move(Character c)
-	{
-		return transitions.get(c);
-	}
+    public State move(Character c) {
+        return transitions.get(c);
+    }
 
-	void setFinal(boolean finalState)
-	{
-		d_final = finalState;
+    void setFinal(boolean finalState) {
+        d_final = finalState;
         d_recomputeHash = true;
-	}
+    }
 }

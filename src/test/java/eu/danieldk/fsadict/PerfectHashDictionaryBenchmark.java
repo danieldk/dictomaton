@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.SortedSet;
 
 @Category(Benchmarks.class)

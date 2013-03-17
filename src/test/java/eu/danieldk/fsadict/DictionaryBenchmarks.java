@@ -15,7 +15,6 @@
 package eu.danieldk.fsadict;
 
 import com.carrotsearch.junitbenchmarks.AbstractBenchmark;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -24,7 +23,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class DictionaryBenchmarks extends AbstractBenchmark {
     private List<String> d_words1;
@@ -35,8 +36,7 @@ public class DictionaryBenchmarks extends AbstractBenchmark {
 
 
     @BeforeClass
-    public static void initializeExpensive() throws IOException
-    {
+    public static void initializeExpensive() throws IOException {
         d_wordsLong = loadWordList("eu/danieldk/fsadict/web2");
     }
 

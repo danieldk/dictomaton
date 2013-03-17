@@ -14,149 +14,133 @@
 
 package eu.danieldk.fsadict;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import eu.danieldk.fsadict.categories.Tests;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 @Category(Tests.class)
 public class DictionaryTest {
-	private List<String> d_words1;
-	private List<String> d_words2;
-	private Dictionary d_dict;
+    private List<String> d_words1;
+    private List<String> d_words2;
+    private Dictionary d_dict;
 
-	@SuppressWarnings("serial")
-	@Before
-	public void initialize() throws DictionaryBuilderException
-	{
-		d_words1 = new ArrayList<String>(){{
-			add("al");
-			add("alleen");
-			add("avonden");
-			add("zeemeeuw");
-			add("zeker");
-			add("zeven");
-			add("zoeven");
-		}};
+    @SuppressWarnings("serial")
+    @Before
+    public void initialize() throws DictionaryBuilderException {
+        d_words1 = new ArrayList<String>() {{
+            add("al");
+            add("alleen");
+            add("avonden");
+            add("zeemeeuw");
+            add("zeker");
+            add("zeven");
+            add("zoeven");
+        }};
 
-		d_words2 = new ArrayList<String>(){{
-			add("als");
-			add("allen");
-			add("avond");
-			add("zeemeeuwen");
-			add("zeer");
-			add("zepen");
-			add("zoef");
-		}};
+        d_words2 = new ArrayList<String>() {{
+            add("als");
+            add("allen");
+            add("avond");
+            add("zeemeeuwen");
+            add("zeer");
+            add("zepen");
+            add("zoef");
+        }};
 
-		d_dict = new DictionaryBuilder().addAll(d_words1).build();
-	}
+        d_dict = new DictionaryBuilder().addAll(d_words1).build();
+    }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void addTest()
-    {
+    public void addTest() {
         d_dict.add("foo");
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void addAllTest()
-    {
+    public void addAllTest() {
         d_dict.addAll(d_words2);
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void clearTest()
-    {
+    public void clearTest() {
         d_dict.clear();
     }
 
-	@Test
-	public void containsTest()
-	{
-		for (String word: d_words1)
-			Assert.assertTrue(d_dict.contains(word));
-	}
+    @Test
+    public void containsTest() {
+        for (String word : d_words1)
+            Assert.assertTrue(d_dict.contains(word));
+    }
 
     @Test
-    public void containsAllTest()
-    {
+    public void containsAllTest() {
         Assert.assertTrue(d_dict.containsAll(d_words1));
         Assert.assertFalse(d_dict.containsAll(d_words2));
     }
 
-	@Test
-	public void doesNotContainWordsTest()
-	{
-		for (String word: d_words2)
-			Assert.assertTrue(!d_dict.contains(word));
-	}
+    @Test
+    public void doesNotContainWordsTest() {
+        for (String word : d_words2)
+            Assert.assertTrue(!d_dict.contains(word));
+    }
 
     @Test
-    public void emptyTest()
-    {
+    public void emptyTest() {
         Dictionary dict = new DictionaryBuilder().build();
         Assert.assertFalse(dict.contains("foo"));
         Assert.assertEquals(0, dict.size());
     }
 
     @Test
-    public void isEmptyTest()
-    {
+    public void isEmptyTest() {
         Assert.assertFalse(d_dict.isEmpty());
         Dictionary dict = new DictionaryBuilder().build();
         Assert.assertTrue(dict.isEmpty());
     }
 
-	@Test
-	public void iterationTest()
-	{
-		List<CharSequence> listFromIteration = new LinkedList<CharSequence>();
-		for (CharSequence seq: d_dict)
-			listFromIteration.add(seq);
-		Assert.assertEquals(d_words1, listFromIteration);
-	}
+    @Test
+    public void iterationTest() {
+        List<CharSequence> listFromIteration = new LinkedList<CharSequence>();
+        for (CharSequence seq : d_dict)
+            listFromIteration.add(seq);
+        Assert.assertEquals(d_words1, listFromIteration);
+    }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void iteratorRemoveTest()
-    {
+    public void iteratorRemoveTest() {
         Iterator<String> iter = d_dict.iterator();
         if (iter.hasNext())
             iter.remove();
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void removeTest()
-    {
+    public void removeTest() {
         d_dict.remove("foo");
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void removeAllTest()
-    {
+    public void removeAllTest() {
         d_dict.removeAll(d_words1);
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void retainAllTest()
-    {
+    public void retainAllTest() {
         d_dict.retainAll(d_words1);
     }
 
     @Test
-    public void sizeTest()
-    {
+    public void sizeTest() {
         Assert.assertEquals(7, d_dict.size());
     }
 
     @Test
-    public void toArrayTest()
-    {
+    public void toArrayTest() {
         Object[] check = d_words1.toArray();
         Assert.assertArrayEquals(check, d_dict.toArray());
 

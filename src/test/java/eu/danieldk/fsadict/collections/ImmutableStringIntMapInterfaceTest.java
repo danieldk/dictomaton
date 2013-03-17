@@ -28,12 +28,12 @@ public class ImmutableStringIntMapInterfaceTest extends MapInterfaceTest<String,
     @Override
     protected Map<String, Integer> makePopulatedMap() throws UnsupportedOperationException {
         try {
-        return new ImmutableStringIntMap.Builder()
-                .put("Miles Davis", 9)
-                .put("John Zorn", 9)
-                .put("Thelonious Monk", 8)
-                .put("The White Stripes", 8)
-                .put("Canned Heat", 3).build();
+            return new ImmutableStringIntMap.Builder()
+                    .put("Miles Davis", 9)
+                    .put("John Zorn", 9)
+                    .put("Thelonious Monk", 8)
+                    .put("The White Stripes", 8)
+                    .put("Canned Heat", 3).build();
         } catch (DictionaryBuilderException e) {
             throw new UnsupportedOperationException();
         }

@@ -16,15 +16,14 @@ package eu.danieldk.fsadict;
 
 /**
  * Exception indicating an error in the dictionary construction process.
- * 
+ *
  * @author Daniel de Kok
  */
 public class DictionaryBuilderException extends Exception {
-	private static final long serialVersionUID = -7158239181823665910L;
+    private static final long serialVersionUID = -7158239181823665910L;
 
-	public DictionaryBuilderException(String msg)
-	{
-		super(msg);
-	}
+    public DictionaryBuilderException(String msg) {
+        super(msg);
+    }
 
 }

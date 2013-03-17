@@ -14,51 +14,49 @@
 
 package eu.danieldk.fsadict;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import eu.danieldk.fsadict.categories.Tests;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Category(Tests.class)
 public class PerfectHashDictionaryTest {
-	private List<String> d_words1;
-	private List<String> d_words2;
-	private PerfectHashDictionary d_dict;
-	
-	@SuppressWarnings("serial")
-	@Before
-	public void initialize() throws DictionaryBuilderException
-	{
-		d_words1 = new ArrayList<String>(){{
-			add("al");
-			add("alleen");
-			add("avonden");
-			add("zeemeeuw");
-			add("zeker");
-			add("zeven");
-			add("zoeven");
-		}};
-		
-		d_words2 = new ArrayList<String>(){{
-			add("als");
-			add("allen");
-			add("avond");
-			add("zeemeeuwen");
-			add("zeer");
-			add("zepen");
-			add("zoef");
-		}};
+    private List<String> d_words1;
+    private List<String> d_words2;
+    private PerfectHashDictionary d_dict;
 
-		d_dict = new DictionaryBuilder().addAll(d_words1).buildPerfectHash();
-	}
+    @SuppressWarnings("serial")
+    @Before
+    public void initialize() throws DictionaryBuilderException {
+        d_words1 = new ArrayList<String>() {{
+            add("al");
+            add("alleen");
+            add("avonden");
+            add("zeemeeuw");
+            add("zeker");
+            add("zeven");
+            add("zoeven");
+        }};
+
+        d_words2 = new ArrayList<String>() {{
+            add("als");
+            add("allen");
+            add("avond");
+            add("zeemeeuwen");
+            add("zeer");
+            add("zepen");
+            add("zoef");
+        }};
+
+        d_dict = new DictionaryBuilder().addAll(d_words1).buildPerfectHash();
+    }
 
     @Test
-    public void emptyTest()
-    {
+    public void emptyTest() {
         PerfectHashDictionary dict = new DictionaryBuilder().buildPerfectHash();
         Assert.assertEquals(-1, dict.number("foo"));
         Assert.assertNull(dict.sequence(1));
@@ -66,32 +64,28 @@ public class PerfectHashDictionaryTest {
     }
 
     @Test
-    public void sizeTest()
-    {
+    public void sizeTest() {
         Assert.assertEquals(7, d_dict.size());
     }
 
-	@Test
-	public void toNumberTest()
-	{
-		for (int i = 0; i < d_words1.size(); i++)
-			Assert.assertEquals(i + 1, d_dict.number(d_words1.get(i)));
-		
-		for (int i = 0; i < d_words2.size(); i++)
-			Assert.assertEquals(-1, d_dict.number(d_words2.get(i)));
-	}
-	
-	@Test
-	public void toWordTest()
-	{
-		for (int i = 0; i < d_words1.size(); i++)
-			Assert.assertEquals(d_words1.get(i), d_dict.sequence(i + 1));
-	}
-	
-	@Test
-	public void unknownHashTest()
-	{
-		Assert.assertNull(d_dict.sequence(0));
-		Assert.assertNull(d_dict.sequence(d_words1.size() + 1));
-	}
+    @Test
+    public void toNumberTest() {
+        for (int i = 0; i < d_words1.size(); i++)
+            Assert.assertEquals(i + 1, d_dict.number(d_words1.get(i)));
+
+        for (int i = 0; i < d_words2.size(); i++)
+            Assert.assertEquals(-1, d_dict.number(d_words2.get(i)));
+    }
+
+    @Test
+    public void toWordTest() {
+        for (int i = 0; i < d_words1.size(); i++)
+            Assert.assertEquals(d_words1.get(i), d_dict.sequence(i + 1));
+    }
+
+    @Test
+    public void unknownHashTest() {
+        Assert.assertNull(d_dict.sequence(0));
+        Assert.assertNull(d_dict.sequence(d_words1.size() + 1));
+    }
 }
