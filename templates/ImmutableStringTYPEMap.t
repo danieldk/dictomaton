@@ -149,6 +149,19 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
         }
     }
 
+
+    private class ##TYPE_NAME##ArrayList extends AbstractList<##BOXED_TYPE##> {
+        @Override
+        public ##BOXED_TYPE## get(int index) {
+            return d_values[index];
+        }
+
+        @Override
+        public int size() {
+            return d_values.length;
+        }
+    }
+
     private ImmutableString##TYPE_NAME##Map(PerfectHashDictionary keys, ##UNBOXED_TYPE##[] values) {
         d_keys = keys;
         d_values = values;
@@ -216,5 +229,10 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
      */
     public Iterator<String> keyIterator() {
         return d_keys.iterator();
+    }
+
+    @Override
+    public Collection<##BOXED_TYPE##> values() {
+        return new ##TYPE_NAME##ArrayList();
     }
 }
