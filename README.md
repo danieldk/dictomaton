@@ -29,7 +29,7 @@ benchmarks via Maven, adding the Benchmarks group:
  * **0.0.3**: add ImmutableStringStringMap, wherein keys are also stored
    in an automaton.
  * **0.0.4**: generic object keys.
- * **1.0.0**: first stabl release.
+ * **1.0.0**: first stable release.
 
 Plans for 1.2.0: use short-based arrays for small automata. Perhaps an
 explicit, fast, and compact data storage format as an alternative to Java
