@@ -28,20 +28,9 @@ public class DictionaryBuilderTest {
         builder.buildPerfectHash();
     }
 
-    @Test(expected = DictionaryBuilderException.class)
-    public void incorrectOrderTest() throws DictionaryBuilderException {
-        DictionaryBuilder builder = new DictionaryBuilder().add("ziezo").add("oeps");
-    }
-
-    @Test(expected = DictionaryBuilderException.class)
-    public void addToFinalizedTest() throws DictionaryBuilderException {
-        DictionaryBuilder builder = new DictionaryBuilder().add("oeps");
-        builder.toDot();
-        builder.add("oeps");
-    }
 
     @Test
-    public void testDot() throws DictionaryBuilderException {
+    public void orderedTest() throws DictionaryBuilderException {
         DictionaryBuilder builder = new DictionaryBuilder().add("al").add("alleen").add("avonden").add("zeemeeuw")
                 .add("zeker").add("zeven").add("zoeven");
 
@@ -56,4 +45,28 @@ public class DictionaryBuilderTest {
 
         Assert.assertEquals(check, builder.toDot().replace('\n', ' '));
     }
+
+    @Test
+    public void unorderedTest() throws DictionaryBuilderException {
+        DictionaryBuilder builder = new DictionaryBuilder().add("zeven").add("alleen").add("avonden").add("al")
+                .add("zeker").add("zeemeeuw").add("zoeven");
+
+        String check = "digraph G { 0 -> 1 [label=\"a\"]; 0 -> 2 [label=\"z\"]; 1 -> 3 [label=\"l\"]; " +
+                "1 -> 4 [label=\"v\"]; 2 -> 5 [label=\"e\"]; 2 -> 6 [label=\"o\"]; 3 [peripheries=2]; " +
+                "3 -> 7 [label=\"l\"]; 4 -> 8 [label=\"o\"]; 5 -> 9 [label=\"e\"]; 5 -> 10 [label=\"k\"]; " +
+                "5 -> 11 [label=\"v\"]; 6 -> 12 [label=\"e\"]; 7 -> 11 [label=\"e\"]; 8 -> 13 [label=\"n\"]; " +
+                "9 -> 14 [label=\"m\"]; 10 -> 15 [label=\"e\"]; 11 -> 16 [label=\"e\"]; 12 -> 11 [label=\"v\"]; " +
+                "13 -> 11 [label=\"d\"]; 14 -> 17 [label=\"e\"]; 15 -> 18 [label=\"r\"]; 16 -> 18 [label=\"n\"]; " +
+                "17 -> 19 [label=\"e\"]; 18 [peripheries=2]; 19 -> 20 [label=\"u\"]; 20 -> 18 [label=\"w\"]; }";
+
+        Assert.assertEquals(check, builder.toDot().replace('\n', ' '));
+    }
+
+    @Test
+    public void sizeTest() throws DictionaryBuilderException {
+        DictionaryBuilder builder = new DictionaryBuilder().add("koe").add("koekjes").add("koe");
+
+        Assert.assertEquals(2, builder.size());
+    }
+
 }

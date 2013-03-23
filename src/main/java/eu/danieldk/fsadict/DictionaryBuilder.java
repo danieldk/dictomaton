@@ -28,12 +28,11 @@ import java.util.Map.Entry;
  * <ul>
  * <li>Create an instance of this class.</li>
  * <li>Add character sequences in lexicographic order using {@link DictionaryBuilder#add(String)}.</li>
- * <li>Construct the automaton with {@link DictionaryBuilder#build()} or
- * {@link DictionaryBuilder#buildPerfectHash()}.</li>
+ * <li>Construct the automaton with {@link DictionaryBuilder#build()} or {@link DictionaryBuilder#buildPerfectHash()}.</li>
  * </ul>
  * <p/>
- * Construction of the automaton finalizes the build process - it is not possible to add
- * new character sequences afterwards.
+ * Construction of the automaton finalizes the build process - it is not possible to add new character sequences
+ * afterwards.
  * <p/>
  * The following construction algorithm is used:
  * </p>
@@ -43,11 +42,9 @@ import java.util.Map.Entry;
  * @author Daniel de Kok
  */
 public class DictionaryBuilder {
-    private final State d_startState;
+    private State d_startState;
     private final Map<State, State> d_register;
-    private String d_prevSeq;
     private int d_nSeqs;
-    private boolean d_finalized;
 
     /**
      * Construct a {@link DictionaryBuilder}.
@@ -56,7 +53,6 @@ public class DictionaryBuilder {
         d_startState = new State();
         d_register = new HashMap<State, State>();
         d_nSeqs = 0;
-        d_finalized = false;
     }
 
     /**
@@ -65,29 +61,19 @@ public class DictionaryBuilder {
      * @param seq The sequence.
      */
     public DictionaryBuilder add(String seq) throws DictionaryBuilderException {
-        if (d_finalized)
-            throw new DictionaryBuilderException("Cannot add a sequence to a finalized DictionaryBuilder.");
+        if (contains(seq))
+            return this;
 
-        if (d_prevSeq != null && d_prevSeq.compareTo(seq) >= 0)
-            throw new DictionaryBuilderException(String.format("Sequences are not added in lexicographic order: %s %s", d_prevSeq, seq));
+        // New start state.
+        State clonedStart = d_startState.clone();
 
-        d_prevSeq = seq;
+        createCloneAndQueueStates(seq, clonedStart);
 
-        // Traverse across the shared prefix.
-        int i = 0;
-        State curState = d_startState;
-        for (; i < seq.length(); i++) {
-            State nextState = curState.move(seq.charAt(i));
-            if (nextState != null)
-                curState = nextState;
-            else
-                break;
-        }
+        removeUnreachableStates(seq, clonedStart);
 
-        if (curState.hasOutgoing())
-            replaceOrRegister(curState);
+        d_startState = clonedStart;
 
-        addSuffix(curState, seq.substring(i));
+        replaceOrRegister(d_startState, seq);
 
         ++d_nSeqs;
 
@@ -108,7 +94,7 @@ public class DictionaryBuilder {
     }
 
     /**
-     * Create a dictionary automaton. This also finalizes the {@link DictionaryBuilder}.
+     * Create a dictionary automaton.
      *
      * @return A finite state dictionary.
      */
@@ -125,22 +111,89 @@ public class DictionaryBuilder {
         return (PerfectHashDictionary) build(true);
     }
 
-    private void finalizeDictionary() {
-        if (!d_finalized) {
-            replaceOrRegister(d_startState);
-            d_finalized = true;
+    /**
+     * Check if the sequence is already in the automaton.
+     *
+     * @param seq The sequence.
+     * @return <tt>true</tt> if the sequence is in the automaton, <tt>false</tt> otherwise.
+     */
+    private boolean contains(String seq) {
+        State curState = d_startState;
+        for (int i = 0; i < seq.length(); ++i)
+            if ((curState = curState.move(seq.charAt(i))) == null)
+                return false;
+
+        return curState.isFinal();
+    }
+
+    private void createCloneAndQueueStates(String seq, State clonedStart) {
+        State last = clonedStart;
+        int i = 0;
+        for (; i < seq.length(); i++) {
+            State nextState = last.move(seq.charAt(i));
+            if (nextState == null)
+                break;
+
+            // Replace transition to transition to the new cloned state.
+            nextState = nextState.clone();
+            last.addTransition(seq.charAt(i), nextState);
+
+            last = nextState;
         }
+
+        addSuffix(last, seq.substring(i));
+    }
+
+    private Set<State> getReachableStates(State start) {
+        Queue<State> stateQueue = new LinkedList<State>();
+        stateQueue.add(start);
+
+        Set<State> reachableStates = new HashSet<State>();
+        while (!stateQueue.isEmpty()) {
+            State s = stateQueue.poll();
+            if (!reachableStates.contains(s)) {
+                reachableStates.add(s);
+                stateQueue.addAll(s.transitions().values());
+            }
+        }
+
+        return reachableStates;
     }
 
     /**
-     * Obtain a Graphviz dot representation of the automaton. This finalizes the
-     * {@link DictionaryBuilder}.
+     * Remove unreachable states from the automaton.
+     *
+     * @param seq         The sequence being inserted.
+     * @param clonedStart The new (cloned) start state.
+     */
+    private void removeUnreachableStates(String seq, State clonedStart) {
+        State current = d_startState;
+        Set<State> reachable = getReachableStates(clonedStart);
+
+        for (int i = 0; i < seq.length() && current != null && !reachable.contains(current); ++i) {
+            d_register.remove(current);
+            current = current.move(seq.charAt(i));
+        }
+
+        if (!reachable.contains(current))
+            d_register.remove(current);
+    }
+
+    /**
+     * Get the number of sequences in the automaton builder.
+     *
+     * @return The number of sequences.
+     */
+    public int size() {
+        return d_nSeqs;
+    }
+
+    /**
+     * Obtain a Graphviz dot representation of the automaton. This finalizes the {@link DictionaryBuilder}.
      *
      * @return Dot representation of the automaton.
      */
     public String toDot() {
-        finalizeDictionary();
-
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("digraph G {\n");
 
@@ -182,8 +235,6 @@ public class DictionaryBuilder {
     }
 
     private Dictionary build(boolean perfectHash) {
-        finalizeDictionary();
-
         Map<State, Integer> stateNumbers = numberedStates();
         State[] sList = stateList(stateNumbers);
 
@@ -239,23 +290,29 @@ public class DictionaryBuilder {
         return states;
     }
 
-    private void replaceOrRegister(State s) {
-        State child = s.lastState();
+    /**
+     * Replace new states that are already in the automaton.
+     *
+     * @param s   The state to start replacement (the state itself will never be replaced).
+     * @param seq The sequence.
+     */
+    private void replaceOrRegister(State s, String seq) {
+        State next = s.move(seq.charAt(0));
 
         // If someone is constructing an empty lexicon, we don't have any outgoing
         // transitions on the start state.
-        if (child == null)
+        if (next == null)
             return;
 
         // Grandchildren may require replacement as well.
-        if (child.hasOutgoing())
-            replaceOrRegister(child);
+        if (seq.length() > 1)
+            replaceOrRegister(next, seq.substring(1)); // substring should be O(1).
 
-        State replacement = d_register.get(child);
+        State replacement = d_register.get(next);
         if (replacement != null)
-            s.setLastState(replacement);
+            s.addTransition(seq.charAt(0), replacement);
         else
-            d_register.put(child, child);
+            d_register.put(next, next);
     }
 
     private State[] stateList(Map<State, Integer> numberedStates) {

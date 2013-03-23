@@ -18,20 +18,34 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 class State {
-    private final TreeMap<Character, State> transitions;
+    private final TreeMap<Character, State> d_transitions;
     private boolean d_final;
     private boolean d_recomputeHash;
     private int d_cachedHash;
 
     public State() {
-        transitions = new TreeMap<Character, State>();
+        d_transitions = new TreeMap<Character, State>();
         d_final = false;
         d_recomputeHash = true;
     }
 
+    private State(TreeMap<Character, State> d_transitions, boolean d_final, boolean d_recomputeHash, int d_cachedHash) {
+        this.d_transitions = d_transitions;
+        this.d_final = d_final;
+        this.d_recomputeHash = d_recomputeHash;
+        this.d_cachedHash = d_cachedHash;
+    }
+
     public void addTransition(Character c, State s) {
-        transitions.put(c, s);
+        d_transitions.put(c, s);
         d_recomputeHash = true;
+    }
+
+    public State clone()
+    {
+        TreeMap<Character, State> newTrans = (TreeMap<Character, State>) d_transitions.clone();
+
+        return new State(newTrans, d_final, d_recomputeHash, d_cachedHash);
     }
 
     @Override
@@ -43,7 +57,7 @@ class State {
         int result = 1;
         result = prime * result + (d_final ? 1231 : 1237);
         result = prime * result
-                + ((transitions == null) ? 0 : transitions.hashCode());
+                + ((d_transitions == null) ? 0 : d_transitions.hashCode());
 
         d_recomputeHash = false;
         d_cachedHash = result;
@@ -65,10 +79,10 @@ class State {
         State other = (State) obj;
         if (d_final != other.d_final)
             return false;
-        if (transitions == null) {
-            if (other.transitions != null)
+        if (d_transitions == null) {
+            if (other.d_transitions != null)
                 return false;
-        } else if (!transitions.equals(other.transitions))
+        } else if (!d_transitions.equals(other.d_transitions))
             return false;
         return true;
     }
@@ -78,11 +92,11 @@ class State {
     }
 
     public boolean hasOutgoing() {
-        return transitions.size() != 0;
+        return d_transitions.size() != 0;
     }
 
     public State lastState() {
-        Entry<Character, State> last = transitions.lastEntry();
+        Entry<Character, State> last = d_transitions.lastEntry();
         if (last == null)
             return null;
 
@@ -90,17 +104,17 @@ class State {
     }
 
     public void setLastState(State s) {
-        Entry<Character, State> entry = transitions.lastEntry();
-        transitions.put(entry.getKey(), s);
+        Entry<Character, State> entry = d_transitions.lastEntry();
+        d_transitions.put(entry.getKey(), s);
         d_recomputeHash = true;
     }
 
     public TreeMap<Character, State> transitions() {
-        return transitions;
+        return d_transitions;
     }
 
     public State move(Character c) {
-        return transitions.get(c);
+        return d_transitions.get(c);
     }
 
     void setFinal(boolean finalState) {
