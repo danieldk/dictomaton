@@ -18,6 +18,8 @@ package eu.danieldk.fsadict.collections;
  * This class provides a compact integer array for applications where integers
  * are stored for which the width is known beforehand and that are not (necessarily)
  * 8, 16, or 32 bits wide.
+ * <p/>
+ * {@link #get(int)} and {@link #set(int, int)} are in O(1) time.
  */
 class CompactIntArray {
     private int INT_SIZE = 32;
