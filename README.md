@@ -46,6 +46,5 @@ benchmarks via Maven, adding the Benchmarks group:
  * **0.0.4**: generic object values.
  * **1.0.0**: first stable release.
 
-Plans for 1.2.0: use short-based arrays for small automata. Perhaps an
-explicit, fast, and compact data storage format as an alternative to Java
-serialization. C or C++ version.
+Plans for 1.2.0: Perhaps an explicit, fast, and compact data storage format
+as an alternative to Java serialization. C or C++ version.
