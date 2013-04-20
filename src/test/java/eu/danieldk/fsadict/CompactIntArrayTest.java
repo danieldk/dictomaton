@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package eu.danieldk.fsadict.collections;
+package eu.danieldk.fsadict;
 
+import eu.danieldk.fsadict.CompactIntArray;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Unit tests for {@link CompactIntArray}.
+ * Unit tests for {@link eu.danieldk.fsadict.CompactIntArray}.
  */
 public class CompactIntArrayTest {
     private final int NUMBER_TESTS = 500;

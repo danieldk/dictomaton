@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package eu.danieldk.fsadict.collections;
+package eu.danieldk.fsadict;
+
+import java.io.Serializable;
 
 /**
  * This class provides a compact integer array for applications where integers
@@ -21,8 +23,9 @@ package eu.danieldk.fsadict.collections;
  * <p/>
  * {@link #get(int)} and {@link #set(int, int)} are in O(1) time.
  */
-class CompactIntArray {
-    private int INT_SIZE = 32;
+class CompactIntArray implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private static int INT_SIZE = 32;
 
     private final int d_size;
     private final int d_bitsPerElem;
@@ -50,6 +53,9 @@ class CompactIntArray {
      * @return An integer.
      */
     public int get(int index) {
+        if (d_bitsPerElem == 0)
+            return 0;
+
         int startIdx = (index * d_bitsPerElem) / INT_SIZE;
         int startBit = (index * d_bitsPerElem) % INT_SIZE;
 
@@ -71,6 +77,9 @@ class CompactIntArray {
      * @param value The value to store.
      */
     public void set(int index, int value) {
+        if (d_bitsPerElem == 0)
+            return;
+
         int startIdx = (index * d_bitsPerElem) / INT_SIZE;
         int startBit = (index * d_bitsPerElem) % INT_SIZE;
 
@@ -87,6 +96,18 @@ class CompactIntArray {
             d_data[startIdx + 1] |= value >>> done;
         }
 
+    }
+
+    /**
+     * Get the size of the array.
+     * @return The size.
+     */
+    public int size() {
+        return d_size;
+    }
+
+    public static int width(int n) {
+        return INT_SIZE - Integer.numberOfLeadingZeros(n);
     }
 
     private int mask(int startBit, int nBits) {

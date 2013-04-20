@@ -26,11 +26,11 @@ import java.util.*;
  * @author Daniel de Kok
  */
 class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
-    private static final long serialVersionUID = 3199608511519213621L;
+    private static final long serialVersionUID = 1L;
 
     // Offset in the transition table of the given state. E.g. d_stateOffsets[3] = 10
     // means that state 3 starts at index 10 in the transition table.
-    protected final int[] d_stateOffsets;
+    protected final CompactIntArray d_stateOffsets;
 
     // Note: we do not use an array of transition instances to represent the
     //       transition table, since this would require an additional pointer
@@ -38,7 +38,7 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
     //       arrays.
 
     protected final char[] d_transitionChars;
-    protected final int[] d_transtitionTo;
+    protected final CompactIntArray d_transtitionTo;
     protected final Set<Integer> d_finalStates;
     protected final int d_nSeqs;
 
@@ -142,10 +142,10 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
 
         dotBuilder.append("digraph G {\n");
 
-        for (int state = 0; state < d_stateOffsets.length; ++state) {
-            for (int trans = d_stateOffsets[state]; trans < transitionsUpperBound(state); ++trans)
+        for (int state = 0; state < d_stateOffsets.size(); ++state) {
+            for (int trans = d_stateOffsets.get(state); trans < transitionsUpperBound(state); ++trans)
                 dotBuilder.append(String.format("%d -> %d [label=\"%c\"]\n",
-                        state, d_transtitionTo[trans], d_transitionChars[trans]));
+                        state, d_transtitionTo.get(trans), d_transitionChars[trans]));
 
             if (d_finalStates.contains(state))
                 dotBuilder.append(String.format("%d [peripheries=2];\n", state));
@@ -187,8 +187,8 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
                 String string = pair.getString();
 
                 // Put states reachable through outgoing transitions on the stack.
-                for (int trans = transitionsUpperBound(state) - 1; trans >= d_stateOffsets[state]; --trans)
-                    d_stack.push(new StateStringPair(d_transtitionTo[trans], string + d_transitionChars[trans]));
+                for (int trans = transitionsUpperBound(state) - 1; trans >= d_stateOffsets.get(state); --trans)
+                    d_stack.push(new StateStringPair(d_transtitionTo.get(trans), string + d_transitionChars[trans]));
 
                 if (d_finalStates.contains(state)) {
                     --d_seqsRemaining;
@@ -235,8 +235,8 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
      * @param transitionTo    Transition table (to-transitions).
      * @param finalStates     Set of final states.
      */
-    protected DictionaryIntIntImpl(int[] stateOffsets, char[] transitionChars,
-                                   int[] transitionTo, Set<Integer> finalStates,
+    protected DictionaryIntIntImpl(CompactIntArray stateOffsets, char[] transitionChars,
+                                   CompactIntArray transitionTo, Set<Integer> finalStates,
                                    int nSeqs) {
         d_stateOffsets = stateOffsets;
         d_transitionChars = transitionChars;
@@ -252,7 +252,7 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
      * @return
      */
     protected int transitionsUpperBound(int state) {
-        return state + 1 < d_stateOffsets.length ? d_stateOffsets[state + 1] :
+        return state + 1 < d_stateOffsets.size() ? d_stateOffsets.get(state + 1) :
                 d_transitionChars.length;
     }
 
@@ -265,7 +265,7 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
      * @return
      */
     protected int findTransition(int state, char c) {
-        int start = d_stateOffsets[state];
+        int start = d_stateOffsets.get(state);
         int end = transitionsUpperBound(state) - 1;
 
         // Binary search
@@ -314,7 +314,7 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
         if (trans == -1)
             return -1;
 
-        return d_transtitionTo[trans];
+        return d_transtitionTo.get(trans);
     }
 
 }
