@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This Java package implements dictionaries that are stored in finite state
+This Java library implements dictionaries that are stored in finite state
 automata. Two types of dictionaries are supported:
 
  * Finite state dictionaries that can be checked for membership and
@@ -13,6 +13,21 @@ automata. Two types of dictionaries are supported:
 *fsadict-java* also contains maps from Strings to primitive types, where
 keys are stored in a perfect hash dictionary and the values in a flat array
 for compact and fast storage.
+
+## Comparisons
+
+The following table compares the sizes of the object graphs of the
+<tt>Dictionary</tt> type of this library to that of <tt>TreeSet</tt> and
+<tt>HashSet</tt>. The comparisons were obtained by storing all the words
+in the *web2* and *web2a* dictionaries and were measured using
+[memory-measurer](https://code.google.com/p/memory-measurer/)
+
+<table>
+   <tr><th>Data type</th><th>Objects</th><th>References</th><th>char</th><th>int</th><th>boolean</th><th>float</th></tr>
+   <tr><td>TreeSet<String></td><td align="right">936277</td><td align="right">1872555</td><td align="right">3193749</td><td align="right">624184</td><td align="right">312091</td><td>0</td></tr>
+   <tr><td>HashSet<String></td><td align="right">936277</td><td align="right">1772657</td><td align="right">3193749</td><td align="right">936277</td><td align="right">1</td><td>1</td></tr>
+   <tr><td>Dictionary<String></td><td align="right">41188</td><td align="right">94546</td><td align="right">424169</td><td align="right">397033</td><td align="right">1</td><td>1</td></tr>
+</table>
 
 ## Benchmarks
 
