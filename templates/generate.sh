@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASEDIR="../src/main/java/eu/danieldk/fsadict/collections"
+BASEDIR="../src/main/java/eu/danieldk/dictomaton/collections"
 
 generate()
 {

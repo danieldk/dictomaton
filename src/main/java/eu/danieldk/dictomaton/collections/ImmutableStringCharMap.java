@@ -22,32 +22,32 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * An immutable mapping from {@link String} to <tt>##UNBOXED_TYPE##</tt>.
+ * An immutable mapping from {@link String} to <tt>char</tt>.
  */
-public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED_TYPE##> implements Serializable {
+public class ImmutableStringCharMap extends AbstractMap<String, Character> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private PerfectHashDictionary d_keys;
-    private ##UNBOXED_TYPE##[] d_values;
+    private char[] d_values;
 
     /**
-     * A builder for {@link ImmutableString##TYPE_NAME##Map}. Mappings
+     * A builder for {@link ImmutableStringCharMap}. Mappings
      * can be added to the builder using the {@link #put} and
-     * {@link #putAll} methods. The {@link ImmutableString##TYPE_NAME##Map}
+     * {@link #putAll} methods. The {@link ImmutableStringCharMap}
      * can then be constructed using the {@link #build} method.
      */
     public static class Builder {
 
-        private TreeMap<String, ##BOXED_TYPE##> d_map;
+        private TreeMap<String, Character> d_map;
 
         public Builder() {
-            d_map = new TreeMap<String, ##BOXED_TYPE##>();
+            d_map = new TreeMap<String, Character>();
         }
 
         /**
          * Put a key/value pair.
          */
-        public synchronized Builder put(String key, ##BOXED_TYPE## value) {
+        public synchronized Builder put(String key, Character value) {
             d_map.put(key, value);
             return this;
         }
@@ -55,30 +55,30 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
         /**
          * Put all key/value pairs from a {@link Map}.
          */
-        public synchronized Builder putAll(Map<String, ##BOXED_TYPE##> map) {
+        public synchronized Builder putAll(Map<String, Character> map) {
             d_map.putAll(map);
             return this;
         }
 
         /**
-         * Construct a {@link ImmutableString##TYPE_NAME##Map}.
+         * Construct a {@link ImmutableStringCharMap}.
          */
-        public synchronized ImmutableString##TYPE_NAME##Map build() throws DictionaryBuilderException {
+        public synchronized ImmutableStringCharMap build() throws DictionaryBuilderException {
             PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
 
-            ##UNBOXED_TYPE##[] values = new ##UNBOXED_TYPE##[d_map.size()];
+            char[] values = new char[d_map.size()];
 
             int i = 0;
-            for (##UNBOXED_TYPE## value : d_map.values())
+            for (char value : d_map.values())
                 values[i++] = value;
 
-            return new ImmutableString##TYPE_NAME##Map(dict, values);
+            return new ImmutableStringCharMap(dict, values);
         }
 
     }
 
-    private class EntrySet extends AbstractSet<Entry<String, ##BOXED_TYPE##>> {
-        private class EntrySetIterator implements Iterator<Entry<String, ##BOXED_TYPE##>> {
+    private class EntrySet extends AbstractSet<Entry<String, Character>> {
+        private class EntrySetIterator implements Iterator<Entry<String, Character>> {
             private final Iterator<String> d_keyIter;
 
             public EntrySetIterator() {
@@ -91,10 +91,10 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
             }
 
             @Override
-            public Entry<String, ##BOXED_TYPE##> next() {
+            public Entry<String, Character> next() {
                 String key = d_keyIter.next();
                 int idx = d_keys.number(key) - 1;
-                return new SimpleEntry<String, ##BOXED_TYPE##>(key, d_values[idx]);
+                return new SimpleEntry<String, Character>(key, d_values[idx]);
             }
 
             @Override
@@ -117,11 +117,11 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
             if (e.getKey() == null || e.getKey() == null)
                 return false;
 
-            if (!(e.getKey() instanceof String) || !(e.getValue() instanceof ##BOXED_TYPE##))
+            if (!(e.getKey() instanceof String) || !(e.getValue() instanceof Character))
                 return false;
 
             String key = (String) e.getKey();
-            ##BOXED_TYPE## value = (##BOXED_TYPE##) e.getValue();
+            Character value = (Character) e.getValue();
 
             int hash = d_keys.number(key);
 
@@ -129,7 +129,7 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
             if (hash == -1)
                 return false;
 
-            return d_values[hash - 1] == value.##UNBOXED_TYPE##Value();
+            return d_values[hash - 1] == value.charValue();
 
         }
 
@@ -139,7 +139,7 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
         }
 
         @Override
-        public Iterator<Entry<String, ##BOXED_TYPE##>> iterator() {
+        public Iterator<Entry<String, Character>> iterator() {
             return new EntrySetIterator();
         }
 
@@ -150,9 +150,9 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
     }
 
 
-    private class ##TYPE_NAME##ArrayList extends AbstractList<##BOXED_TYPE##> {
+    private class CharArrayList extends AbstractList<Character> {
         @Override
-        public ##BOXED_TYPE## get(int index) {
+        public Character get(int index) {
             return d_values[index];
         }
 
@@ -162,7 +162,7 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
         }
     }
 
-    private ImmutableString##TYPE_NAME##Map(PerfectHashDictionary keys, ##UNBOXED_TYPE##[] values) {
+    private ImmutableStringCharMap(PerfectHashDictionary keys, char[] values) {
         d_keys = keys;
         d_values = values;
     }
@@ -178,7 +178,7 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
     }
 
     @Override
-    public Set<Entry<String, ##BOXED_TYPE##>> entrySet() {
+    public Set<Entry<String, Character>> entrySet() {
         return new EntrySet();
     }
 
@@ -186,7 +186,7 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
      * Get the value associated with a key, returning a default value is it
      * is not in the mapping.
      */
-    public ##UNBOXED_TYPE## getOrElse(String key, ##UNBOXED_TYPE## defaultValue) {
+    public char getOrElse(String key, char defaultValue) {
         int hash = d_keys.number(key);
         if (hash == -1)
             return defaultValue;
@@ -205,17 +205,17 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
     }
 
     @Override
-    public ##BOXED_TYPE## put(String k, ##BOXED_TYPE## v) {
+    public Character put(String k, Character v) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void putAll(Map<? extends String, ? extends ##BOXED_TYPE##> m) {
+    public void putAll(Map<? extends String, ? extends Character> m) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public ##BOXED_TYPE## remove(Object key) {
+    public Character remove(Object key) {
         throw new UnsupportedOperationException();
     }
 
@@ -232,7 +232,7 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
     }
 
     @Override
-    public Collection<##BOXED_TYPE##> values() {
-        return new ##TYPE_NAME##ArrayList();
+    public Collection<Character> values() {
+        return new CharArrayList();
     }
 }

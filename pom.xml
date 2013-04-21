@@ -3,17 +3,17 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>eu.danieldk</groupId>
-    <artifactId>fsadict</artifactId>
+    <artifactId>dictomaton</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>fsadict</name>
+    <name>dictomaton</name>
     <description>Finite state disctionaries and perfect hash automata.</description>
-    <url>http://github.com/danieldk/fsadict-java</url>
+    <url>http://github.com/danieldk/dictomaton</url>
 
     <scm>
-        <url>git@github.com:danieldk/fsadict-java.git</url>
-        <connection>scm:git:git@github.com:danieldk/fsadict-java.git</connection>
-        <developerConnection>scm:git:git@github.com:danieldk/fsadict-java.git</developerConnection>
+        <url>git@github.com:danieldk/dictomaton.git</url>
+        <connection>scm:git:git@github.com:danieldk/dictomaton.git</connection>
+        <developerConnection>scm:git:git@github.com:danieldk/dictomaton.git</developerConnection>
     </scm>
 
     <licenses>
@@ -34,7 +34,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.groups>eu.danieldk.fsadict.categories.Tests</junit.groups>
+        <junit.groups>eu.danieldk.dictomaton.categories.Tests</junit.groups>
     </properties>
 
     <build>
