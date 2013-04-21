@@ -187,15 +187,18 @@ public class DictionaryBuilder {
         Map<State, Integer> stateNumbers = numberedStates();
         State[] sList = stateList(stateNumbers);
 
-        // First compute the offsets of each state in the state table.
-        int[] offsets = new int[stateNumbers.size()];
+        int nTransitions = 0;
+        for (int i = 0; i < sList.length; ++i)
+            nTransitions += sList[i].transitions().size();
+
+        // First compute the offsets of each state in the transition table.
+        CompactIntArray offsets = new CompactIntArray(stateNumbers.size(), CompactIntArray.width(nTransitions - 1));
         for (int i = 1; i < stateNumbers.size(); i++)
-            offsets[i] = offsets[i - 1] + sList[i - 1].transitions().size();
+            offsets.set(i, offsets.get(i - 1) + sList[i - 1].transitions().size());
 
         // Create transition tables.
-        int nTransitions = offsets[offsets.length - 1] + sList[offsets.length - 1].transitions().size();
         char[] transChars = new char[nTransitions];
-        int[] transTo = new int[nTransitions];
+        CompactIntArray transTo = new CompactIntArray(nTransitions, CompactIntArray.width(stateNumbers.size() - 1));
 
         // Final state set.
         Set<Integer> finalStates = new HashSet<Integer>();
@@ -204,8 +207,8 @@ public class DictionaryBuilder {
         for (int i = 0; i < sList.length; i++) {
             int j = 0;
             for (Entry<Character, State> trans : sList[i].transitions().entrySet()) {
-                transChars[offsets[i] + j] = trans.getKey();
-                transTo[offsets[i] + j] = stateNumbers.get(trans.getValue());
+                transChars[offsets.get(i) + j] = trans.getKey();
+                transTo.set(offsets.get(i) + j, stateNumbers.get(trans.getValue()));
                 ++j;
             }
 
