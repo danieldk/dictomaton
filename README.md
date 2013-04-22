@@ -36,11 +36,23 @@ benchmarks via Maven, adding the Benchmarks group:
 
     mvn test -Djunit.groups=eu.danieldk.dictomaton.categories.Benchmarks
 
+## Changelog
+
+### 0.0.3
+
+* Fix an off-by-one error in integer width of the state table.
+
+### 0.0.2
+
+* Rename the project from *fsadict-java* to *dictomaton*.
+* Store the state and transition tables as packed int arrays, resulting in drastically smaller automata.
+
+
 ## Release plan
 
- * **0.0.3**: add ImmutableStringStringMap, wherein values are also stored
+ * **0.0.4**: add ImmutableStringStringMap, wherein values are also stored
    in an automaton.
- * **0.0.4**: generic object values.
+ * **0.0.5**: generic object values.
  * **1.0.0**: first stable release.
 
 Plans for 1.2.0: Perhaps an explicit, fast, and compact data storage format
