@@ -191,14 +191,17 @@ public class DictionaryBuilder {
         for (int i = 0; i < sList.length; ++i)
             nTransitions += sList[i].transitions().size();
 
-        // First compute the offsets of each state in the transition table.
-        CompactIntArray offsets = new CompactIntArray(stateNumbers.size(), CompactIntArray.width(nTransitions - 1));
-        for (int i = 1; i < stateNumbers.size(); i++)
+        // First compute the offsets of each state in the transition table. Note, we need the width
+        // of the number of transitions, since the pointer can be one beyond the last state (if the
+        // last state is a final state without transitions).
+        CompactIntArray offsets = new CompactIntArray(sList.length, CompactIntArray.width(nTransitions));
+        for (int i = 1; i < sList.length; i++)
             offsets.set(i, offsets.get(i - 1) + sList[i - 1].transitions().size());
+
 
         // Create transition tables.
         char[] transChars = new char[nTransitions];
-        CompactIntArray transTo = new CompactIntArray(nTransitions, CompactIntArray.width(stateNumbers.size() - 1));
+        CompactIntArray transTo = new CompactIntArray(nTransitions, CompactIntArray.width(sList.length - 1));
 
         // Final state set.
         Set<Integer> finalStates = new HashSet<Integer>();

@@ -158,7 +158,7 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
 
         // Marker that indicates that the number of suffixes of a state is not yet computed. We cannot
         // use -1, since CompactIntArray would then require 32-bit per value.
-        int magicMarker = nSeqs + 1;
+        final int magicMarker = nSeqs + 1;
 
         d_stateNSuffixes = new CompactIntArray(d_stateOffsets.size(), CompactIntArray.width(magicMarker));
         for (int i = 0; i < d_stateNSuffixes.size(); ++i)
@@ -167,7 +167,8 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
         computeStateSuffixes(0, magicMarker);
     }
 
-    private int computeStateSuffixes(int state, int magicMarker) {
+    private int computeStateSuffixes(final int state, final int magicMarker) {
+
         int suffixes = d_stateNSuffixes.get(state);
         if (suffixes != magicMarker)
             return suffixes;
