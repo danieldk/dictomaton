@@ -27,6 +27,7 @@ import java.util.List;
 public class PerfectHashDictionaryTest {
     private List<String> d_words1;
     private List<String> d_words2;
+    private List<String> d_words3;
     private PerfectHashDictionary d_dict;
 
     @SuppressWarnings("serial")
@@ -52,7 +53,21 @@ public class PerfectHashDictionaryTest {
             add("zoef");
         }};
 
+        d_words3 = new ArrayList<String>() {{
+            add("groene");
+            add("mooie");
+            add("oude");
+            add("rare");
+        }};
+
         d_dict = new DictionaryBuilder().addAll(d_words1).buildPerfectHash();
+    }
+
+    @Test
+    public void cycleTest() throws DictionaryBuilderException {
+        // This test causes cycles when there is an off-by-one bug for the transition table.
+        PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_words3).buildPerfectHash();
+        Assert.assertEquals(4, dict.size());
     }
 
     @Test
