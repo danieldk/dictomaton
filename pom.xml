@@ -4,7 +4,7 @@
 
     <groupId>eu.danieldk</groupId>
     <artifactId>dictomaton</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <packaging>jar</packaging>
     <name>dictomaton</name>
     <description>Finite state disctionaries and perfect hash automata.</description>
