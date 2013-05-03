@@ -14,6 +14,8 @@
 
 package eu.danieldk.dictomaton;
 
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -43,7 +45,7 @@ class State {
         int result = 1;
         result = prime * result + (d_final ? 1231 : 1237);
         result = prime * result
-                + ((transitions == null) ? 0 : transitions.hashCode());
+                + ((transitions == null) ? 0 : transitionsHashCode());
 
         d_recomputeHash = false;
         d_cachedHash = result;
@@ -68,9 +70,9 @@ class State {
         if (transitions == null) {
             if (other.transitions != null)
                 return false;
-        } else if (!transitions.equals(other.transitions))
-            return false;
-        return true;
+        }
+
+        return transitions.equals(other.transitions);
     }
 
     public boolean isFinal() {
@@ -106,5 +108,32 @@ class State {
     void setFinal(boolean finalState) {
         d_final = finalState;
         d_recomputeHash = true;
+    }
+
+    /**
+     * Return the hashcode 'computed' by {@link Object#hashCode()}.
+     * @return The hashcode.
+     */
+    private int objectHashCode() {
+        return super.hashCode();
+    }
+
+    /**
+     * Compute the hashcode for transitions. We do not rely on the{@link java.util.TreeMap#hashCode()},
+     * because it will recursively compute the hashcodes of the to-states, which is not necessary since
+     * two states are only identical when they have the same symbols leading to exactly the same objects.
+     *
+     * @return
+     */
+    private int transitionsHashCode() {
+        int hc = 0;
+
+        Iterator<Entry<Character, State>> iter = transitions.entrySet().iterator();
+        while (iter.hasNext()) {
+            Entry<Character, State> e = iter.next();
+            hc += e.getKey().hashCode() + e.getValue().objectHashCode();
+        }
+
+        return hc;
     }
 }
