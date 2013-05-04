@@ -1,5 +1,7 @@
 package eu.danieldk.dictomaton.levenshtein;
 
+import eu.danieldk.dictomaton.Dictionary;
+
 import java.util.*;
 
 public class LevenshteinAutomaton {
@@ -48,6 +50,42 @@ public class LevenshteinAutomaton {
         stringBuilder.append("}");
 
         return stringBuilder.toString();
+    }
+
+    public Set<String> intersectionLanguage(Dictionary dictionary)
+    {
+        Set<String> language = new HashSet<String>();
+
+        Queue<StatePair> q = new LinkedList<StatePair>();
+        q.add(new StatePair(dictionary.startState(), d_startState, ""));
+
+        while (!q.isEmpty())
+        {
+            StatePair pair = q.poll();
+            int dictState = pair.getDictionaryState();
+            LevenshteinAutomatonState laState = pair.getLevenshteinAutomatonState();
+            String string = pair.getString();
+
+            for (Character c: dictionary.transitionCharacters(dictState))
+            {
+                LevenshteinAutomatonState laNewState = laState.move(c);
+
+                if (laNewState == null && (laNewState = laState.move(d_otherChar)) == null)
+                    continue;
+
+                int dictNewState = dictionary.next(dictState, c);
+
+                String newString = string + c;
+
+                if (laNewState.isFinal())
+                    language.add(newString);
+
+                q.add(new StatePair(dictNewState, laNewState, newString));
+            }
+
+        }
+
+        return language;
     }
 
     private LevenshteinAutomatonState createAutomaton(ParametricTransitions transitions, String word) {
@@ -132,6 +170,31 @@ public class LevenshteinAutomaton {
         }
 
         return states;
+    }
+
+    private class StatePair
+    {
+        private final int d_dictionaryState;
+        private final LevenshteinAutomatonState d_laState;
+        private final String d_string;
+
+        private StatePair(int dictionaryState, LevenshteinAutomatonState laState, String string) {
+            d_dictionaryState = dictionaryState;
+            d_laState = laState;
+            d_string = string;
+        }
+
+        private int getDictionaryState() {
+            return d_dictionaryState;
+        }
+
+        private LevenshteinAutomatonState getLevenshteinAutomatonState() {
+            return d_laState;
+        }
+
+        private String getString() {
+            return d_string;
+        }
     }
 
 }

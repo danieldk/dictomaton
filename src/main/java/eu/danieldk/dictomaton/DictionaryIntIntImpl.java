@@ -90,6 +90,16 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
     }
 
     @Override
+    public int next(int state, char c) {
+        int trans = findTransition(state, c);
+
+        if (trans == -1)
+            return -1;
+
+        return d_transtitionTo.get(trans);
+    }
+
+    @Override
     public boolean remove(Object o) {
         throw new UnsupportedOperationException();
     }
@@ -156,9 +166,24 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
         return dotBuilder.toString();
     }
 
-    private class DictionaryIterator implements Iterator<String> {
+    @Override
+    public int startState() {
+        return 0;
+    }
 
+    @Override
+    public Set<Character> transitionCharacters(int state) {
+        Set<Character> transChars = new HashSet<Character>();
+
+        for (int i = d_stateOffsets.get(state); i < transitionsUpperBound(state); ++i)
+            transChars.add(d_transitionChars[i]);
+
+        return transChars;
+    }
+
+    private class DictionaryIterator implements Iterator<String> {
         private final Stack<StateStringPair> d_stack;
+
         private int d_seqsRemaining;
 
         public DictionaryIterator() {
@@ -208,8 +233,8 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
     }
 
     private class StateStringPair {
-
         private final int d_state;
+
         private final String d_string;
 
         public StateStringPair(int state, String string) {
@@ -299,22 +324,6 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
         }
 
         return d_finalStates.contains(state);
-    }
-
-    /**
-     * Get the next state, given a character.
-     *
-     * @param state
-     * @param c
-     * @return
-     */
-    private int next(int state, char c) {
-        int trans = findTransition(state, c);
-
-        if (trans == -1)
-            return -1;
-
-        return d_transtitionTo.get(trans);
     }
 
 }
