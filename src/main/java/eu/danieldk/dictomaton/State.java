@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-class State {
+public class State {
     private final TreeMap<Character, State> transitions;
     private boolean d_final;
     private boolean d_recomputeHash;
