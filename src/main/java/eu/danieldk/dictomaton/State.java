@@ -14,10 +14,8 @@
 
 package eu.danieldk.dictomaton;
 
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
 public class State {
     private final TreeMap<Character, State> transitions;
@@ -105,13 +103,67 @@ public class State {
         return transitions.get(c);
     }
 
-    void setFinal(boolean finalState) {
+    /**
+     * Reduce the set of outgoing transitions by removing transitions that are also captured by the
+     * 'other'-transition. The 'other'-transition are transitions with the given character.
+     *
+     * @param otherChar The character representing any other character.
+     */
+    public void reduce(Character otherChar) {
+        Set<State> seen = new HashSet<State>();
+        Queue<State> q = new LinkedList<State>();
+        q.add(this);
+
+        while (!q.isEmpty()) {
+            State s = q.poll();
+            if (seen.contains(s))
+                continue;
+
+            State otherTo = s.transitions.get(otherChar);
+            if (otherTo == null) {
+                // There is no reduction possible in this state: queue the to-states, mark this state
+                // as seen and continue with the next state.
+                for (State toState : s.transitions.values())
+                    q.add(toState);
+
+                seen.add(s);
+
+                continue;
+            }
+
+            // Find transitions that can be removed, because they are handled by an 'other' transition. This
+            // is the case when a transition is not the 'other' transition, but has the same to-state as the
+            // 'other' transition.
+            Set<Character> remove = new HashSet<Character>();
+            for (Map.Entry<Character, State> trans : s.transitions.entrySet())
+                if (!trans.getKey().equals(otherChar) && trans.getValue() == otherTo)
+                    remove.add(trans.getKey());
+
+            // Remove the transitions that were found.
+            for (Character c : remove)
+                s.transitions.remove(c);
+
+            // Recompute the hash if the state table has changed.
+            if (remove.size() != 0)
+                s.d_recomputeHash = true;
+
+            // We have now seen this state.
+            seen.add(s);
+
+            // Queue states that can be reached via this state.
+            for (State toState : s.transitions.values())
+                q.add(toState);
+        }
+    }
+
+    public void setFinal(boolean finalState) {
         d_final = finalState;
         d_recomputeHash = true;
     }
 
     /**
      * Return the hashcode 'computed' by {@link Object#hashCode()}.
+     *
      * @return The hashcode.
      */
     private int objectHashCode() {
