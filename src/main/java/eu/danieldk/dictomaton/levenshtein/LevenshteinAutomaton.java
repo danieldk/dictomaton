@@ -52,22 +52,27 @@ public class LevenshteinAutomaton {
         return stringBuilder.toString();
     }
 
-    public Set<String> intersectionLanguage(Dictionary dictionary)
-    {
+    /**
+     * Compute the intersection language of a dictionary and the automaton. This amounts
+     * to finding the strings in the dictionary that are within the edit distance allowed
+     * by the {@link LevenshteinAutomaton}.
+     *
+     * @param dictionary
+     * @return The intersection language.
+     */
+    public Set<String> intersectionLanguage(Dictionary dictionary) {
         Set<String> language = new HashSet<String>();
 
         Queue<StatePair> q = new LinkedList<StatePair>();
         q.add(new StatePair(dictionary.startState(), d_startState, ""));
 
-        while (!q.isEmpty())
-        {
+        while (!q.isEmpty()) {
             StatePair pair = q.poll();
             int dictState = pair.getDictionaryState();
             LevenshteinAutomatonState laState = pair.getLevenshteinAutomatonState();
             String string = pair.getString();
 
-            for (Character c: dictionary.transitionCharacters(dictState))
-            {
+            for (Character c : dictionary.transitionCharacters(dictState)) {
                 LevenshteinAutomatonState laNewState = laState.move(c);
 
                 if (laNewState == null && (laNewState = laState.move(d_otherChar)) == null)
@@ -172,8 +177,10 @@ public class LevenshteinAutomaton {
         return states;
     }
 
-    private class StatePair
-    {
+    /**
+     * This class stores a pair of states from a {@link LevenshteinAutomaton} and a {@link Dictionary}.
+     */
+    private class StatePair {
         private final int d_dictionaryState;
         private final LevenshteinAutomatonState d_laState;
         private final String d_string;
