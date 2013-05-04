@@ -121,13 +121,13 @@ class LevenshteinAutomatonState {
      * @param otherChar The character representing any other character.
      */
     public void reduce(Character otherChar) {
-        Set<LevenshteinAutomatonState> seen = new HashSet<LevenshteinAutomatonState>();
+        Set<Integer> seen = new HashSet<Integer>();
         Queue<LevenshteinAutomatonState> q = new LinkedList<LevenshteinAutomatonState>();
         q.add(this);
 
         while (!q.isEmpty()) {
             LevenshteinAutomatonState s = q.poll();
-            if (seen.contains(s))
+            if (seen.contains(System.identityHashCode(s)))
                 continue;
 
             LevenshteinAutomatonState otherTo = s.transitions.get(otherChar);
@@ -137,7 +137,7 @@ class LevenshteinAutomatonState {
                 for (LevenshteinAutomatonState toState : s.transitions.values())
                     q.add(toState);
 
-                seen.add(s);
+                seen.add(System.identityHashCode(s));
 
                 continue;
             }
@@ -159,7 +159,7 @@ class LevenshteinAutomatonState {
                 s.d_recomputeHash = true;
 
             // We have now seen this state.
-            seen.add(s);
+            seen.add(System.identityHashCode(s));
 
             // Queue states that can be reached via this state.
             for (LevenshteinAutomatonState toState : s.transitions.values())
@@ -178,15 +178,6 @@ class LevenshteinAutomatonState {
     }
 
     /**
-     * Return the hashcode 'computed' by {@link Object#hashCode()}.
-     *
-     * @return The hashcode.
-     */
-    private int objectHashCode() {
-        return super.hashCode();
-    }
-
-    /**
      * Compute the hashcode for transitions. We do not rely on the{@link java.util.TreeMap#hashCode()},
      * because it will recursively compute the hashcodes of the to-states, which is not necessary since
      * two states are only identical when they have the same symbols leading to exactly the same objects.
@@ -197,7 +188,7 @@ class LevenshteinAutomatonState {
         int hc = 0;
 
         for (Entry<Character, LevenshteinAutomatonState> e : transitions.entrySet())
-            hc += e.getKey().hashCode() + e.getValue().objectHashCode();
+            hc += e.getKey().hashCode() + System.identityHashCode(e.getValue());
 
         return hc;
     }

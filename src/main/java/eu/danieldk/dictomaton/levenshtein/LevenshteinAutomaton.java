@@ -3,7 +3,7 @@ package eu.danieldk.dictomaton.levenshtein;
 import java.util.*;
 
 public class LevenshteinAutomaton {
-    private final ParametricTransitions[] d_parametricTransitions = {new ParametricTransitions1(), new ParametricTransitions2()};
+    private final static ParametricTransitions[] d_parametricTransitions = {new ParametricTransitions1(), new ParametricTransitions2()};
     private final LevenshteinAutomatonState d_startState;
     private final Set<Character> d_alphabet;
     private final char d_otherChar;
@@ -57,38 +57,40 @@ public class LevenshteinAutomaton {
         for (int i = 0; i < states.length; ++i)
             states[i] = new LevenshteinAutomatonState();
 
+        final int nParametricStates = transitions.nParametricStates();
+        final int lastPosition = states.length / nParametricStates;
+
         // Fill state table.
         for (int i = 0; i < states.length; ++i) {
-            int position = i / transitions.nParametricStates();
-            int parametricState = i % transitions.nParametricStates();
-            int lastPosition = states.length / transitions.nParametricStates();
+            int offset = i / nParametricStates;
+            int parametricState = i % nParametricStates;
 
             for (Character c : d_alphabet) {
-                int vec = characteristicVector(word.substring(position), c, n);
+                int vec = characteristicVector(word, offset, c, n);
 
                 // Will be handled by the 'other' transition.
                 if (vec == 0 && c != d_otherChar)
                     continue;
 
-                int toState = transitions.transition(i, position, vec, word.length());
+                int toState = transitions.transition(parametricState, offset, vec, word.length());
                 if (toState != -1)
                     states[i].addTransition(c, states[toState]);
             }
 
-            if (lastPosition - 1 - position <= transitions.maxOffsetErrors(parametricState))
+            if (lastPosition - 1 - offset <= transitions.maxOffsetErrors(parametricState))
                 states[i].setFinal(true);
         }
 
         return states[0];
     }
 
-    private int characteristicVector(String rest, char c, int n) {
-        int vlen = Math.min(2 * n + 1, rest.length());
+    private int characteristicVector(String word, int offset, char c, int n) {
+        int vlen = Math.min(2 * n + 1, word.length() - offset);
 
         int vec = 0;
         for (int i = 0; i < vlen; ++i) {
             vec <<= 1;
-            vec |= rest.charAt(i) == c ? 1 : 0;
+            vec |= word.charAt(offset + i) == c ? 1 : 0;
         }
 
         return vec;
