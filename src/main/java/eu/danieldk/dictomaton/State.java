@@ -14,8 +14,6 @@
 
 package eu.danieldk.dictomaton;
 
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -111,28 +109,17 @@ class State {
     }
 
     /**
-     * Return the hashcode 'computed' by {@link Object#hashCode()}.
-     * @return The hashcode.
-     */
-    private int objectHashCode() {
-        return super.hashCode();
-    }
-
-    /**
      * Compute the hashcode for transitions. We do not rely on the{@link java.util.TreeMap#hashCode()},
      * because it will recursively compute the hashcodes of the to-states, which is not necessary since
      * two states are only identical when they have the same symbols leading to exactly the same objects.
      *
-     * @return
+     * @return Transitions hashcode.
      */
     private int transitionsHashCode() {
         int hc = 0;
 
-        Iterator<Entry<Character, State>> iter = transitions.entrySet().iterator();
-        while (iter.hasNext()) {
-            Entry<Character, State> e = iter.next();
-            hc += e.getKey().hashCode() + e.getValue().objectHashCode();
-        }
+        for (Entry<Character, State> e : transitions.entrySet())
+            hc += e.getKey().hashCode() + System.identityHashCode(e.getValue());
 
         return hc;
     }
