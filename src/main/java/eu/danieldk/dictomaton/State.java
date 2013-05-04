@@ -23,12 +23,22 @@ public class State {
     private boolean d_recomputeHash;
     private int d_cachedHash;
 
+    /**
+     * Construct a state. The state will have no transitions and will be non-final.
+     */
     public State() {
         transitions = new TreeMap<Character, State>();
         d_final = false;
         d_recomputeHash = true;
     }
 
+    /**
+     * Add a transition to the state. If a transition with the provided character already
+     * exists, it will be replaced.
+     *
+     * @param c The transition character.
+     * @param s The to-state.
+     */
     public void addTransition(Character c, State s) {
         transitions.put(c, s);
         d_recomputeHash = true;
@@ -73,14 +83,30 @@ public class State {
         return transitions.equals(other.transitions);
     }
 
+    /**
+     * Returns <tt>true</tt> if the state is a final state.
+     *
+     * @return <tt>true</tt> if the state is a final state, <tt>false</tt> otherwise.
+     */
     public boolean isFinal() {
         return d_final;
     }
 
+    /**
+     * Returns <tt>true</tt> if the state has outgoing transitions.
+     *
+     * @return <tt>true</tt> if the state has outgoing transitions, <tt>false</tt> otherwise.
+     */
     public boolean hasOutgoing() {
         return transitions.size() != 0;
     }
 
+    /**
+     * Obtain the state that the last transition (the transition with the 'highest' character value)
+     * points to.
+     *
+     * @return The to-state of the last transition.
+     */
     public State lastState() {
         Entry<Character, State> last = transitions.lastEntry();
         if (last == null)
@@ -89,16 +115,33 @@ public class State {
         return last.getValue();
     }
 
+    /**
+     * Set the {@link State} that the last transition points to.
+     *
+     * @param s The state.
+     */
     public void setLastState(State s) {
         Entry<Character, State> entry = transitions.lastEntry();
         transitions.put(entry.getKey(), s);
         d_recomputeHash = true;
     }
 
+    /**
+     * Obtain the transitions of this state. This method does not return a copy. Modifying the transition
+     * map may make the internal state inconsistent.
+     *
+     * @return The transition map.
+     */
     public TreeMap<Character, State> transitions() {
         return transitions;
     }
 
+    /**
+     * Follow a transition.
+     *
+     * @param c The character.
+     * @return The target state of the transition, <tt>null</tt> if there is no transition with the given character.
+     */
     public State move(Character c) {
         return transitions.get(c);
     }
@@ -156,6 +199,11 @@ public class State {
         }
     }
 
+    /**
+     * Set the 'finalness' of the state.
+     *
+     * @param finalState If <tt>true</tt>, the state is set to be final. Otherwise, it is non-final.
+     */
     public void setFinal(boolean finalState) {
         d_final = finalState;
         d_recomputeHash = true;
@@ -175,7 +223,7 @@ public class State {
      * because it will recursively compute the hashcodes of the to-states, which is not necessary since
      * two states are only identical when they have the same symbols leading to exactly the same objects.
      *
-     * @return
+     * @return The hashcode of the transition table.
      */
     private int transitionsHashCode() {
         int hc = 0;
