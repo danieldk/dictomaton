@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package eu.danieldk.dictomaton;
+package eu.danieldk.dictomaton.levenshtein;
 
 import java.util.*;
 import java.util.Map.Entry;
 
 /**
- * State representation for the minimized deterministic acyclic automaton builder.
+ * State representation of Levenshtein automata.
  */
-class State {
-    private final TreeMap<Character, State> transitions;
+class LevenshteinAutomatonState {
+    private final TreeMap<Character, LevenshteinAutomatonState> transitions;
     private boolean d_final;
     private boolean d_recomputeHash;
     private int d_cachedHash;
@@ -29,8 +29,8 @@ class State {
     /**
      * Construct a state. The state will have no transitions and will be non-final.
      */
-    public State() {
-        transitions = new TreeMap<Character, State>();
+    public LevenshteinAutomatonState() {
+        transitions = new TreeMap<Character, LevenshteinAutomatonState>();
         d_final = false;
         d_recomputeHash = true;
     }
@@ -42,7 +42,7 @@ class State {
      * @param c The transition character.
      * @param s The to-state.
      */
-    public void addTransition(Character c, State s) {
+    public void addTransition(Character c, LevenshteinAutomatonState s) {
         transitions.put(c, s);
         d_recomputeHash = true;
     }
@@ -75,7 +75,7 @@ class State {
         if (getClass() != obj.getClass())
             return false;
 
-        State other = (State) obj;
+        LevenshteinAutomatonState other = (LevenshteinAutomatonState) obj;
         if (d_final != other.d_final)
             return false;
 
@@ -95,46 +95,12 @@ class State {
     }
 
     /**
-     * Returns <tt>true</tt> if the state has outgoing transitions.
-     *
-     * @return <tt>true</tt> if the state has outgoing transitions, <tt>false</tt> otherwise.
-     */
-    public boolean hasOutgoing() {
-        return transitions.size() != 0;
-    }
-
-    /**
-     * Obtain the state that the last transition (the transition with the 'highest' character value)
-     * points to.
-     *
-     * @return The to-state of the last transition.
-     */
-    public State lastState() {
-        Entry<Character, State> last = transitions.lastEntry();
-        if (last == null)
-            return null;
-
-        return last.getValue();
-    }
-
-    /**
-     * Set the {@link State} that the last transition points to.
-     *
-     * @param s The state.
-     */
-    public void setLastState(State s) {
-        Entry<Character, State> entry = transitions.lastEntry();
-        transitions.put(entry.getKey(), s);
-        d_recomputeHash = true;
-    }
-
-    /**
      * Obtain the transitions of this state. This method does not return a copy. Modifying the transition
      * map may make the internal state inconsistent.
      *
      * @return The transition map.
      */
-    public TreeMap<Character, State> transitions() {
+    public TreeMap<Character, LevenshteinAutomatonState> transitions() {
         return transitions;
     }
 
@@ -144,8 +110,61 @@ class State {
      * @param c The character.
      * @return The target state of the transition, <tt>null</tt> if there is no transition with the given character.
      */
-    public State move(Character c) {
+    public LevenshteinAutomatonState move(Character c) {
         return transitions.get(c);
+    }
+
+    /**
+     * Reduce the set of outgoing transitions by removing transitions that are also captured by the
+     * 'other'-transition. The 'other'-transition are transitions with the given character.
+     *
+     * @param otherChar The character representing any other character.
+     */
+    public void reduce(Character otherChar) {
+        Set<LevenshteinAutomatonState> seen = new HashSet<LevenshteinAutomatonState>();
+        Queue<LevenshteinAutomatonState> q = new LinkedList<LevenshteinAutomatonState>();
+        q.add(this);
+
+        while (!q.isEmpty()) {
+            LevenshteinAutomatonState s = q.poll();
+            if (seen.contains(s))
+                continue;
+
+            LevenshteinAutomatonState otherTo = s.transitions.get(otherChar);
+            if (otherTo == null) {
+                // There is no reduction possible in this state: queue the to-states, mark this state
+                // as seen and continue with the next state.
+                for (LevenshteinAutomatonState toState : s.transitions.values())
+                    q.add(toState);
+
+                seen.add(s);
+
+                continue;
+            }
+
+            // Find transitions that can be removed, because they are handled by an 'other' transition. This
+            // is the case when a transition is not the 'other' transition, but has the same to-state as the
+            // 'other' transition.
+            Set<Character> remove = new HashSet<Character>();
+            for (Entry<Character, LevenshteinAutomatonState> trans : s.transitions.entrySet())
+                if (!trans.getKey().equals(otherChar) && trans.getValue() == otherTo)
+                    remove.add(trans.getKey());
+
+            // Remove the transitions that were found.
+            for (Character c : remove)
+                s.transitions.remove(c);
+
+            // Recompute the hash if the state table has changed.
+            if (remove.size() != 0)
+                s.d_recomputeHash = true;
+
+            // We have now seen this state.
+            seen.add(s);
+
+            // Queue states that can be reached via this state.
+            for (LevenshteinAutomatonState toState : s.transitions.values())
+                q.add(toState);
+        }
     }
 
     /**
@@ -177,7 +196,7 @@ class State {
     private int transitionsHashCode() {
         int hc = 0;
 
-        for (Entry<Character, State> e : transitions.entrySet())
+        for (Entry<Character, LevenshteinAutomatonState> e : transitions.entrySet())
             hc += e.getKey().hashCode() + e.getValue().objectHashCode();
 
         return hc;

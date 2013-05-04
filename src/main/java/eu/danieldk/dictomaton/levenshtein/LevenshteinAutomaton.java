@@ -1,12 +1,10 @@
 package eu.danieldk.dictomaton.levenshtein;
 
-import eu.danieldk.dictomaton.State;
-
 import java.util.*;
 
 public class LevenshteinAutomaton {
     private final ParametricTransitions[] d_parametricTransitions = {new ParametricTransitions1(), new ParametricTransitions2()};
-    private final State d_startState;
+    private final LevenshteinAutomatonState d_startState;
     private final Set<Character> d_alphabet;
     private final char d_otherChar;
 
@@ -26,23 +24,23 @@ public class LevenshteinAutomaton {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("digraph G {\n");
 
-        Map<State, Integer> stateNumbers = numberedStates(d_startState);
+        Map<LevenshteinAutomatonState, Integer> stateNumbers = numberedStates(d_startState);
 
         // We want to traverse states a fixed order, so that the output is predictable. We
-        // could also store the numbered states in a TreeMap, but State doesn't implement
+        // could also store the numbered states in a TreeMap, but LevenshteinAutomatonState doesn't implement
         // Comparable, and I wouldn't even know what that would mean ;).
-        State[] states = new State[stateNumbers.size()];
+        LevenshteinAutomatonState[] states = new LevenshteinAutomatonState[stateNumbers.size()];
 
-        for (Map.Entry<State, Integer> numberedState : stateNumbers.entrySet())
+        for (Map.Entry<LevenshteinAutomatonState, Integer> numberedState : stateNumbers.entrySet())
             states[numberedState.getValue()] = numberedState.getKey();
 
         for (int stateNumber = 0; stateNumber < states.length; ++stateNumber) {
-            State s = states[stateNumber];
+            LevenshteinAutomatonState s = states[stateNumber];
 
             if (s.isFinal())
                 stringBuilder.append(String.format("%d [peripheries=2];\n", stateNumber));
 
-            for (Map.Entry<Character, State> trans : s.transitions().entrySet())
+            for (Map.Entry<Character, LevenshteinAutomatonState> trans : s.transitions().entrySet())
                 stringBuilder.append(String.format("%d -> %d [label=\"%c\"];\n", stateNumber,
                         stateNumbers.get(trans.getValue()), trans.getKey()));
         }
@@ -52,12 +50,12 @@ public class LevenshteinAutomaton {
         return stringBuilder.toString();
     }
 
-    private State createAutomaton(ParametricTransitions transitions, String word) {
+    private LevenshteinAutomatonState createAutomaton(ParametricTransitions transitions, String word) {
         int n = transitions.nEditOperations();
 
-        State[] states = new State[(word.length() + 1) * transitions.nParametricStates()];
+        LevenshteinAutomatonState[] states = new LevenshteinAutomatonState[(word.length() + 1) * transitions.nParametricStates()];
         for (int i = 0; i < states.length; ++i)
-            states[i] = new State();
+            states[i] = new LevenshteinAutomatonState();
 
         // Fill state table.
         for (int i = 0; i < states.length; ++i) {
@@ -114,20 +112,20 @@ public class LevenshteinAutomaton {
         throw new IllegalArgumentException("At least one character that is not in the alphabet is required.");
     }
 
-    private Map<State, Integer> numberedStates(State startState) {
-        Map<State, Integer> states = new HashMap<State, Integer>();
+    private Map<LevenshteinAutomatonState, Integer> numberedStates(LevenshteinAutomatonState startState) {
+        Map<LevenshteinAutomatonState, Integer> states = new HashMap<LevenshteinAutomatonState, Integer>();
 
-        Queue<State> stateQueue = new LinkedList<State>();
+        Queue<LevenshteinAutomatonState> stateQueue = new LinkedList<LevenshteinAutomatonState>();
         stateQueue.add(startState);
         while (!stateQueue.isEmpty()) {
-            State s = stateQueue.poll();
+            LevenshteinAutomatonState s = stateQueue.poll();
 
             if (states.containsKey(s))
                 continue;
 
             states.put(s, states.size());
 
-            for (State to : s.transitions().values())
+            for (LevenshteinAutomatonState to : s.transitions().values())
                 stateQueue.add(to);
         }
 
