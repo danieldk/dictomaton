@@ -82,7 +82,7 @@ public class LevenshteinAutomaton {
 
                 String newString = string + c;
 
-                if (laNewState.isFinal())
+                if (laNewState.isFinal() && dictionary.isFinalState(dictNewState))
                     language.add(newString);
 
                 q.add(new StatePair(dictNewState, laNewState, newString));

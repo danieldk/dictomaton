@@ -85,6 +85,11 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
     }
 
     @Override
+    public boolean isFinalState(int state) {
+        return d_finalStates.contains(state);
+    }
+
+    @Override
     public Iterator<String> iterator() {
         return new DictionaryIterator();
     }

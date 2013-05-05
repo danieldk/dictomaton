@@ -23,11 +23,11 @@ public interface Dictionary extends Set<String>, Serializable {
     public String toDot();
 
     /**
-     * Get the start state.
-     *
-     * @return The start state.
+     * Returns <tt>true</tt> if the state is a final state and <tt>false</tt> otherwise.
+     * @param state The state.
+     * @return Finalness of the state.
      */
-    public int startState();
+    public boolean isFinalState(int state);
 
     /**
      * Get the next state, given a character.
@@ -37,6 +37,13 @@ public interface Dictionary extends Set<String>, Serializable {
      * @return
      */
     public int next(int state, char c);
+
+    /**
+     * Get the start state.
+     *
+     * @return The start state.
+     */
+    public int startState();
 
     /**
      * Get the transition characters on outgoing transitions of the current state.
