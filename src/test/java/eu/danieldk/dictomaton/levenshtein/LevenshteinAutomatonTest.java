@@ -65,9 +65,11 @@ public class LevenshteinAutomatonTest {
         for (int i = 0; i < nPermutations; ++i) {
             int n = d_rng.nextInt(nRandomEditOperations);
 
-            String permuted = str;
+            StringBuilder permutedBuilder = new StringBuilder(str);
             for (int perm = 0; perm < n; ++perm)
-                permuted = d_editOperations[d_rng.nextInt(d_editOperations.length)].apply(permuted);
+                d_editOperations[d_rng.nextInt(d_editOperations.length)].apply(permutedBuilder);
+
+            String permuted = permutedBuilder.toString();
 
             all.add(permuted);
 
@@ -82,28 +84,26 @@ public class LevenshteinAutomatonTest {
     }
 
     private interface RandomEditOperation {
-        public String apply(String string);
+        public void apply(StringBuilder string);
     }
 
     private class RandomSubstitution implements RandomEditOperation {
 
-        public String apply(String string) {
-            StringBuilder sb = new StringBuilder(string);
-            sb.setCharAt(d_rng.nextInt(string.length()), d_characters[d_rng.nextInt(d_characters.length)]);
-            return sb.toString();
+        public void apply(StringBuilder sb) {
+            sb.setCharAt(d_rng.nextInt(sb.length()), d_characters[d_rng.nextInt(d_characters.length)]);
         }
 
     }
 
     private class RandomDelete implements RandomEditOperation {
-        public String apply(String string) {
-            return new StringBuilder(string).deleteCharAt(d_rng.nextInt(string.length())).toString();
+        public void apply(StringBuilder sb) {
+            sb.deleteCharAt(d_rng.nextInt(sb.length()));
         }
     }
 
     private class RanndomInsert implements RandomEditOperation {
-        public String apply(String string) {
-            return new StringBuilder(string).insert(d_rng.nextInt(string.length() + 1),
+        public void apply(StringBuilder sb) {
+            sb.insert(d_rng.nextInt(sb.length() + 1),
                     d_characters[d_rng.nextInt(d_characters.length)]).toString();
         }
     }
