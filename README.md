@@ -50,9 +50,10 @@ benchmarks via Maven, adding the Benchmarks group:
 
 ## Release plan
 
- * **0.0.4**: add ImmutableStringStringMap, wherein values are also stored
+ * **0.0.4**: Levenshtein automata.
+ * **0.0.5**: add ImmutableStringStringMap, wherein values are also stored
    in an automaton.
- * **0.0.5**: generic object values.
+ * **0.0.6**: generic object values.
  * **1.0.0**: first stable release.
 
 Plans for 1.2.0: Perhaps an explicit, fast, and compact data storage format
