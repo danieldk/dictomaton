@@ -21,4 +21,35 @@ public interface Dictionary extends Set<String>, Serializable {
      * @return Dot representation of the automaton.
      */
     public String toDot();
+
+    /**
+     * Returns <tt>true</tt> if the state is a final state and <tt>false</tt> otherwise.
+     * @param state The state.
+     * @return Finalness of the state.
+     */
+    public boolean isFinalState(int state);
+
+    /**
+     * Get the next state, given a character.
+     *
+     * @param state
+     * @param c
+     * @return
+     */
+    public int next(int state, char c);
+
+    /**
+     * Get the start state.
+     *
+     * @return The start state.
+     */
+    public int startState();
+
+    /**
+     * Get the transition characters on outgoing transitions of the current state.
+     *
+     * @param state
+     * @return
+     */
+    public Set<Character> transitionCharacters(int state);
 }

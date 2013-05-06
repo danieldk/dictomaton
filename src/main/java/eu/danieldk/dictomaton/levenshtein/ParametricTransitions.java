@@ -23,11 +23,11 @@ interface ParametricTransitions
 
     /**
      * The transition function.
-     * @param fromState The (non-parametric) from-state.
-     * @param position The word position.
+     * @param parametricState The parametric state.
+     * @param offset The state/word offset.
      * @param characteristicVector The characteristic vector.
      * @param len The length of the word.
      * @return
      */
-    public int transition(int fromState, int position, int characteristicVector, int len);
+    public int transition(int parametricState, int offset, int characteristicVector, int len);
 }

@@ -3,45 +3,43 @@ package eu.danieldk.dictomaton.levenshtein;
 class ParametricTransitions2 implements ParametricTransitions {
 
     @Override
-    public int transition(int fromState, int position, int characteristicVector, int len) {
-        int parFromState = fromState % d_nStates;
-        int parOffset = fromState / d_nStates;
+    public int transition(int parametricState, int offset, int characteristicVector, int len) {
         int parToState = -1;
         int parToOffset = 0;
 
-        if (position == len) {
-            if (parFromState < 3) {
-                int pos = characteristicVector * 3 + parFromState;
+        if (offset == len) {
+            if (parametricState < 3) {
+                int pos = characteristicVector * 3 + parametricState;
                 parToState = d_toStates[0][pos];
                 parToOffset = d_increments[0][pos];
             }
-        } else if (position == len - 1) {
-            if (parFromState < 5) {
-                int pos = characteristicVector * 5 + parFromState;
+        } else if (offset == len - 1) {
+            if (parametricState < 5) {
+                int pos = characteristicVector * 5 + parametricState;
                 parToState = d_toStates[1][pos];
                 parToOffset = d_increments[1][pos];
             }
-        } else if (position == len - 2) {
-            if (parFromState < 11) {
-                int pos = characteristicVector * 11 + parFromState;
+        } else if (offset == len - 2) {
+            if (parametricState < 11) {
+                int pos = characteristicVector * 11 + parametricState;
                 parToState = d_toStates[2][pos];
                 parToOffset = d_increments[2][pos];
             }
-        } else if (position == len - 3) {
-            if (parFromState < 21) {
-                int pos = characteristicVector * 21 + parFromState;
+        } else if (offset == len - 3) {
+            if (parametricState < 21) {
+                int pos = characteristicVector * 21 + parametricState;
                 parToState = d_toStates[3][pos];
                 parToOffset = d_increments[3][pos];
             }
-        } else if (position == len - 4) {
-            if (parFromState < 30) {
-                int pos = characteristicVector * 30 + parFromState;
+        } else if (offset == len - 4) {
+            if (parametricState < 30) {
+                int pos = characteristicVector * 30 + parametricState;
                 parToState = d_toStates[4][pos];
                 parToOffset = d_increments[4][pos];
             }
-        } else if (position <= len - 5) {
-            if (parFromState < 30) {
-                int pos = characteristicVector * 30 + parFromState;
+        } else if (offset <= len - 5) {
+            if (parametricState < 30) {
+                int pos = characteristicVector * 30 + parametricState;
                 parToState = d_toStates[5][pos];
                 parToOffset = d_increments[5][pos];
             }
@@ -50,7 +48,7 @@ class ParametricTransitions2 implements ParametricTransitions {
         if (parToState == -1)
             return -1;
 
-        return ((parOffset + parToOffset) * d_nStates) + parToState;
+        return ((offset + parToOffset) * d_nStates) + parToState;
     }
 
     @Override
