@@ -1,18 +1,47 @@
+// Copyright 2013 Daniel de Kok
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 package eu.danieldk.dictomaton.levenshtein;
-
-import eu.danieldk.dictomaton.Dictionary;
 
 import java.util.*;
 
+import eu.danieldk.dictomaton.Dictionary;
+
+/**
+ * A Levenshtein automaton is an automaton that accepts a string and all strings within
+ * a given edit distance. This class constructs the automaton from parametric state/transition
+ * tables, allowing for the construction of the automaton in <i>O(l*n)</i> time, where <i>l</i>
+ * is the word length and *n* the number of edit operations. In other words, the construction
+ * time grows linearly with the length of a word for a given edit distance.
+ */
 public class LevenshteinAutomaton {
-    private final static ParametricTransitions[] d_parametricTransitions = {new ParametricTransitions1(), new ParametricTransitions2()};
+    private final static ParametricTransitions[] d_parametricTransitions = {new ParametricTransitions1(),
+            new ParametricTransitions2()};
     private final LevenshteinAutomatonState d_startState;
     private final Set<Character> d_alphabet;
     private final char d_otherChar;
 
+    /**
+     * Construct a Levenshtein automaton for a word with a maximumum permitted Levenshtein
+     * distance. The maximum distance can currently be 1 or 2.
+     *
+     * @param word        The word.
+     * @param maxDistance The maximum distance.
+     */
     public LevenshteinAutomaton(String word, int maxDistance) {
-        if (maxDistance > d_parametricTransitions.length)
-            throw new IllegalArgumentException(String.format("The maximum supported edit distance is: %d", d_parametricTransitions.length));
+        if (maxDistance > d_parametricTransitions.length || maxDistance < 1)
+            throw new IllegalArgumentException(String.format("The maximum supported edit distance is: %d",
+                    d_parametricTransitions.length));
 
         d_alphabet = extractAlphabet(word);
         d_otherChar = findAnyChar(d_alphabet);
@@ -22,6 +51,11 @@ public class LevenshteinAutomaton {
         d_startState.reduce(d_otherChar);
     }
 
+    /**
+     * Return the automaton in Graphviz dot format.
+     *
+     * @return Dot representation.
+     */
     public String toDot() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("digraph G {\n");
@@ -93,10 +127,18 @@ public class LevenshteinAutomaton {
         return language;
     }
 
+    /**
+     * Create the Levenshtein automaton for a word.
+     *
+     * @param transitions The parametric transition table.
+     * @param word        The word.
+     * @return
+     */
     private LevenshteinAutomatonState createAutomaton(ParametricTransitions transitions, String word) {
         int n = transitions.nEditOperations();
 
-        LevenshteinAutomatonState[] states = new LevenshteinAutomatonState[(word.length() + 1) * transitions.nParametricStates()];
+        LevenshteinAutomatonState[] states = new LevenshteinAutomatonState[(word.length() + 1)
+                * transitions.nParametricStates()];
         for (int i = 0; i < states.length; ++i)
             states[i] = new LevenshteinAutomatonState();
 

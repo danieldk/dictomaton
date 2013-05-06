@@ -55,8 +55,7 @@ class LevenshteinAutomatonState {
         final int prime = 31;
         int result = 1;
         result = prime * result + (d_final ? 1231 : 1237);
-        result = prime * result
-                + ((transitions == null) ? 0 : transitionsHashCode());
+        result = prime * result + ((transitions == null) ? 0 : transitionsHashCode());
 
         d_recomputeHash = false;
         d_cachedHash = result;
