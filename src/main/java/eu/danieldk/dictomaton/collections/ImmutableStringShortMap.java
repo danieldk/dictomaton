@@ -182,6 +182,20 @@ public class ImmutableStringShortMap extends AbstractMap<String, Short> implemen
         return new EntrySet();
     }
 
+    @Override
+    public Short get(Object o) {
+        if (!(o instanceof String))
+            return null;
+
+        String key = (String) o;
+
+        int hashcode = d_keys.number(key);
+        if (hashcode == -1)
+            return null;
+
+        return d_values[hashcode - 1];
+    }
+
     /**
      * Get the value associated with a key, returning a default value is it
      * is not in the mapping.

@@ -182,6 +182,20 @@ public class ImmutableStringByteMap extends AbstractMap<String, Byte> implements
         return new EntrySet();
     }
 
+    @Override
+    public Byte get(Object o) {
+        if (!(o instanceof String))
+            return null;
+
+        String key = (String) o;
+
+        int hashcode = d_keys.number(key);
+        if (hashcode == -1)
+            return null;
+
+        return d_values[hashcode - 1];
+    }
+
     /**
      * Get the value associated with a key, returning a default value is it
      * is not in the mapping.
