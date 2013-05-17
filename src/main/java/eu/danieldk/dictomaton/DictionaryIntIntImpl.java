@@ -38,7 +38,7 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
     //       arrays.
 
     protected final char[] d_transitionChars;
-    protected final CompactIntArray d_transtitionTo;
+    protected final CompactIntArray d_transitionTo;
     protected final Set<Integer> d_finalStates;
     protected final int d_nSeqs;
 
@@ -101,7 +101,7 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
         if (trans == -1)
             return -1;
 
-        return d_transtitionTo.get(trans);
+        return d_transitionTo.get(trans);
     }
 
     @Override
@@ -160,7 +160,7 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
         for (int state = 0; state < d_stateOffsets.size(); ++state) {
             for (int trans = d_stateOffsets.get(state); trans < transitionsUpperBound(state); ++trans)
                 dotBuilder.append(String.format("%d -> %d [label=\"%c\"]\n",
-                        state, d_transtitionTo.get(trans), d_transitionChars[trans]));
+                        state, d_transitionTo.get(trans), d_transitionChars[trans]));
 
             if (d_finalStates.contains(state))
                 dotBuilder.append(String.format("%d [peripheries=2];\n", state));
@@ -218,7 +218,7 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
 
                 // Put states reachable through outgoing transitions on the stack.
                 for (int trans = transitionsUpperBound(state) - 1; trans >= d_stateOffsets.get(state); --trans)
-                    d_stack.push(new StateStringPair(d_transtitionTo.get(trans), string + d_transitionChars[trans]));
+                    d_stack.push(new StateStringPair(d_transitionTo.get(trans), string + d_transitionChars[trans]));
 
                 if (d_finalStates.contains(state)) {
                     --d_seqsRemaining;
@@ -270,7 +270,7 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
                                    int nSeqs) {
         d_stateOffsets = stateOffsets;
         d_transitionChars = transitionChars;
-        d_transtitionTo = transitionTo;
+        d_transitionTo = transitionTo;
         d_finalStates = finalStates;
         d_nSeqs = nSeqs;
     }

@@ -47,13 +47,13 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
 
             // Count the number of preceding suffixes in the preceding transitions.
             for (int j = d_stateOffsets.get(state); j < trans; j++)
-                num += d_stateNSuffixes.get(d_transtitionTo.get(j));
+                num += d_stateNSuffixes.get(d_transitionTo.get(j));
 
             // A final state is another suffix.
             if (d_finalStates.contains(state))
                 ++num;
 
-            state = d_transtitionTo.get(trans);
+            state = d_transitionTo.get(trans);
         }
 
         // If we found the sequence, return the number of preceding sequences, plus one.
@@ -89,7 +89,7 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
             // preceding suffixes.
             int trans;
             for (trans = d_stateOffsets.get(state); trans < transitionsUpperBound(state); ++trans) {
-                int stateNSuffixes = d_stateNSuffixes.get(d_transtitionTo.get(trans));
+                int stateNSuffixes = d_stateNSuffixes.get(d_transitionTo.get(trans));
 
                 if (hashCode - stateNSuffixes <= 0)
                     break;
@@ -99,7 +99,7 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
 
             // Add the character on the given transition and move.
             wordBuilder.append(d_transitionChars[trans]);
-            state = d_transtitionTo.get(trans);
+            state = d_transitionTo.get(trans);
 
             // If we encounter a final state, decrease the hash code, since it represents a
             // suffix. If our hash code is reduced to zero, we have found the sequence.
@@ -135,7 +135,7 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
         for (int state = 0; state < d_stateOffsets.size(); ++state) {
             for (int trans = d_stateOffsets.get(state); trans < transitionsUpperBound(state); ++trans)
                 dotBuilder.append(String.format("%d -> %d [label=\"%c\"]\n",
-                        state, d_transtitionTo.get(trans), d_transitionChars[trans]));
+                        state, d_transitionTo.get(trans), d_transitionChars[trans]));
 
             if (d_finalStates.contains(state))
                 dotBuilder.append(String.format("%d [peripheries=2,label=\"%d (%d)\"];\n", state, state, d_stateNSuffixes.get(state)));
@@ -176,7 +176,7 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
         suffixes = d_finalStates.contains(state) ? 1 : 0;
 
         for (int trans = d_stateOffsets.get(state); trans < transitionsUpperBound(state); ++trans)
-            suffixes += computeStateSuffixes(d_transtitionTo.get(trans), magicMarker);
+            suffixes += computeStateSuffixes(d_transitionTo.get(trans), magicMarker);
 
         d_stateNSuffixes.set(state, suffixes);
 
