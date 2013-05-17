@@ -25,7 +25,10 @@ import java.io.Serializable;
  */
 class CompactIntArray implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static int INT_SIZE = 32;
+    private static final int INT_SIZE = 32;
+    private static final int MASK[] = { 0x0, 0x1, 0x3, 0x7, 0xf, 0x1f, 0x3f, 0x7f, 0xff, 0x1ff, 0x3ff, 0x7ff, 0xfff, 0x1fff,
+            0x3fff, 0x7fff, 0xffff, 0x1ffff, 0x3ffff, 0x7ffff, 0xfffff, 0x1fffff, 0x3fffff, 0x7fffff, 0xffffff,
+            0x1ffffff, 0x3ffffff, 0x7ffffff, 0xfffffff, 0x1fffffff, 0x3fffffff, 0x7fffffff, 0xffffffff };
 
     private final int d_size;
     private final int d_bitsPerElem;
@@ -33,7 +36,8 @@ class CompactIntArray implements Serializable {
 
     /**
      * Construct an array of the given number of elements and (maximum) bit width per element.
-     * @param nElems The number of elements.
+     *
+     * @param nElems      The number of elements.
      * @param bitsPerElem The number of bits per element.
      */
     public CompactIntArray(int nElems, int bitsPerElem) {
@@ -49,6 +53,7 @@ class CompactIntArray implements Serializable {
 
     /**
      * Get the integer at the given index.
+     *
      * @param index The index.
      * @return An integer.
      */
@@ -59,11 +64,11 @@ class CompactIntArray implements Serializable {
         int startIdx = (index * d_bitsPerElem) / INT_SIZE;
         int startBit = (index * d_bitsPerElem) % INT_SIZE;
 
-        int result = (d_data[startIdx] & mask(startBit, d_bitsPerElem)) >>> startBit;
+        int result = (d_data[startIdx] >>> startBit) & MASK[d_bitsPerElem];
 
         if ((startBit + d_bitsPerElem) > 32) {
             int done = INT_SIZE - startBit;
-            result |= (d_data[startIdx + 1] & mask(0, d_bitsPerElem - done)) << done;
+            result |= (d_data[startIdx + 1] & MASK[d_bitsPerElem - done]) << done;
         }
 
         return result;
@@ -73,6 +78,7 @@ class CompactIntArray implements Serializable {
      * Set the integer at the given index. <b>Warning:</b> if you attempt to store an integer that
      * is wider than the width given to the constructor {@link #CompactIntArray(int, int)}, the integer
      * is truncated.
+     *
      * @param index The index.
      * @param value The value to store.
      */
@@ -84,7 +90,7 @@ class CompactIntArray implements Serializable {
         int startBit = (index * d_bitsPerElem) % INT_SIZE;
 
         // Clear data
-        d_data[startIdx] &= ~mask(startBit, d_bitsPerElem);
+        d_data[startIdx] &= ~(MASK[d_bitsPerElem] << startBit);
 
         // And set.
         d_data[startIdx] |= value << startBit;
@@ -92,7 +98,7 @@ class CompactIntArray implements Serializable {
         // If the integer didn't have enough bits available, write the rest in the next integer.
         if ((startBit + d_bitsPerElem) > 32) {
             int done = INT_SIZE - startBit;
-            d_data[startIdx + 1] &= ~mask(0, d_bitsPerElem - done);
+            d_data[startIdx + 1] &= ~MASK[d_bitsPerElem - done];
             d_data[startIdx + 1] |= value >>> done;
         }
 
@@ -100,6 +106,7 @@ class CompactIntArray implements Serializable {
 
     /**
      * Get the size of the array.
+     *
      * @return The size.
      */
     public int size() {
@@ -108,16 +115,5 @@ class CompactIntArray implements Serializable {
 
     public static int width(int n) {
         return INT_SIZE - Integer.numberOfLeadingZeros(n);
-    }
-
-    private int mask(int startBit, int nBits) {
-        // Get appropriate number of bits.
-        int mask = ~0 >>> (INT_SIZE - nBits);
-
-        //System.out.println(String.format("start: %d, nbits: %d, mask %s", startBit, nBits, Integer.toBinaryString(mask << startBit)));
-
-        // Shift to the right position.
-        return mask << startBit;
-
     }
 }
