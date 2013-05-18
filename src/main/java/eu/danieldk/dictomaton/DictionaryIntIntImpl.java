@@ -26,7 +26,7 @@ import java.util.*;
  * @author Daniel de Kok
  */
 class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     // Offset in the transition table of the given state. E.g. d_stateOffsets[3] = 10
     // means that state 3 starts at index 10 in the transition table.
@@ -39,7 +39,7 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
 
     protected final char[] d_transitionChars;
     protected final CompactIntArray d_transitionTo;
-    protected final Set<Integer> d_finalStates;
+    protected final BitSet d_finalStates;
     protected final int d_nSeqs;
 
     @Override
@@ -86,7 +86,7 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
 
     @Override
     public boolean isFinalState(int state) {
-        return d_finalStates.contains(state);
+        return d_finalStates.get(state);
     }
 
     @Override
@@ -162,7 +162,7 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
                 dotBuilder.append(String.format("%d -> %d [label=\"%c\"]\n",
                         state, d_transitionTo.get(trans), d_transitionChars[trans]));
 
-            if (d_finalStates.contains(state))
+            if (d_finalStates.get(state))
                 dotBuilder.append(String.format("%d [peripheries=2];\n", state));
         }
 
@@ -220,7 +220,7 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
                 for (int trans = transitionsUpperBound(state) - 1; trans >= d_stateOffsets.get(state); --trans)
                     d_stack.push(new StateStringPair(d_transitionTo.get(trans), string + d_transitionChars[trans]));
 
-                if (d_finalStates.contains(state)) {
+                if (d_finalStates.get(state)) {
                     --d_seqsRemaining;
                     return string;
                 }
@@ -266,7 +266,7 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
      * @param finalStates     Set of final states.
      */
     protected DictionaryIntIntImpl(CompactIntArray stateOffsets, char[] transitionChars,
-                                   CompactIntArray transitionTo, Set<Integer> finalStates,
+                                   CompactIntArray transitionTo, BitSet finalStates,
                                    int nSeqs) {
         d_stateOffsets = stateOffsets;
         d_transitionChars = transitionChars;
@@ -328,7 +328,7 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
                 return false;
         }
 
-        return d_finalStates.contains(state);
+        return d_finalStates.get(state);
     }
 
 }

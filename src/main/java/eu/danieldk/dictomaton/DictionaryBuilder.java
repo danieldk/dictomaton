@@ -204,7 +204,7 @@ public class DictionaryBuilder {
         CompactIntArray transTo = new CompactIntArray(nTransitions, CompactIntArray.width(sList.length - 1));
 
         // Final state set.
-        Set<Integer> finalStates = new HashSet<Integer>();
+        BitSet finalStates = new BitSet();
 
         // Construct the transition table.
         for (int i = 0; i < sList.length; i++) {
@@ -216,7 +216,7 @@ public class DictionaryBuilder {
             }
 
             if (sList[i].isFinal())
-                finalStates.add(i);
+                finalStates.set(i, true);
         }
 
         if (perfectHash)

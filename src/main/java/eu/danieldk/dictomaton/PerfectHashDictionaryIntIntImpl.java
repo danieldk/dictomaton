@@ -14,7 +14,7 @@
 
 package eu.danieldk.dictomaton;
 
-import java.util.Set;
+import java.util.BitSet;
 
 /**
  * A finite state dictionary with perfect hashing. Dictionaries of this
@@ -25,7 +25,7 @@ import java.util.Set;
  * @author Daniel de Kok
  */
 class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements PerfectHashDictionary {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     private final CompactIntArray d_stateNSuffixes;
 
@@ -50,14 +50,14 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
                 num += d_stateNSuffixes.get(d_transitionTo.get(j));
 
             // A final state is another suffix.
-            if (d_finalStates.contains(state))
+            if (d_finalStates.get(state))
                 ++num;
 
             state = d_transitionTo.get(trans);
         }
 
         // If we found the sequence, return the number of preceding sequences, plus one.
-        if (d_finalStates.contains(state))
+        if (d_finalStates.get(state))
             return num + 1;
         else
             return -1;
@@ -103,7 +103,7 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
 
             // If we encounter a final state, decrease the hash code, since it represents a
             // suffix. If our hash code is reduced to zero, we have found the sequence.
-            if (d_finalStates.contains(state)) {
+            if (d_finalStates.get(state)) {
                 --hashCode;
 
                 if (hashCode == 0)
@@ -137,7 +137,7 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
                 dotBuilder.append(String.format("%d -> %d [label=\"%c\"]\n",
                         state, d_transitionTo.get(trans), d_transitionChars[trans]));
 
-            if (d_finalStates.contains(state))
+            if (d_finalStates.get(state))
                 dotBuilder.append(String.format("%d [peripheries=2,label=\"%d (%d)\"];\n", state, state, d_stateNSuffixes.get(state)));
             else
                 dotBuilder.append(String.format("%d [label=\"%d (%d)\"];\n", state, state, d_stateNSuffixes.get(state)));
@@ -149,10 +149,10 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
     }
 
     /**
-     * @see DictionaryIntIntImpl#DictionaryIntIntImpl(CompactIntArray, char[], CompactIntArray, Set, int)
+     * @see DictionaryIntIntImpl#DictionaryIntIntImpl(CompactIntArray, char[], CompactIntArray, java.util.BitSet, int)
      */
     protected PerfectHashDictionaryIntIntImpl(CompactIntArray stateOffsets, char[] transitionChars,
-                                              CompactIntArray transitionTo, Set<Integer> finalStates,
+                                              CompactIntArray transitionTo, BitSet finalStates,
                                               int nSeqs) {
         super(stateOffsets, transitionChars, transitionTo, finalStates, nSeqs);
 
@@ -173,7 +173,7 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
         if (suffixes != magicMarker)
             return suffixes;
 
-        suffixes = d_finalStates.contains(state) ? 1 : 0;
+        suffixes = d_finalStates.get(state) ? 1 : 0;
 
         for (int trans = d_stateOffsets.get(state); trans < transitionsUpperBound(state); ++trans)
             suffixes += computeStateSuffixes(d_transitionTo.get(trans), magicMarker);
