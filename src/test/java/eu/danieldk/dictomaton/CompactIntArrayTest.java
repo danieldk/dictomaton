@@ -14,9 +14,11 @@
 
 package eu.danieldk.dictomaton;
 
+import eu.danieldk.dictomaton.categories.Tests;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,7 @@ import java.util.Random;
 /**
  * Unit tests for {@link eu.danieldk.dictomaton.CompactIntArray}.
  */
+@Category(Tests.class)
 public class CompactIntArrayTest {
     private final int NUMBER_TESTS = 500;
     private final int MAX_ARRAY_LEN = 2000;
