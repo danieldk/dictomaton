@@ -29,6 +29,7 @@ public class PerfectHashDictionaryTest {
     private List<String> d_words2;
     private List<String> d_words3;
     private PerfectHashDictionary d_dict;
+    private PerfectHashDictionary d_dictTransitionCardinality;
 
     @SuppressWarnings("serial")
     @Before
@@ -61,6 +62,7 @@ public class PerfectHashDictionaryTest {
         }};
 
         d_dict = new DictionaryBuilder().addAll(d_words1).buildPerfectHash();
+        d_dictTransitionCardinality = new DictionaryBuilder().addAll(d_words1).buildPerfectHash(false);
     }
 
     @Test
@@ -93,9 +95,24 @@ public class PerfectHashDictionaryTest {
     }
 
     @Test
+    public void toNumberTransitionsTest() {
+        for (int i = 0; i < d_words1.size(); i++)
+            Assert.assertEquals(i + 1, d_dictTransitionCardinality.number(d_words1.get(i)));
+
+        for (int i = 0; i < d_words2.size(); i++)
+            Assert.assertEquals(-1, d_dictTransitionCardinality.number(d_words2.get(i)));
+    }
+
+    @Test
     public void toWordTest() {
         for (int i = 0; i < d_words1.size(); i++)
             Assert.assertEquals(d_words1.get(i), d_dict.sequence(i + 1));
+    }
+
+    @Test
+    public void toWordTransitionsTest() {
+        for (int i = 0; i < d_words1.size(); i++)
+            Assert.assertEquals(d_words1.get(i), d_dictTransitionCardinality.sequence(i + 1));
     }
 
     @Test

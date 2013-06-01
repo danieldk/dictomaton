@@ -18,16 +18,16 @@ import java.util.BitSet;
 
 /**
  * A finite state dictionary with perfect hashing. Dictionaries of this
- * type can are constructed using {@link eu.danieldk.dictomaton.DictionaryBuilder#buildPerfectHash()}.
+ * type can are constructed using {@link DictionaryBuilder#buildPerfectHash()}.
  * <p/>
  * This class uses integers (int) for transition and state numbers.
  *
  * @author Daniel de Kok
  */
-class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements PerfectHashDictionary {
-    private static final long serialVersionUID = 2L;
+class PerfectHashDictionaryTransitionImpl extends DictionaryIntIntImpl implements PerfectHashDictionary {
+    private static final long serialVersionUID = 1L;
 
-    private final CompactIntArray d_stateNSuffixes;
+    private final CompactIntArray d_transitionNSuffixes;
 
     /**
      * Compute the perfect hash code of the given character sequence.
@@ -46,8 +46,7 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
                 return -1;
 
             // Count the number of preceding suffixes in the preceding transitions.
-            for (int j = d_stateOffsets.get(state); j < trans; j++)
-                num += d_stateNSuffixes.get(d_transitionTo.get(j));
+            num += d_transitionNSuffixes.get(trans);
 
             // A final state is another suffix.
             if (d_finalStates.get(state))
@@ -77,7 +76,7 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
 
         // If the hash code is larger than the number of suffixes in the start state,
         // the hash code does not correspond to a sequence.
-        if (hashCode > d_stateNSuffixes.get(state))
+        if (hashCode > d_nSeqs)
             return null;
 
         StringBuilder wordBuilder = new StringBuilder();
@@ -88,14 +87,18 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
             // Obtain the next transition, decreasing the hash code by the number of
             // preceding suffixes.
             int trans;
+            // Todo: use binary search.
             for (trans = d_stateOffsets.get(state); trans < transitionsUpperBound(state); ++trans) {
-                int stateNSuffixes = d_stateNSuffixes.get(d_transitionTo.get(trans));
+                int transNSuffixes = d_transitionNSuffixes.get(trans);
 
-                if (hashCode - stateNSuffixes <= 0)
+                if (hashCode <= transNSuffixes) {
                     break;
-
-                hashCode -= stateNSuffixes;
+                }
             }
+
+            --trans;
+
+            hashCode -= d_transitionNSuffixes.get(trans);
 
             // Add the character on the given transition and move.
             wordBuilder.append(d_transitionChars[trans]);
@@ -134,13 +137,13 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
 
         for (int state = 0; state < d_stateOffsets.size(); ++state) {
             for (int trans = d_stateOffsets.get(state); trans < transitionsUpperBound(state); ++trans)
-                dotBuilder.append(String.format("%d -> %d [label=\"%c\"]\n",
-                        state, d_transitionTo.get(trans), d_transitionChars[trans]));
+                dotBuilder.append(String.format("%d -> %d [label=\"%c (%d)\"]\n",
+                        state, d_transitionTo.get(trans), d_transitionChars[trans], d_transitionNSuffixes.get(trans)));
 
             if (d_finalStates.get(state))
-                dotBuilder.append(String.format("%d [peripheries=2,label=\"%d (%d)\"];\n", state, state, d_stateNSuffixes.get(state)));
+                dotBuilder.append(String.format("%d [peripheries=2,label=\"%d\"];\n", state, state));
             else
-                dotBuilder.append(String.format("%d [label=\"%d (%d)\"];\n", state, state, d_stateNSuffixes.get(state)));
+                dotBuilder.append(String.format("%d [label=\"%d\"];\n", state, state));
         }
 
         dotBuilder.append("}");
@@ -149,36 +152,55 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
     }
 
     /**
-     * @see DictionaryIntIntImpl#DictionaryIntIntImpl(CompactIntArray, char[], CompactIntArray, java.util.BitSet, int)
+     * @see eu.danieldk.dictomaton.DictionaryIntIntImpl#DictionaryIntIntImpl(eu.danieldk.dictomaton.CompactIntArray, char[], eu.danieldk.dictomaton.CompactIntArray, java.util.BitSet, int)
      */
-    protected PerfectHashDictionaryIntIntImpl(CompactIntArray stateOffsets, char[] transitionChars,
-                                              CompactIntArray transitionTo, BitSet finalStates,
-                                              int nSeqs) {
+    protected PerfectHashDictionaryTransitionImpl(CompactIntArray stateOffsets, char[] transitionChars,
+                                                  CompactIntArray transitionTo, BitSet finalStates,
+                                                  int nSeqs) {
         super(stateOffsets, transitionChars, transitionTo, finalStates, nSeqs);
 
         // Marker that indicates that the number of suffixes of a state is not yet computed. We cannot
         // use -1, since CompactIntArray would then require 32-bit per value.
         final int magicMarker = nSeqs + 1;
 
-        d_stateNSuffixes = new CompactIntArray(d_stateOffsets.size(), CompactIntArray.width(magicMarker));
-        for (int i = 0; i < d_stateNSuffixes.size(); ++i)
-            d_stateNSuffixes.set(i, magicMarker);
+        CompactIntArray stateNSuffixes = new CompactIntArray(d_stateOffsets.size(), CompactIntArray.width(magicMarker));
+        for (int i = 0; i < stateNSuffixes.size(); ++i)
+            stateNSuffixes.set(i, magicMarker);
 
-        computeStateSuffixes(0, magicMarker);
+        computeStateSuffixes(0, magicMarker, stateNSuffixes);
+
+        d_transitionNSuffixes = transitionPrecedingTable(magicMarker, stateNSuffixes);
     }
 
-    private int computeStateSuffixes(final int state, final int magicMarker) {
-        int suffixes = d_stateNSuffixes.get(state);
+    private int computeStateSuffixes(final int state, final int magicMarker, CompactIntArray stateNSuffixes) {
+
+        int suffixes = stateNSuffixes.get(state);
         if (suffixes != magicMarker)
             return suffixes;
 
         suffixes = d_finalStates.get(state) ? 1 : 0;
 
         for (int trans = d_stateOffsets.get(state); trans < transitionsUpperBound(state); ++trans)
-            suffixes += computeStateSuffixes(d_transitionTo.get(trans), magicMarker);
+            suffixes += computeStateSuffixes(d_transitionTo.get(trans), magicMarker, stateNSuffixes);
 
-        d_stateNSuffixes.set(state, suffixes);
+        stateNSuffixes.set(state, suffixes);
 
         return suffixes;
+    }
+
+    private CompactIntArray transitionPrecedingTable(int magicMarker, CompactIntArray stateRightCard)
+    {
+        CompactIntArray table = new CompactIntArray(d_transitionTo.size(), CompactIntArray.width(magicMarker - 1));
+
+        for (int state = 0; state < d_stateOffsets.size(); ++state) {
+            int preceding = 0;
+            for (int trans = d_stateOffsets.get(state); trans < transitionsUpperBound(state); ++trans)
+            {
+                table.set(trans, preceding);
+                preceding += stateRightCard.get(d_transitionTo.get(trans));
+            }
+        }
+
+        return table;
     }
 }

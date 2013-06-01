@@ -15,6 +15,7 @@ public class PerfectHashDictionaryBenchmark extends AbstractBenchmark {
     private static SortedSet<String> d_words1;
     private static SortedSet<String> d_words2;
     private static PerfectHashDictionary d_dict;
+    private static PerfectHashDictionary d_transCardDict;
 
     @BeforeClass
     public static void initializeExpensive() throws DictionaryBuilderException, IOException {
@@ -22,6 +23,7 @@ public class PerfectHashDictionaryBenchmark extends AbstractBenchmark {
         d_words2 = Util.loadWordList("eu/danieldk/dictomaton/web2-2");
 
         d_dict = new DictionaryBuilder().addAll(d_words1).buildPerfectHash();
+        d_transCardDict = new DictionaryBuilder().addAll(d_words1).buildPerfectHash(false);
     }
 
     @Test
@@ -34,6 +36,19 @@ public class PerfectHashDictionaryBenchmark extends AbstractBenchmark {
 
         for (String word : d_words2)
             Assert.assertEquals(-1, d_dict.number(word));
+
+    }
+
+    @Test
+    public void wordToNumberTransCardBenchmark() {
+        int i = 1;
+        for (String word : d_words1) {
+            Assert.assertEquals(i, d_transCardDict.number(word));
+            ++i;
+        }
+
+        for (String word : d_words2)
+            Assert.assertEquals(-1, d_transCardDict.number(word));
 
     }
 

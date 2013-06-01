@@ -113,7 +113,7 @@ public class DictionaryBuilder {
      * @return A finite state dictionary.
      */
     public Dictionary build() {
-        return build(false);
+        return build(false, false);
     }
 
     /**
@@ -122,7 +122,11 @@ public class DictionaryBuilder {
      * @return A perfect hash automaton.
      */
     public PerfectHashDictionary buildPerfectHash() {
-        return (PerfectHashDictionary) build(true);
+        return (PerfectHashDictionary) build(true, true);
+    }
+
+    public PerfectHashDictionary buildPerfectHash(boolean stateSuffixes) {
+        return (PerfectHashDictionary) build(true, stateSuffixes);
     }
 
     private void finalizeDictionary() {
@@ -181,7 +185,7 @@ public class DictionaryBuilder {
         s.setFinal(true);
     }
 
-    private Dictionary build(boolean perfectHash) {
+    private Dictionary build(boolean perfectHash, boolean stateSuffixes) {
         finalizeDictionary();
 
         Map<State, Integer> stateNumbers = numberedStates();
@@ -219,8 +223,10 @@ public class DictionaryBuilder {
                 finalStates.set(i, true);
         }
 
-        if (perfectHash)
+        if (perfectHash && stateSuffixes)
             return new PerfectHashDictionaryIntIntImpl(offsets, transChars, transTo, finalStates, d_nSeqs);
+        else if (perfectHash)
+            return new PerfectHashDictionaryTransitionImpl(offsets, transChars, transTo, finalStates, d_nSeqs);
         else
             return new DictionaryIntIntImpl(offsets, transChars, transTo, finalStates, d_nSeqs);
     }
