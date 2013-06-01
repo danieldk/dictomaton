@@ -224,11 +224,11 @@ public class DictionaryBuilder {
         }
 
         if (perfectHash && stateSuffixes)
-            return new PerfectHashDictionaryIntIntImpl(offsets, transChars, transTo, finalStates, d_nSeqs);
+            return new PerfectHashDictionaryStateCard(offsets, transChars, transTo, finalStates, d_nSeqs);
         else if (perfectHash)
-            return new PerfectHashDictionaryTransitionImpl(offsets, transChars, transTo, finalStates, d_nSeqs);
+            return new PerfectHashDictionaryTransCard(offsets, transChars, transTo, finalStates, d_nSeqs);
         else
-            return new DictionaryIntIntImpl(offsets, transChars, transTo, finalStates, d_nSeqs);
+            return new DictionaryImpl(offsets, transChars, transTo, finalStates, d_nSeqs);
     }
 
     private Map<State, Integer> numberedStates() {

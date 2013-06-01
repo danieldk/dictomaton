@@ -17,14 +17,13 @@ package eu.danieldk.dictomaton;
 import java.util.BitSet;
 
 /**
- * A finite state dictionary with perfect hashing. Dictionaries of this
- * type can are constructed using {@link eu.danieldk.dictomaton.DictionaryBuilder#buildPerfectHash()}.
- * <p/>
- * This class uses integers (int) for transition and state numbers.
+ * A finite state dictionary with perfect hashing, that puts right language cardinalities in states.
+ * Dictionaries of this type can are constructed using
+ * {@link eu.danieldk.dictomaton.DictionaryBuilder#buildPerfectHash()}.
  *
  * @author Daniel de Kok
  */
-class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements PerfectHashDictionary {
+class PerfectHashDictionaryStateCard extends DictionaryImpl implements PerfectHashDictionary {
     private static final long serialVersionUID = 2L;
 
     private final CompactIntArray d_stateNSuffixes;
@@ -149,11 +148,11 @@ class PerfectHashDictionaryIntIntImpl extends DictionaryIntIntImpl implements Pe
     }
 
     /**
-     * @see DictionaryIntIntImpl#DictionaryIntIntImpl(CompactIntArray, char[], CompactIntArray, java.util.BitSet, int)
+     * @see DictionaryImpl#DictionaryImpl(CompactIntArray, char[], CompactIntArray, java.util.BitSet, int)
      */
-    protected PerfectHashDictionaryIntIntImpl(CompactIntArray stateOffsets, char[] transitionChars,
-                                              CompactIntArray transitionTo, BitSet finalStates,
-                                              int nSeqs) {
+    protected PerfectHashDictionaryStateCard(CompactIntArray stateOffsets, char[] transitionChars,
+                                             CompactIntArray transitionTo, BitSet finalStates,
+                                             int nSeqs) {
         super(stateOffsets, transitionChars, transitionTo, finalStates, nSeqs);
 
         // Marker that indicates that the number of suffixes of a state is not yet computed. We cannot

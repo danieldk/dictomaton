@@ -25,7 +25,7 @@ import java.util.*;
  *
  * @author Daniel de Kok
  */
-class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
+class DictionaryImpl extends AbstractSet<String> implements Dictionary {
     private static final long serialVersionUID = 2L;
 
     // Offset in the transition table of the given state. E.g. d_stateOffsets[3] = 10
@@ -265,9 +265,9 @@ class DictionaryIntIntImpl extends AbstractSet<String> implements Dictionary {
      * @param transitionTo    Transition table (to-transitions).
      * @param finalStates     Set of final states.
      */
-    protected DictionaryIntIntImpl(CompactIntArray stateOffsets, char[] transitionChars,
-                                   CompactIntArray transitionTo, BitSet finalStates,
-                                   int nSeqs) {
+    protected DictionaryImpl(CompactIntArray stateOffsets, char[] transitionChars,
+                             CompactIntArray transitionTo, BitSet finalStates,
+                             int nSeqs) {
         d_stateOffsets = stateOffsets;
         d_transitionChars = transitionChars;
         d_transitionTo = transitionTo;

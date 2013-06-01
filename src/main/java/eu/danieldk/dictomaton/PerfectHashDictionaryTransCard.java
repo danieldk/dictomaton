@@ -17,14 +17,13 @@ package eu.danieldk.dictomaton;
 import java.util.BitSet;
 
 /**
- * A finite state dictionary with perfect hashing. Dictionaries of this
- * type can are constructed using {@link DictionaryBuilder#buildPerfectHash()}.
- * <p/>
- * This class uses integers (int) for transition and state numbers.
+ * A finite state dictionary with perfect hashing, that puts right language cardinalities in transitions.
+ * Dictionaries of this type can are constructed using
+ * {@link eu.danieldk.dictomaton.DictionaryBuilder#buildPerfectHash()}.
  *
  * @author Daniel de Kok
  */
-class PerfectHashDictionaryTransitionImpl extends DictionaryIntIntImpl implements PerfectHashDictionary {
+class PerfectHashDictionaryTransCard extends DictionaryImpl implements PerfectHashDictionary {
     private static final long serialVersionUID = 1L;
 
     private final CompactIntArray d_transitionNSuffixes;
@@ -152,11 +151,11 @@ class PerfectHashDictionaryTransitionImpl extends DictionaryIntIntImpl implement
     }
 
     /**
-     * @see eu.danieldk.dictomaton.DictionaryIntIntImpl#DictionaryIntIntImpl(eu.danieldk.dictomaton.CompactIntArray, char[], eu.danieldk.dictomaton.CompactIntArray, java.util.BitSet, int)
+     * @see DictionaryImpl#DictionaryImpl(eu.danieldk.dictomaton.CompactIntArray, char[], eu.danieldk.dictomaton.CompactIntArray, java.util.BitSet, int)
      */
-    protected PerfectHashDictionaryTransitionImpl(CompactIntArray stateOffsets, char[] transitionChars,
-                                                  CompactIntArray transitionTo, BitSet finalStates,
-                                                  int nSeqs) {
+    protected PerfectHashDictionaryTransCard(CompactIntArray stateOffsets, char[] transitionChars,
+                                             CompactIntArray transitionTo, BitSet finalStates,
+                                             int nSeqs) {
         super(stateOffsets, transitionChars, transitionTo, finalStates, nSeqs);
 
         // Marker that indicates that the number of suffixes of a state is not yet computed. We cannot
