@@ -52,6 +52,33 @@ class CompactIntArray implements Serializable {
     }
 
     /**
+     * Search a value in the array, the subarray <i>(fromIndex, toIndex]</i> should be sorted.
+     * @param fromIndex The index of the first element to be searched.
+     * @param toIndex The index of the last element to be searched (exclusive).
+     * @param value The value to be searched.
+     * @return
+     */
+    public int binarySearch(int fromIndex, int toIndex, int value)
+    {
+        --toIndex;
+
+        while (toIndex >= fromIndex)
+        {
+            int mid = (int) (((long) toIndex + (long) fromIndex) / 2L);
+            int midVal = get(mid);
+
+            if (midVal > value)
+                toIndex = mid - 1;
+            else if (midVal < value)
+                fromIndex = mid + 1;
+            else
+                return mid;
+        }
+
+        return -(fromIndex + 1);
+    }
+
+    /**
      * Get the integer at the given index.
      *
      * @param index The index.

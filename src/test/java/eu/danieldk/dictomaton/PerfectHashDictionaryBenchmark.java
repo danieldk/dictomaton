@@ -60,4 +60,14 @@ public class PerfectHashDictionaryBenchmark extends AbstractBenchmark {
             i++;
         }
     }
+
+    @Test
+    public void numberToWordTransCardBenchmark() {
+        int i = 1;
+        for (String word : d_words1) {
+            Assert.assertEquals(word, d_transCardDict.sequence(i));
+            i++;
+        }
+    }
+
 }

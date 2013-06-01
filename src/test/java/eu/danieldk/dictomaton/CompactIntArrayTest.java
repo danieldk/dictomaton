@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -37,6 +38,26 @@ public class CompactIntArrayTest {
     @Before
     public void initialize() {
         rng = new Random(42);
+    }
+
+    @Test
+    public void binarySearchTest() {
+        for (int bits = 8; bits < 16; ++bits) {
+            for (int n = 0; n < NUMBER_TESTS; ++n) {
+                int l = rng.nextInt(MAX_ARRAY_LEN);
+
+                CompactIntArray test = new CompactIntArray(l, bits);
+                List<Integer> check = randomList(rng, bits, l);
+                Collections.sort(check);
+
+                for (int i = 0; i < l; ++i)
+                    test.set(i, check.get(i));
+
+                List<Integer> needles = randomList(rng, bits, l);
+                for (Integer needle : needles)
+                    Assert.assertEquals(Collections.binarySearch(check, needle), test.binarySearch(0, test.size(), needle));
+            }
+        }
     }
 
     @Test

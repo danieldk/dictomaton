@@ -85,17 +85,11 @@ class PerfectHashDictionaryTransCard extends DictionaryImpl implements PerfectHa
 
             // Obtain the next transition, decreasing the hash code by the number of
             // preceding suffixes.
-            int trans;
-            // Todo: use binary search.
-            for (trans = d_stateOffsets.get(state); trans < transitionsUpperBound(state); ++trans) {
-                int transNSuffixes = d_transitionNSuffixes.get(trans);
-
-                if (hashCode <= transNSuffixes) {
-                    break;
-                }
-            }
-
-            --trans;
+            int trans = d_transitionNSuffixes.binarySearch(d_stateOffsets.get(state), transitionsUpperBound(state), hashCode);
+            if (trans >= 0)
+                --trans;
+            else
+                trans = -trans - 2;
 
             hashCode -= d_transitionNSuffixes.get(trans);
 
