@@ -64,7 +64,7 @@ public class ImmutableStringShortMap extends AbstractMap<String, Short> implemen
          * Construct a {@link ImmutableStringShortMap}.
          */
         public synchronized ImmutableStringShortMap build() throws DictionaryBuilderException {
-            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
+            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash(false);
 
             short[] values = new short[d_map.size()];
 

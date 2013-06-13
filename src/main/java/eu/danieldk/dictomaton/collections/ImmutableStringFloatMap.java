@@ -64,7 +64,7 @@ public class ImmutableStringFloatMap extends AbstractMap<String, Float> implemen
          * Construct a {@link ImmutableStringFloatMap}.
          */
         public synchronized ImmutableStringFloatMap build() throws DictionaryBuilderException {
-            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
+            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash(false);
 
             float[] values = new float[d_map.size()];
 

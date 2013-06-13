@@ -64,7 +64,7 @@ public class ImmutableStringByteMap extends AbstractMap<String, Byte> implements
          * Construct a {@link ImmutableStringByteMap}.
          */
         public synchronized ImmutableStringByteMap build() throws DictionaryBuilderException {
-            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
+            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash(false);
 
             byte[] values = new byte[d_map.size()];
 

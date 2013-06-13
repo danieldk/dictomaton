@@ -64,7 +64,7 @@ public class ImmutableStringCharMap extends AbstractMap<String, Character> imple
          * Construct a {@link ImmutableStringCharMap}.
          */
         public synchronized ImmutableStringCharMap build() throws DictionaryBuilderException {
-            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
+            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash(false);
 
             char[] values = new char[d_map.size()];
 

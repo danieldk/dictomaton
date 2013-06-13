@@ -64,7 +64,7 @@ public class ImmutableStringIntMap extends AbstractMap<String, Integer> implemen
          * Construct a {@link ImmutableStringIntMap}.
          */
         public synchronized ImmutableStringIntMap build() throws DictionaryBuilderException {
-            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
+            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash(false);
 
             int[] values = new int[d_map.size()];
 

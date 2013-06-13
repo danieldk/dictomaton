@@ -64,7 +64,7 @@ public class ImmutableStringDoubleMap extends AbstractMap<String, Double> implem
          * Construct a {@link ImmutableStringDoubleMap}.
          */
         public synchronized ImmutableStringDoubleMap build() throws DictionaryBuilderException {
-            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
+            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash(false);
 
             double[] values = new double[d_map.size()];
 

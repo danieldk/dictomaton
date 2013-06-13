@@ -64,7 +64,7 @@ public class ImmutableStringBooleanMap extends AbstractMap<String, Boolean> impl
          * Construct a {@link ImmutableStringBooleanMap}.
          */
         public synchronized ImmutableStringBooleanMap build() throws DictionaryBuilderException {
-            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
+            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash(false);
 
             boolean[] values = new boolean[d_map.size()];
 

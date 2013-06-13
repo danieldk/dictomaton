@@ -64,7 +64,7 @@ public class ImmutableStringLongMap extends AbstractMap<String, Long> implements
          * Construct a {@link ImmutableStringLongMap}.
          */
         public synchronized ImmutableStringLongMap build() throws DictionaryBuilderException {
-            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
+            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash(false);
 
             long[] values = new long[d_map.size()];
 
