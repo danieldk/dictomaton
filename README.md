@@ -43,6 +43,9 @@ benchmarks via Maven, adding the Benchmarks group:
 
 * Added Levenshtein automata for looking up sequences in a <tt>Dictionary</tt> that
   are within a certain edit distance of a sequence.
+* Provide a variant of perfect hash automata that puts right language
+  cardinalities in transitions rather than states. This provides faster
+  hashing and hashcode lookups at the cost of some memory.
 
 ### 0.0.3
 
