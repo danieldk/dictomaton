@@ -64,7 +64,7 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
          * Construct a {@link ImmutableString##TYPE_NAME##Map}.
          */
         public synchronized ImmutableString##TYPE_NAME##Map build() throws DictionaryBuilderException {
-            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash();
+            PerfectHashDictionary dict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash(false);
 
             ##UNBOXED_TYPE##[] values = new ##UNBOXED_TYPE##[d_map.size()];
 
