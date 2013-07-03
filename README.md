@@ -46,6 +46,7 @@ benchmarks via Maven, adding the Benchmarks group:
 * Provide a variant of perfect hash automata that puts right language
   cardinalities in transitions rather than states. This provides faster
   hashing and hashcode lookups at the cost of some memory.
+* Added String to String mapping (<tt>ImmutableStringStringMap</tt>).
 
 ### 0.0.3
 
@@ -60,8 +61,6 @@ benchmarks via Maven, adding the Benchmarks group:
 ## Release plan
 
 
- * **0.0.5**: add ImmutableStringStringMap, wherein values are also stored
-   in an automaton.
  * **0.0.6**: generic object values.
  * **1.0.0**: first stable release.
 
