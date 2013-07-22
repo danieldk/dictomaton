@@ -130,6 +130,7 @@ class DictionaryImpl extends AbstractSet<String> implements Dictionary {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T[] toArray(T[] a) {
         T[] r = a.length >= d_nSeqs ? a : (T[]) Array.newInstance(a.getClass().getComponentType(), d_nSeqs);
 
