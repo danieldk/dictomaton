@@ -39,7 +39,7 @@ benchmarks via Maven, adding the Benchmarks group:
 
 ## Changelog
 
-### 0.0.4
+### 1.0.0
 
 * Added Levenshtein automata for looking up sequences in a <tt>Dictionary</tt> that
   are within a certain edit distance of a sequence.
@@ -61,8 +61,8 @@ benchmarks via Maven, adding the Benchmarks group:
 ## Release plan
 
 
- * **0.0.6**: generic object values.
  * **1.0.0**: first stable release.
+ * **1.1.0**: generic object values.
 
 Plans for 1.2.0: Perhaps an explicit, fast, and compact data storage format
 as an alternative to Java serialization. C or C++ version.
