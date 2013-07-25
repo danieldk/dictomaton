@@ -47,6 +47,7 @@ benchmarks via Maven, adding the Benchmarks group:
   cardinalities in transitions rather than states. This provides faster
   hashing and hashcode lookups at the cost of some memory.
 * Added String to String mapping (<tt>ImmutableStringStringMap</tt>).
+* Generic object values.
 
 ### 0.0.3
 
@@ -59,7 +60,6 @@ benchmarks via Maven, adding the Benchmarks group:
 
 
 ## Release plan
-
 
  * **1.0.0**: first stable release.
  * **1.1.0**: generic object values.
