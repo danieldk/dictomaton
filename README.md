@@ -15,6 +15,30 @@ automata. *Dictomaton* has the following features:
  * String to primitive type mappings, where the keys are stored in a perfect
    hashing automaton and the values in an (unboxed) array.
 
+## Using Dictomaton
+
+Dictomaton is in the Maven Central Repository:
+
+~~~
+<dependency>
+    <groupId>eu.danieldk.dictomaton</groupId>
+    <artifactId>dictomaton</artifactId>
+    <version>1.0.0</version>
+</dependency>
+~~~
+
+SBT:
+
+~~~
+libraryDependencies += "eu.danieldk.dictomaton" % "dictomaton" % "1.0.0"
+~~~
+
+Grails:
+
+~~~
+compile 'eu.danieldk.dictomaton:dictomaton:1.0.0'
+~~~
+
 ## Comparisons
 
 The following table compares the sizes of the object graphs of the
