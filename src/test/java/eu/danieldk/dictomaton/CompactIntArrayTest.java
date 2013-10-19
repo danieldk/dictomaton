@@ -135,7 +135,7 @@ public class CompactIntArrayTest {
         return check;
     }
 
-    public int upperNum(int bits) {
+    private int upperNum(int bits) {
         return (1 << bits) - 1;
     }
 }

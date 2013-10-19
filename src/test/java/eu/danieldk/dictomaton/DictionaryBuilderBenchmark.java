@@ -35,10 +35,6 @@ public class DictionaryBuilderBenchmark extends AbstractBenchmark {
         d_wordsLong.addAll(Util.loadWordList("eu/danieldk/dictomaton/web2-2"));
     }
 
-    @Before
-    public void initialize() throws DictionaryBuilderException {
-    }
-
     @Test
     public void treeSetConstructionTest() {
         TreeSet<String> ts = new TreeSet<String>();

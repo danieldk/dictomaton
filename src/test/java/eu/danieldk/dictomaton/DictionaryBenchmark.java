@@ -13,14 +13,12 @@ import java.util.SortedSet;
 @Category(Benchmarks.class)
 public class DictionaryBenchmark extends AbstractBenchmark {
     private static SortedSet<String> d_words1;
-    private static SortedSet<String> d_words2;
     private static Dictionary d_dict;
     private static HashSet<String> d_hashSet;
 
     @BeforeClass
     public static void initializeExpensive() throws DictionaryBuilderException, IOException {
         d_words1 = Util.loadWordList("eu/danieldk/dictomaton/web2-1");
-        d_words2 = Util.loadWordList("eu/danieldk/dictomaton/web2-2");
 
         d_dict = new DictionaryBuilder().addAll(d_words1).build();
 

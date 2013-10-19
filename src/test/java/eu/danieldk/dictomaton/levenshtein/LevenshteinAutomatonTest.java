@@ -17,8 +17,8 @@ import java.util.TreeSet;
 
 @Category(Tests.class)
 public class LevenshteinAutomatonTest {
-    final char[] d_characters = {'a', 'b', 'c', 'd', 'e', 'f'};
-    final RandomEditOperation[] d_editOperations = {new RandomSubstitution(), new RanndomInsert(), new RandomDelete()};
+    private final char[] d_characters = {'a', 'b', 'c', 'd', 'e', 'f'};
+    private final RandomEditOperation[] d_editOperations = {new RandomSubstitution(), new RanndomInsert(), new RandomDelete()};
 
     private final int MIN_LENGTH = 5;
     private final int MAX_LENGTH = 15;

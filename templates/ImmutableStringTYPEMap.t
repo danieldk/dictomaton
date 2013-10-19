@@ -27,8 +27,8 @@ import java.util.*;
 public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED_TYPE##> implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private PerfectHashDictionary d_keys;
-    private ##UNBOXED_TYPE##[] d_values;
+    private final PerfectHashDictionary d_keys;
+    private final ##UNBOXED_TYPE##[] d_values;
 
     /**
      * A builder for {@link ImmutableString##TYPE_NAME##Map}. Mappings
@@ -38,7 +38,7 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
      */
     public static class Builder {
 
-        private TreeMap<String, ##BOXED_TYPE##> d_map;
+        private final TreeMap<String, ##BOXED_TYPE##> d_map;
 
         public Builder() {
             d_map = new TreeMap<String, ##BOXED_TYPE##>();

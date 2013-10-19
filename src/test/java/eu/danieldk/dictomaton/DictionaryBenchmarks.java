@@ -40,10 +40,6 @@ public class DictionaryBenchmarks extends AbstractBenchmark {
         d_wordsLong = loadWordList("eu/danieldk/dictomaton/web2");
     }
 
-    @Before
-    public void initialize() throws DictionaryBuilderException {
-    }
-
     @Test
     public void treeSetConstructionTest() {
         TreeSet<String> ts = new TreeSet<String>();
