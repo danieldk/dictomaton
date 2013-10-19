@@ -27,8 +27,8 @@ import java.util.*;
 public class ImmutableStringByteMap extends AbstractMap<String, Byte> implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private PerfectHashDictionary d_keys;
-    private byte[] d_values;
+    private final PerfectHashDictionary d_keys;
+    private final byte[] d_values;
 
     /**
      * A builder for {@link ImmutableStringByteMap}. Mappings
@@ -38,7 +38,7 @@ public class ImmutableStringByteMap extends AbstractMap<String, Byte> implements
      */
     public static class Builder {
 
-        private TreeMap<String, Byte> d_map;
+        private final TreeMap<String, Byte> d_map;
 
         public Builder() {
             d_map = new TreeMap<String, Byte>();

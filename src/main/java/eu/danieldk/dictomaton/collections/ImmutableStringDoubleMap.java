@@ -27,8 +27,8 @@ import java.util.*;
 public class ImmutableStringDoubleMap extends AbstractMap<String, Double> implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private PerfectHashDictionary d_keys;
-    private double[] d_values;
+    private final PerfectHashDictionary d_keys;
+    private final double[] d_values;
 
     /**
      * A builder for {@link ImmutableStringDoubleMap}. Mappings
@@ -38,7 +38,7 @@ public class ImmutableStringDoubleMap extends AbstractMap<String, Double> implem
      */
     public static class Builder {
 
-        private TreeMap<String, Double> d_map;
+        private final TreeMap<String, Double> d_map;
 
         public Builder() {
             d_map = new TreeMap<String, Double>();

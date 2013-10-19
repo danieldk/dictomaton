@@ -27,8 +27,8 @@ import java.util.*;
 public class ImmutableStringBooleanMap extends AbstractMap<String, Boolean> implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private PerfectHashDictionary d_keys;
-    private boolean[] d_values;
+    private final PerfectHashDictionary d_keys;
+    private final boolean[] d_values;
 
     /**
      * A builder for {@link ImmutableStringBooleanMap}. Mappings
@@ -38,7 +38,7 @@ public class ImmutableStringBooleanMap extends AbstractMap<String, Boolean> impl
      */
     public static class Builder {
 
-        private TreeMap<String, Boolean> d_map;
+        private final TreeMap<String, Boolean> d_map;
 
         public Builder() {
             d_map = new TreeMap<String, Boolean>();
