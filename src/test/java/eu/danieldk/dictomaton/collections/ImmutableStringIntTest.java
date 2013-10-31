@@ -15,6 +15,7 @@ import java.util.*;
 @Category(Tests.class)
 public class ImmutableStringIntTest {
     private Map<String, Integer> d_check1;
+
     private Map<String, Integer> d_check2;
 
     @Before
@@ -34,8 +35,16 @@ public class ImmutableStringIntTest {
         }};
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void orderedComparatorTest() throws DictionaryBuilderException {
+        TreeMap<String, Integer> bogus = new TreeMap<String, Integer>(Collections.reverseOrder());
+        ImmutableStringIntMap test = new ImmutableStringIntMap.OrderedBuilder().putAll(bogus).build();
+        Assert.assertEquals(0, test.size());
+    }
+
     @Test
     public void containsTest() throws DictionaryBuilderException {
+        // Unordered
         ImmutableStringIntMap test = new ImmutableStringIntMap.Builder().putAll(d_check1).build();
 
         for (Map.Entry<String, Integer> entry : d_check1.entrySet())
@@ -44,6 +53,30 @@ public class ImmutableStringIntTest {
         for (Map.Entry<String, Integer> entry : d_check2.entrySet())
             Assert.assertFalse(test.containsKey(entry.getKey()));
 
+        // Ordered
+        test = new ImmutableStringIntMap.OrderedBuilder().putAll(new TreeMap<String, Integer>(d_check1)).build();
+
+        for (Map.Entry<String, Integer> entry : d_check1.entrySet())
+            Assert.assertTrue(test.containsKey(entry.getKey()));
+
+        for (Map.Entry<String, Integer> entry : d_check2.entrySet())
+            Assert.assertFalse(test.containsKey(entry.getKey()));
+    }
+
+    @Test
+    public void containsOrderedPutTest() throws DictionaryBuilderException {
+        // Ordered
+        ImmutableStringIntMap.OrderedBuilder builder = new ImmutableStringIntMap.OrderedBuilder();
+        for (Map.Entry<String, Integer> e : new TreeMap<String, Integer>(d_check1).entrySet())
+            builder.put(e.getKey(), e.getValue());
+
+        ImmutableStringIntMap test = builder.build();
+
+        for (Map.Entry<String, Integer> entry : d_check1.entrySet())
+            Assert.assertTrue(test.containsKey(entry.getKey()));
+
+        for (Map.Entry<String, Integer> entry : d_check2.entrySet())
+            Assert.assertFalse(test.containsKey(entry.getKey()));
     }
 
     @Test
@@ -68,6 +101,13 @@ public class ImmutableStringIntTest {
 
 
         Assert.assertEquals(d_check1.keySet(), isiKeys);
+    }
+
+    @Test(expected = DictionaryBuilderException.class)
+    public void invalidOrderTest() throws DictionaryBuilderException {
+        ImmutableStringIntMap test = new ImmutableStringIntMap.OrderedBuilder()
+                .put("The Godfather", 9).put("Pulp Fiction", 9).build();
+        Assert.assertEquals(2, test.size());
     }
 
 

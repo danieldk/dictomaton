@@ -77,6 +77,64 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
 
     }
 
+    /**
+     * A builder for {@link ImmutableString##TYPE_NAME##Map}. Mappings can be added to the builder using the {@link #put} and
+     * {@link #putAll} methods. The {@link ImmutableString##TYPE_NAME##Map} can then be constructed using the {@link #build}
+     * method. <b>Note:</b> This builder assumes that entries are put in key order. This additional assumption makes
+     * the builder more efficient than {@link Builder}.
+     */
+    public static class OrderedBuilder {
+        private final DictionaryBuilder dictionaryBuilder;
+
+        private final ArrayList<##BOXED_TYPE##> values;
+
+        public OrderedBuilder() {
+            this.dictionaryBuilder = new DictionaryBuilder();
+            this.values = new ArrayList<##BOXED_TYPE##>();
+        }
+
+        /**
+         * Put a key/value pair.
+         */
+        public synchronized OrderedBuilder put(String key, ##BOXED_TYPE## value) throws DictionaryBuilderException {
+            dictionaryBuilder.add(key);
+            values.add(value);
+            return this;
+        }
+
+        /**
+         * Put all key/value pairs from a {@link Map}. The map should be an ordered map (by key). If
+         * not, a {@link IllegalArgumentException} is thrown.
+         */
+        public synchronized OrderedBuilder putAll(SortedMap<String, ##BOXED_TYPE##> map) throws DictionaryBuilderException {
+            if (map.comparator() != null)
+                throw new IllegalArgumentException("SortedMap does not use the natural ordering of its keys");
+
+            values.ensureCapacity(values.size() + map.size());
+
+            for (SortedMap.Entry<String, ##BOXED_TYPE##> entry: map.entrySet()) {
+                dictionaryBuilder.add(entry.getKey());
+                values.add(entry.getValue());
+            }
+
+            return this;
+        }
+
+        /**
+         * Construct a {@link ImmutableString##TYPE_NAME##Map}.
+         */
+        public synchronized ImmutableString##TYPE_NAME##Map build() throws DictionaryBuilderException {
+            PerfectHashDictionary dict = dictionaryBuilder.buildPerfectHash(false);
+
+            ##UNBOXED_TYPE##[] arr = new ##UNBOXED_TYPE##[values.size()];
+
+            for (int i = 0; i < values.size(); ++i)
+                arr[i] = values.get(i);
+
+            return new ImmutableString##TYPE_NAME##Map(dict, arr);
+        }
+    }
+
     private class EntrySet extends AbstractSet<Entry<String, ##BOXED_TYPE##>> {
         private class EntrySetIterator implements Iterator<Entry<String, ##BOXED_TYPE##>> {
             private final Iterator<String> d_keyIter;
