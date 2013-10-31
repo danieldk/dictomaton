@@ -20,8 +20,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 @Category(Tests.class)
 public class ImmutableStringObjectMapTest {
@@ -32,20 +34,59 @@ public class ImmutableStringObjectMapTest {
         d_locations = new HashMap<String, String>();
         d_locations.put("New York", "USA");
         d_locations.put("Amsterdam", "The Netherlands");
+        d_locations.put("Paris", "France");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void orderedComparatorTest() throws DictionaryBuilderException {
+        TreeMap<String, String> bogus = new TreeMap<String, String>(Collections.reverseOrder());
+        ImmutableStringObjectMap<String> test = new ImmutableStringObjectMap.OrderedBuilder<String>().putAll(bogus).build();
+        Assert.assertEquals(0, test.size());
     }
 
     @Test
     public void getTest() throws DictionaryBuilderException {
+        // Unordered
         Map<String, String> iso = new ImmutableStringObjectMap.Builder<String>().putAll(d_locations).build();
 
-        Assert.assertEquals(2, iso.size());
+        Assert.assertEquals(3, iso.size());
         Assert.assertEquals("USA", iso.get("New York"));
         Assert.assertEquals("The Netherlands", iso.get("Amsterdam"));
+        Assert.assertEquals("France", iso.get("Paris"));
+
+        // Ordered
+        iso = new ImmutableStringObjectMap.OrderedBuilder<String>().putAll(new TreeMap<String, String>(d_locations))
+                .build();
+
+        Assert.assertEquals(3, iso.size());
+        Assert.assertEquals("USA", iso.get("New York"));
+        Assert.assertEquals("The Netherlands", iso.get("Amsterdam"));
+        Assert.assertEquals("France", iso.get("Paris"));
+    }
+
+    @Test
+    public void containsOrderedPutTest() throws DictionaryBuilderException {
+        // Ordered
+        ImmutableStringObjectMap.OrderedBuilder<String> builder = new ImmutableStringObjectMap.OrderedBuilder<String>();
+        for (Map.Entry<String, String> e : new TreeMap<String, String>(d_locations).entrySet())
+            builder.put(e.getKey(), e.getValue());
+
+        ImmutableStringObjectMap<String> test = builder.build();
+
+        for (Map.Entry<String, String> entry : d_locations.entrySet())
+            Assert.assertTrue(test.containsKey(entry.getKey()));
     }
 
     @Test
     public void equalsTest() throws DictionaryBuilderException {
         Map<String, String> iss = new ImmutableStringObjectMap.Builder<String>().putAll(d_locations).build();
         Assert.assertEquals(d_locations, iss);
+    }
+
+    @Test(expected = DictionaryBuilderException.class)
+    public void invalidOrderTest() throws DictionaryBuilderException {
+        ImmutableStringObjectMap<String> test = new ImmutableStringObjectMap.OrderedBuilder<String>()
+                .put("Paris", "France").put("Amsterdam", "The Netherlands").build();
+        Assert.assertEquals(2, test.size());
     }
 }

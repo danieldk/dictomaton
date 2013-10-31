@@ -18,14 +18,7 @@ import eu.danieldk.dictomaton.DictionaryBuilderException;
 import eu.danieldk.dictomaton.PerfectHashDictionary;
 
 import java.io.Serializable;
-import java.util.AbstractList;
-import java.util.AbstractMap;
-import java.util.AbstractSet;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * An immutable mapping from {@link String} to an object with the type <code>V</code>, where keys are compactly stored
@@ -83,7 +76,65 @@ public class ImmutableStringObjectMap<V> extends AbstractMap<String, V> implemen
 
             return new ImmutableStringObjectMap<V>(dict, values);
         }
+    }
 
+    /**
+     * A builder for {@link ImmutableStringObjectMap}. Mappings can be added to the builder using the {@link #put} and
+     * {@link #putAll} methods. The {@link ImmutableStringObjectMap} can then be constructed using the {@link #build}
+     * method. <b>Note:</b> This builder assumes that entries are put in key order. This additional assumption makes
+     * the builder more efficient than {@link Builder}.
+     */
+    public static class OrderedBuilder<V> {
+        private final DictionaryBuilder dictionaryBuilder;
+
+        private final ArrayList<V> values;
+
+        public OrderedBuilder() {
+            this.dictionaryBuilder = new DictionaryBuilder();
+            this.values = new ArrayList<V>();
+        }
+
+        /**
+         * Put a key/value pair.
+         */
+        public synchronized OrderedBuilder put(String key, V value) throws DictionaryBuilderException {
+            dictionaryBuilder.add(key);
+            values.add(value);
+            return this;
+        }
+
+        /**
+         * Put all key/value pairs from a {@link Map}. The map should be an ordered map (by key). If
+         * not, a {@link IllegalArgumentException} is thrown.
+         */
+        public synchronized OrderedBuilder putAll(SortedMap<String, V> map) throws DictionaryBuilderException {
+            if (map.comparator() != null)
+                throw new IllegalArgumentException("SortedMap does not use the natural ordering of its keys");
+
+            values.ensureCapacity(values.size() + map.size());
+
+            for (SortedMap.Entry<String, V> entry: map.entrySet()) {
+                dictionaryBuilder.add(entry.getKey());
+                values.add(entry.getValue());
+            }
+
+            return this;
+        }
+
+        /**
+         * Construct a {@link ImmutableStringIntMap}.
+         */
+        public synchronized ImmutableStringObjectMap build() throws DictionaryBuilderException {
+            PerfectHashDictionary dict = dictionaryBuilder.buildPerfectHash(false);
+
+            @SuppressWarnings("unchecked")
+            V[] arr = (V[]) new Object[values.size()];
+
+            for (int i = 0; i < values.size(); ++i)
+                arr[i] = values.get(i);
+
+            return new ImmutableStringObjectMap<V>(dict, arr);
+        }
     }
 
     private class EntrySet extends AbstractSet<Entry<String, V>> {
