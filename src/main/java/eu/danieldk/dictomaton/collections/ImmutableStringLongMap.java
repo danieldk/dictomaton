@@ -77,6 +77,64 @@ public class ImmutableStringLongMap extends AbstractMap<String, Long> implements
 
     }
 
+    /**
+     * A builder for {@link ImmutableStringLongMap}. Mappings can be added to the builder using the {@link #put} and
+     * {@link #putAll} methods. The {@link ImmutableStringLongMap} can then be constructed using the {@link #build}
+     * method. <b>Note:</b> This builder assumes that entries are put in key order. This additional assumption makes
+     * the builder more efficient than {@link Builder}.
+     */
+    public static class OrderedBuilder {
+        private final DictionaryBuilder dictionaryBuilder;
+
+        private final ArrayList<Long> values;
+
+        public OrderedBuilder() {
+            this.dictionaryBuilder = new DictionaryBuilder();
+            this.values = new ArrayList<Long>();
+        }
+
+        /**
+         * Put a key/value pair.
+         */
+        public synchronized OrderedBuilder put(String key, Long value) throws DictionaryBuilderException {
+            dictionaryBuilder.add(key);
+            values.add(value);
+            return this;
+        }
+
+        /**
+         * Put all key/value pairs from a {@link Map}. The map should be an ordered map (by key). If
+         * not, a {@link IllegalArgumentException} is thrown.
+         */
+        public synchronized OrderedBuilder putAll(SortedMap<String, Long> map) throws DictionaryBuilderException {
+            if (map.comparator() != null)
+                throw new IllegalArgumentException("SortedMap does not use the natural ordering of its keys");
+
+            values.ensureCapacity(values.size() + map.size());
+
+            for (SortedMap.Entry<String, Long> entry: map.entrySet()) {
+                dictionaryBuilder.add(entry.getKey());
+                values.add(entry.getValue());
+            }
+
+            return this;
+        }
+
+        /**
+         * Construct a {@link ImmutableStringLongMap}.
+         */
+        public synchronized ImmutableStringLongMap build() throws DictionaryBuilderException {
+            PerfectHashDictionary dict = dictionaryBuilder.buildPerfectHash(false);
+
+            long[] arr = new long[values.size()];
+
+            for (int i = 0; i < values.size(); ++i)
+                arr[i] = values.get(i);
+
+            return new ImmutableStringLongMap(dict, arr);
+        }
+    }
+
     private class EntrySet extends AbstractSet<Entry<String, Long>> {
         private class EntrySetIterator implements Iterator<Entry<String, Long>> {
             private final Iterator<String> d_keyIter;

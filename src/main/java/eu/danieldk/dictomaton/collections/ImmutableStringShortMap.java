@@ -77,6 +77,64 @@ public class ImmutableStringShortMap extends AbstractMap<String, Short> implemen
 
     }
 
+    /**
+     * A builder for {@link ImmutableStringShortMap}. Mappings can be added to the builder using the {@link #put} and
+     * {@link #putAll} methods. The {@link ImmutableStringShortMap} can then be constructed using the {@link #build}
+     * method. <b>Note:</b> This builder assumes that entries are put in key order. This additional assumption makes
+     * the builder more efficient than {@link Builder}.
+     */
+    public static class OrderedBuilder {
+        private final DictionaryBuilder dictionaryBuilder;
+
+        private final ArrayList<Short> values;
+
+        public OrderedBuilder() {
+            this.dictionaryBuilder = new DictionaryBuilder();
+            this.values = new ArrayList<Short>();
+        }
+
+        /**
+         * Put a key/value pair.
+         */
+        public synchronized OrderedBuilder put(String key, Short value) throws DictionaryBuilderException {
+            dictionaryBuilder.add(key);
+            values.add(value);
+            return this;
+        }
+
+        /**
+         * Put all key/value pairs from a {@link Map}. The map should be an ordered map (by key). If
+         * not, a {@link IllegalArgumentException} is thrown.
+         */
+        public synchronized OrderedBuilder putAll(SortedMap<String, Short> map) throws DictionaryBuilderException {
+            if (map.comparator() != null)
+                throw new IllegalArgumentException("SortedMap does not use the natural ordering of its keys");
+
+            values.ensureCapacity(values.size() + map.size());
+
+            for (SortedMap.Entry<String, Short> entry: map.entrySet()) {
+                dictionaryBuilder.add(entry.getKey());
+                values.add(entry.getValue());
+            }
+
+            return this;
+        }
+
+        /**
+         * Construct a {@link ImmutableStringShortMap}.
+         */
+        public synchronized ImmutableStringShortMap build() throws DictionaryBuilderException {
+            PerfectHashDictionary dict = dictionaryBuilder.buildPerfectHash(false);
+
+            short[] arr = new short[values.size()];
+
+            for (int i = 0; i < values.size(); ++i)
+                arr[i] = values.get(i);
+
+            return new ImmutableStringShortMap(dict, arr);
+        }
+    }
+
     private class EntrySet extends AbstractSet<Entry<String, Short>> {
         private class EntrySetIterator implements Iterator<Entry<String, Short>> {
             private final Iterator<String> d_keyIter;
