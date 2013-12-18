@@ -63,6 +63,12 @@ benchmarks via Maven, adding the Benchmarks group:
 
 ## Changelog
 
+### 1.1.0
+
+* Added immutable mapping from String to a generic type.
+* Added a key-ordered builder for immutable mappings. This builder is more
+  efficient since it construct the key automaton on the fly.
+
 ### 1.0.0
 
 * Added Levenshtein automata for looking up sequences in a <tt>Dictionary</tt> that
