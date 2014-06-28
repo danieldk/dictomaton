@@ -34,7 +34,7 @@ class PerfectHashDictionaryStateCard extends DictionaryImpl implements PerfectHa
      * @param seq
      * @return
      */
-    public int number(String seq) {
+    public int number(CharSequence seq) {
         int state = 0;
         int num = 0;
 
