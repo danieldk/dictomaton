@@ -16,7 +16,7 @@ public interface PerfectHashDictionary extends Dictionary {
      * @return The perfect hash value of the sequence or <tt>-1</tt> if the sequence is
      *         not in the automaton.
      */
-    public int number(String seq);
+    public int number(CharSequence seq);
 
     /**
      * Compute the sequence corresponding to the given hash code.
