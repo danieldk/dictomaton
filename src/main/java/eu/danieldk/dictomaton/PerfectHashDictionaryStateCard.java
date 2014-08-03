@@ -35,31 +35,49 @@ class PerfectHashDictionaryStateCard extends DictionaryImpl implements PerfectHa
      * @return
      */
     public int number(CharSequence seq) {
-        int state = 0;
-        int num = 0;
-
+        StateInfo info = getStateInfo(seq);
+        return info.isInFinalState() ? info.getHash() : -1;
+    }
+    
+    public StateInfo getStateInfo(CharSequence seq) {
+        return getStateInfo(seq, null);
+    }
+    
+    public StateInfo getStateInfo(CharSequence seq, StateInfo startInfo) {
+        
+        StateInfo info;
+        
+        if (startInfo != null) {
+            if (!startInfo.isInKnownState()) {
+                throw new IllegalStateException("Cannot resume transitions from unknown state. Sequence: " + seq);
+            }
+            info = new StateInfo(startInfo.num, startInfo.state, startInfo.trans, startInfo.inFinalState);
+        } else {
+            info = new StateInfo(0, 0, -1, false);
+        }
+        
         for (int i = 0; i < seq.length(); i++) {
-            int trans = findTransition(state, seq.charAt(i));
+            char ch = seq.charAt(i);
+            info.trans = findTransition(info.state, ch);
 
-            if (trans == -1)
-                return -1;
+            if (!info.isInKnownState()) {
+                return info;
+            }
 
             // Count the number of preceding suffixes in the preceding transitions.
-            for (int j = d_stateOffsets.get(state); j < trans; j++)
-                num += d_stateNSuffixes.get(d_transitionTo.get(j));
+            for (int j = d_stateOffsets.get(info.state); j < info.trans; j++)
+                info.num += d_stateNSuffixes.get(d_transitionTo.get(j));
 
             // A final state is another suffix.
-            if (d_finalStates.get(state))
-                ++num;
+            if (d_finalStates.get(info.state))
+                ++info.num;
 
-            state = d_transitionTo.get(trans);
+            info.state = d_transitionTo.get(info.trans);
         }
 
-        // If we found the sequence, return the number of preceding sequences, plus one.
-        if (d_finalStates.get(state))
-            return num + 1;
-        else
-            return -1;
+        info.inFinalState = d_finalStates.get(info.state);
+        
+        return info;
     }
 
     /**

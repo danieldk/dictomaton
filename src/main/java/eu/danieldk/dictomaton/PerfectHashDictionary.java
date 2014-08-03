@@ -18,6 +18,10 @@ public interface PerfectHashDictionary extends Dictionary {
      */
     public int number(CharSequence seq);
 
+    public StateInfo getStateInfo(CharSequence seq);
+
+    public StateInfo getStateInfo(CharSequence seq, StateInfo startInfo);
+    
     /**
      * Compute the sequence corresponding to the given hash code.
      *

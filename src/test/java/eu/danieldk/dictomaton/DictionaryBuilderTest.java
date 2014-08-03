@@ -14,7 +14,9 @@
 
 package eu.danieldk.dictomaton;
 
+import static org.junit.Assert.*;
 import eu.danieldk.dictomaton.categories.Tests;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -55,5 +57,22 @@ public class DictionaryBuilderTest {
 
 
         Assert.assertEquals(check, builder.toDot().replace('\n', ' '));
+    }
+    
+    /**
+     * Comparison between CharSequences should behave similar to String comparison
+     * @throws Exception
+     */
+    @Test
+    public void testCompareCharacterSequences() throws Exception {
+        DictionaryBuilder builder = new DictionaryBuilder();
+        assertEquals("".compareTo(""), builder.compareCharacterSequences("", ""));
+        assertEquals("".compareTo("a"), builder.compareCharacterSequences("", "a"));
+        assertEquals("a".compareTo(""), builder.compareCharacterSequences("a", ""));
+        assertEquals("a".compareTo("ab"), builder.compareCharacterSequences("a", "ab"));
+        assertEquals("aa".compareTo("a"), builder.compareCharacterSequences("aa", "a"));
+        assertEquals("a".compareTo("b"), builder.compareCharacterSequences("a", "b"));
+        assertEquals("b".compareTo("a"), builder.compareCharacterSequences("b", "a"));
+        assertEquals("abc".compareTo("abc"), builder.compareCharacterSequences("abc", "abc"));
     }
 }
