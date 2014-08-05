@@ -23,20 +23,20 @@ Dictomaton is in the Maven Central Repository:
 <dependency>
     <groupId>eu.danieldk.dictomaton</groupId>
     <artifactId>dictomaton</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 </dependency>
 ~~~
 
 SBT:
 
 ~~~
-libraryDependencies += "eu.danieldk.dictomaton" % "dictomaton" % "1.0.0"
+libraryDependencies += "eu.danieldk.dictomaton" % "dictomaton" % "1.1.0"
 ~~~
 
 Grails:
 
 ~~~
-compile 'eu.danieldk.dictomaton:dictomaton:1.0.0'
+compile 'eu.danieldk.dictomaton:dictomaton:1.1.0'
 ~~~
 
 ## Comparisons
