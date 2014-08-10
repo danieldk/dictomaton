@@ -215,36 +215,6 @@ class DictionaryImpl extends AbstractSet<String> implements Dictionary {
             moveToSequence(s);
         }
 
-        private void moveToSequence(String s) {
-            for (int i = 0; i < s.length(); ++i) {
-                char c = s.charAt(i);
-
-                StateStringPair pair = d_stack.pop();
-
-                int state = pair.getState();
-                String string = pair.getString();
-
-                boolean transitionFound = false;
-
-                for (int trans = transitionsUpperBound(state) - 1; trans >= d_stateOffsets.get(state); --trans) {
-                    if (d_transitionChars[trans] < c)
-                        break;
-
-                    if (d_transitionChars[trans] == c)
-                        transitionFound = true;
-
-                    d_stack.push(new StateStringPair(d_transitionTo.get(trans), string + d_transitionChars[trans]));
-                }
-
-                // If there was no transition for the current character, the
-                // given sequence was not in the automaton. This also means that
-                // means that the iterator is in a state where all succeeding
-                // sequences are produced.
-                if (!transitionFound)
-                    break;
-            }
-        }
-
         @Override
         public boolean hasNext() {
             if (d_stack.isEmpty() || d_nSeqs == 0)
@@ -281,6 +251,42 @@ class DictionaryImpl extends AbstractSet<String> implements Dictionary {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Change the iterator state such that the next value of the iterator
+         * is the given sequence, or if the sequence is not in the automaton,
+         * the next sequence that is lexicographically sorted after the
+         * sequence.
+         */
+        private void moveToSequence(String s) {
+            for (int i = 0; i < s.length(); ++i) {
+                char c = s.charAt(i);
+
+                StateStringPair pair = d_stack.pop();
+
+                int state = pair.getState();
+                String string = pair.getString();
+
+                // To construct the correct iterator state, we do a depth-first
+                // search for 's', also putting states on the stack that
+                // represent sequences succeeding 's'.
+                for (int trans = transitionsUpperBound(state) - 1; trans >= d_stateOffsets.get(state); --trans) {
+                    if (d_transitionChars[trans] == c) {
+                        // We have found the next character, continue depth-first
+                        // search using the next character in the sequence 's'.
+                        d_stack.push(new StateStringPair(d_transitionTo.get(trans), string + d_transitionChars[trans]));
+                        break;
+                    }
+                    else if (d_transitionChars[trans] < c) {
+                        // The next character of the sequence cannot be found.
+                        // Hence, the sequence is not in the automaton.
+                        return;
+                    }
+
+                    // Add states representing sequences succeeding 's'.
+                    d_stack.push(new StateStringPair(d_transitionTo.get(trans), string + d_transitionChars[trans]));
+                }
+            }
+        }
     }
 
     private class StateStringPair {
@@ -300,7 +306,6 @@ class DictionaryImpl extends AbstractSet<String> implements Dictionary {
         public String getString() {
             return d_string;
         }
-
     }
 
     /**
