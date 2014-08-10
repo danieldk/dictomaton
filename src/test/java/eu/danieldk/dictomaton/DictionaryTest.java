@@ -20,10 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Category(Tests.class)
 public class DictionaryTest {
@@ -112,6 +109,40 @@ public class DictionaryTest {
         Assert.assertEquals(d_words1, listFromIteration);
     }
 
+    @Test
+    public void partialIterationTest() {
+        DictionaryImpl impl = (DictionaryImpl) d_dict;
+
+        List<CharSequence> listFromIteration = partialIteration(impl, "");
+        Assert.assertEquals(d_words1, listFromIteration);
+
+        // Check iterator for words.
+        for (int i = 0; i < d_words1.size(); ++i) {
+            listFromIteration = partialIteration(impl, d_words1.get(i));
+            Assert.assertEquals(d_words1.subList(i, d_words1.size()), listFromIteration);
+        }
+
+        // Check iterator for word prefixes.
+        for (int i = 0; i < d_words1.size(); ++i) {
+            String word = d_words1.get(i);
+
+            for (int prefixLen = 3; prefixLen < 8; ++prefixLen) {
+                if (prefixLen + 1> word.length())
+                    break;
+
+                listFromIteration = partialIteration(impl, d_words1.get(i).substring(0, prefixLen + 1));
+                Assert.assertEquals(d_words1.subList(i, d_words1.size()), listFromIteration);
+            }
+        }
+
+        // Check iterator for non-prefixes.
+        listFromIteration = partialIteration(impl, "cacao");
+        Assert.assertEquals(d_words1.subList(3, d_words1.size()), listFromIteration);
+
+        listFromIteration = partialIteration(impl, "zygote");
+        Assert.assertEquals(Collections.EMPTY_LIST, listFromIteration);
+    }
+
     @Test(expected = UnsupportedOperationException.class)
     public void iteratorRemoveTest() {
         Iterator<String> iter = d_dict.iterator();
@@ -149,5 +180,13 @@ public class DictionaryTest {
 
         Assert.assertTrue(check2 == conv);
         Assert.assertTrue(check2[d_dict.size()] == null);
+    }
+
+    private List<CharSequence> partialIteration(DictionaryImpl impl, String s) {
+        List<CharSequence> listFromIteration = new LinkedList<CharSequence>();
+        Iterator<String> iter = impl.iterator(s);
+        while (iter.hasNext())
+            listFromIteration.add(iter.next());
+        return listFromIteration;
     }
 }

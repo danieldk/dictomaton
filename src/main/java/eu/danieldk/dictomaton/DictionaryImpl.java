@@ -94,6 +94,16 @@ class DictionaryImpl extends AbstractSet<String> implements Dictionary {
         return new DictionaryIterator();
     }
 
+    /**
+     * An iterator that starts at the sequence {@code s}, or the first
+     * sequence thereafter if {@code s} is not in the automaton.
+     *
+     * @param s The sequence to point the iterator at.
+     */
+    Iterator<String> iterator(String s) {
+        return new DictionaryIterator(s);
+    }
+
     @Override
     public int next(int state, char c) {
         int trans = findTransition(state, c);
@@ -193,6 +203,46 @@ class DictionaryImpl extends AbstractSet<String> implements Dictionary {
         public DictionaryIterator() {
             d_stack = new Stack<StateStringPair>();
             d_stack.push(new StateStringPair(0, ""));
+        }
+
+        /**
+         * Create an iterator that starts at the given sequence.
+         * @param s The sequence to start at.
+         */
+        public DictionaryIterator(String s) {
+            d_stack = new Stack<StateStringPair>();
+            d_stack.push(new StateStringPair(0, ""));
+            moveToSequence(s);
+        }
+
+        private void moveToSequence(String s) {
+            for (int i = 0; i < s.length(); ++i) {
+                char c = s.charAt(i);
+
+                StateStringPair pair = d_stack.pop();
+
+                int state = pair.getState();
+                String string = pair.getString();
+
+                boolean transitionFound = false;
+
+                for (int trans = transitionsUpperBound(state) - 1; trans >= d_stateOffsets.get(state); --trans) {
+                    if (d_transitionChars[trans] < c)
+                        break;
+
+                    if (d_transitionChars[trans] == c)
+                        transitionFound = true;
+
+                    d_stack.push(new StateStringPair(d_transitionTo.get(trans), string + d_transitionChars[trans]));
+                }
+
+                // If there was no transition for the current character, the
+                // given sequence was not in the automaton. This also means that
+                // means that the iterator is in a state where all succeeding
+                // sequences are produced.
+                if (!transitionFound)
+                    break;
+            }
         }
 
         @Override
