@@ -27,7 +27,7 @@ import java.util.Map.Entry;
  * <p/>
  * <ul>
  * <li>Create an instance of this class.</li>
- * <li>Add character sequences in lexicographic order using {@link DictionaryBuilder#add(String)}.</li>
+ * <li>Add character sequences in lexicographic order using {@link DictionaryBuilder#add(CharSequence)}.</li>
  * <li>Construct the automaton with {@link DictionaryBuilder#build()} or
  * {@link DictionaryBuilder#buildPerfectHash()}.</li>
  * </ul>
