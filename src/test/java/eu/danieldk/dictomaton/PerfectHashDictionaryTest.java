@@ -14,7 +14,9 @@
 
 package eu.danieldk.dictomaton;
 
+import static org.junit.Assert.*;
 import eu.danieldk.dictomaton.categories.Tests;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -93,6 +95,37 @@ public class PerfectHashDictionaryTest {
         for (int i = 0; i < d_words2.size(); i++)
             Assert.assertEquals(-1, d_dict.number(d_words2.get(i)));
     }
+    
+    @Test
+    public void testStateInfo() throws Exception {
+        for (int i = 0; i < d_words1.size(); i++) {
+            StateInfo info = d_dict.getStateInfo(d_words1.get(i));
+            assertTrue(info.isInKnownState());
+            assertTrue(info.isInFinalState());
+            Assert.assertEquals(i + 1, info.getHash());
+        }
+        
+        for (int i = 0; i < d_words2.size(); i++) {
+            StateInfo info = d_dict.getStateInfo(d_words2.get(i));
+            if ("avond".equals(d_words2.get(i))) {
+                assertTrue(d_words2.get(i) + ": transistion should end in known state",  info.isInKnownState());
+            } else {
+                assertFalse(d_words2.get(i) + ": transistion should end in unknown state",  info.isInKnownState());
+            }
+            
+            assertFalse(d_words2.get(i) + ": transistion should end in non-final state", info.isInFinalState());
+            
+            try {
+                info.getHash();
+                fail();
+            } catch (IllegalStateException e) {
+                // expected
+            }
+        }
+
+        for (int i = 0; i < d_words2.size(); i++)
+            Assert.assertEquals(-1, d_dict.number(d_words2.get(i)));
+    }
 
     @Test
     public void toNumberTransitionsTest() {
@@ -102,6 +135,92 @@ public class PerfectHashDictionaryTest {
         for (int i = 0; i < d_words2.size(); i++)
             Assert.assertEquals(-1, d_dictTransitionCardinality.number(d_words2.get(i)));
     }
+    
+    @Test
+    public void testStateInfoForCard() throws Exception {
+        for (int i = 0; i < d_words1.size(); i++) {
+            StateInfo info = d_dictTransitionCardinality.getStateInfo(d_words1.get(i));
+            assertTrue(info.isInKnownState());
+            assertTrue(info.isInFinalState());
+            Assert.assertEquals(i + 1, info.getHash());
+        }
+        
+        for (int i = 0; i < d_words2.size(); i++) {
+            
+            StateInfo info = d_dictTransitionCardinality.getStateInfo(d_words2.get(i));
+            if ("avond".equals(d_words2.get(i))) {
+                assertTrue(d_words2.get(i) + ": transistion should end in known state",  info.isInKnownState());
+            } else {
+                assertFalse(d_words2.get(i) + ": transistion should end in unknown state",  info.isInKnownState());
+            }
+            
+            assertFalse(d_words2.get(i) + ": transistion should end in non-final state", info.isInFinalState());
+            
+            try {
+                info.getHash();
+                fail();
+            } catch (IllegalStateException e) {
+                // expected
+            }
+        }
+
+        for (int i = 0; i < d_words2.size(); i++)
+            Assert.assertEquals(-1, d_dictTransitionCardinality.number(d_words2.get(i)));
+    }
+    
+    @Test
+    public void testResumeTransitionsAfterNonFinal() throws Exception {
+        
+        StateInfo info = d_dict.getStateInfo("avond");
+        assertTrue(info.isInKnownState());
+        assertFalse(info.isInFinalState());
+        
+        StateInfo info2 = d_dict.getStateInfo("en", info); // avonden
+        assertTrue(info2.isInKnownState());
+        assertTrue(info2.isInFinalState());
+        
+        
+    }
+    
+    @Test
+    public void testResumeTransitionsAfterFinal() throws Exception {
+        
+        StateInfo info = d_dict.getStateInfo("al"); // al
+        assertTrue(info.isInKnownState());
+        assertTrue(info.isInFinalState());
+        
+        StateInfo info2 = d_dict.getStateInfo("leen", info); // alleen
+        assertTrue(info2.isInKnownState());
+        assertTrue(info2.isInFinalState());
+        
+    }
+    
+    @Test
+    public void testResumeTransitionsAfterNonFinalForCard() throws Exception {
+        
+        StateInfo info = d_dictTransitionCardinality.getStateInfo("avond");
+        assertTrue(info.isInKnownState());
+        assertFalse(info.isInFinalState());
+        
+        StateInfo info2 = d_dictTransitionCardinality.getStateInfo("en", info); // avonden
+        assertTrue(info2.isInKnownState());
+        assertTrue(info2.isInFinalState());
+        
+    }
+    
+    @Test
+    public void testResumeTransitionsAfterFinalForCard() throws Exception {
+        
+        StateInfo info = d_dictTransitionCardinality.getStateInfo("al"); // al
+        assertTrue(info.isInKnownState());
+        assertTrue(info.isInFinalState());
+        
+        StateInfo info2 = d_dictTransitionCardinality.getStateInfo("leen", info); // alleen
+        assertTrue(info2.isInKnownState());
+        assertTrue(info2.isInFinalState());
+        
+    }
+    
 
     @Test
     public void toWordTest() {

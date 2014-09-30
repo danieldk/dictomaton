@@ -27,7 +27,7 @@ import java.util.Map.Entry;
  * <p/>
  * <ul>
  * <li>Create an instance of this class.</li>
- * <li>Add character sequences in lexicographic order using {@link DictionaryBuilder#add(String)}.</li>
+ * <li>Add character sequences in lexicographic order using {@link DictionaryBuilder#add(CharSequence)}.</li>
  * <li>Construct the automaton with {@link DictionaryBuilder#build()} or
  * {@link DictionaryBuilder#buildPerfectHash()}.</li>
  * </ul>
@@ -45,7 +45,7 @@ import java.util.Map.Entry;
 public class DictionaryBuilder {
     private final State d_startState;
     private final Map<State, State> d_register;
-    private String d_prevSeq;
+    private CharSequence d_prevSeq;
     private int d_nSeqs;
     private boolean d_finalized;
 
@@ -64,11 +64,11 @@ public class DictionaryBuilder {
      *
      * @param seq The sequence.
      */
-    public DictionaryBuilder add(String seq) throws DictionaryBuilderException {
+    public DictionaryBuilder add(CharSequence seq) throws DictionaryBuilderException {
         if (d_finalized)
             throw new DictionaryBuilderException("Cannot add a sequence to a finalized DictionaryBuilder.");
 
-        if (d_prevSeq != null && d_prevSeq.compareTo(seq) >= 0)
+        if (d_prevSeq != null && compareCharacterSequences(d_prevSeq, seq) >= 0)
             throw new DictionaryBuilderException(String.format("Sequences are not added in lexicographic order: %s %s", d_prevSeq, seq));
 
         d_prevSeq = seq;
@@ -76,7 +76,7 @@ public class DictionaryBuilder {
         // Traverse across the shared prefix.
         int i = 0;
         State curState = d_startState;
-        for (; i < seq.length(); i++) {
+        for (int len = seq.length(); i < len; i++) {
             State nextState = curState.move(seq.charAt(i));
             if (nextState != null)
                 curState = nextState;
@@ -87,11 +87,31 @@ public class DictionaryBuilder {
         if (curState.hasOutgoing())
             replaceOrRegister(curState);
 
-        addSuffix(curState, seq.substring(i));
+        addSuffix(curState, seq.subSequence(i,  seq.length()));
 
         ++d_nSeqs;
 
         return this;
+    }
+    
+    public int compareCharacterSequences(CharSequence seq1, CharSequence seq2) {
+        
+        int len1 = seq1.length();
+        int len2 = seq2.length();
+        
+        for (int i = 0, len = Math.min(len1, len2); i < len; i++) {
+            
+            char ch1 = seq1.charAt(i);
+            char ch2 = seq2.charAt(i);
+            if (ch1 != ch2) {
+                return ch1 - ch2;
+            }
+            
+        }
+        
+        return len1 - len2;
+        
+        
     }
 
     /**
@@ -100,12 +120,13 @@ public class DictionaryBuilder {
      * @param seqs A collection of sequences.
      * @throws DictionaryBuilderException
      */
-    public DictionaryBuilder addAll(Collection<String> seqs) throws DictionaryBuilderException {
-        for (String seq : seqs)
+    public DictionaryBuilder addAll(Collection<? extends CharSequence> seqs) throws DictionaryBuilderException {
+        for (CharSequence seq : seqs)
             add(seq);
 
         return this;
     }
+    
 
     /**
      * Create a dictionary automaton. This also finalizes the {@link DictionaryBuilder}.
@@ -174,8 +195,8 @@ public class DictionaryBuilder {
         return stringBuilder.toString();
     }
 
-    private void addSuffix(State s, String suffix) {
-        for (int i = 0; i < suffix.length(); i++) {
+    private void addSuffix(State s, CharSequence suffix) {
+        for (int i = 0, len = suffix.length(); i < len; i++) {
             State newState = new State();
             s.addTransition(suffix.charAt(i), newState);
             s = newState;

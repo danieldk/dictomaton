@@ -127,7 +127,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava-testlib</artifactId>
-            <version>13.0</version>
+            <version>14.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
