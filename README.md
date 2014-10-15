@@ -63,6 +63,11 @@ benchmarks via Maven, adding the Benchmarks group:
 
 ## Changelog
 
+### 1.2.0
+
+* Exposing state through StateInfo object, which allows user of PerfectHashDictionary to resume transitions, which makes it e.g. far more efficient to look up a string and its prefixes. (contributed by René Kriegler).
+* DictionaryBuilder now accepts adding more general CharSequence instead of String and uses CharSequence internally (contributed by René Kriegler).
+
 ### 1.1.0
 
 * Added immutable mapping from String to a generic type.
