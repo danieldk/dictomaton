@@ -96,8 +96,10 @@ benchmarks via Maven, adding the Benchmarks group:
 
 ## Release plan
 
- * **1.0.0**: first stable release.
- * **1.1.0**: generic object values.
-
-Plans for 1.2.0: Perhaps an explicit, fast, and compact data storage format
+Plans for 1.3.0: Perhaps an explicit, fast, and compact data storage format
 as an alternative to Java serialization. C or C++ version.
+
+## Contributors
+
+* Daniël de Kok (maintainer)
+* René Kriegler
