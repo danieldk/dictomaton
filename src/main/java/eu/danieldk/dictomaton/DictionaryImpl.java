@@ -18,11 +18,13 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 /**
+ * <p>
  * A finite state dictionary. Dictionaries of this type can are constructed
  * using {@link eu.danieldk.dictomaton.DictionaryBuilder#build()}.
- * <p/>
+ * </p>
+ * <p>
  * This class uses integers (int) for transition and state numbers.
- *
+ * </p>
  * @author Daniel de Kok
  */
 class DictionaryImpl extends AbstractSet<String> implements Dictionary {

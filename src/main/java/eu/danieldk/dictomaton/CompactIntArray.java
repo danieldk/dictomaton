@@ -17,11 +17,14 @@ package eu.danieldk.dictomaton;
 import java.io.Serializable;
 
 /**
+ * <p>
  * This class provides a compact integer array for applications where integers
  * are stored for which the width is known beforehand and that are not (necessarily)
  * 8, 16, or 32 bits wide.
- * <p/>
+ * </p>
+ * <p>
  * {@link #get(int)} and {@link #set(int, int)} are in O(1) time.
+ * </p>
  */
 class CompactIntArray implements Serializable {
     private static final long serialVersionUID = 1L;

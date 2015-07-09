@@ -18,27 +18,32 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
+ * <p>
  * This class is used to construct a dictionary in the form of a minimized
  * deterministic finite state automaton. This builder can create a normal
  * dictionary automaton ({@link Dictionary} or a perfect hash automaton
  * ({@link PerfectHashDictionary}).
- * <p/>
+ * </p>
+ * <p>
  * The workflow is simple:
- * <p/>
+ * </p>
  * <ul>
  * <li>Create an instance of this class.</li>
  * <li>Add character sequences in lexicographic order using {@link DictionaryBuilder#add(CharSequence)}.</li>
  * <li>Construct the automaton with {@link DictionaryBuilder#build()} or
  * {@link DictionaryBuilder#buildPerfectHash()}.</li>
  * </ul>
- * <p/>
+ * <p>
  * Construction of the automaton finalizes the build process - it is not possible to add
  * new character sequences afterwards.
- * <p/>
+ * </p>
+ * <p>
  * The following construction algorithm is used:
  * </p>
+ * <p>
  * <i>Incremental Construction of Minimal Acyclic Finite-State Automata</i>, Jan Daciuk, Bruce W. Watson,
  * Stoyan Mihov, and Robert E. Watson, 2000, Association for Computational Linguistics
+ * </p>
  *
  * @author Daniel de Kok
  */
