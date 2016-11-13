@@ -76,6 +76,10 @@ class State {
             return false;
 
         State other = (State) obj;
+
+        if (!d_recomputeHash && !other.d_recomputeHash && d_cachedHash != other.d_cachedHash)
+            return false;
+
         if (d_final != other.d_final)
             return false;
 
