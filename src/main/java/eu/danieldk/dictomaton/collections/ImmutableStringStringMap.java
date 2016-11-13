@@ -34,7 +34,7 @@ public class ImmutableStringStringMap extends AbstractMap<String, String>
 {
 	private final PerfectHashDictionary d_keys;
 	private final PerfectHashDictionary d_values;
-	private int[] d_link;
+	private final int[] d_link;
 
 	/**
 	 * A builder for {@link ImmutableStringStringMap}. Mappings
@@ -43,11 +43,11 @@ public class ImmutableStringStringMap extends AbstractMap<String, String>
 	 */
 	public static class Builder
 	{
-		private TreeMap<String, String> d_map;
+		private final TreeMap<String, String> d_map;
 
 		public Builder()
 		{
-			d_map = new TreeMap<String, String>();
+			d_map = new TreeMap<>();
 		}
 
 		/**
@@ -74,7 +74,7 @@ public class ImmutableStringStringMap extends AbstractMap<String, String>
 		public synchronized ImmutableStringStringMap build() throws DictionaryBuilderException
 		{
 			PerfectHashDictionary keyDict = new DictionaryBuilder().addAll(d_map.keySet()).buildPerfectHash(false);
-			PerfectHashDictionary valueDict = new DictionaryBuilder().addAll(new TreeSet<String>(d_map.values()))
+			PerfectHashDictionary valueDict = new DictionaryBuilder().addAll(new TreeSet<>(d_map.values()))
 					.buildPerfectHash(false);
 
 			int links[] = new int[keyDict.size()];
@@ -114,7 +114,7 @@ public class ImmutableStringStringMap extends AbstractMap<String, String>
 			{
 				String key = d_keyIter.next();
 				int idx = d_keys.number(key) - 1;
-				return new SimpleEntry<String, String>(key, d_values.sequence(d_link[idx]));
+				return new SimpleEntry<>(key, d_values.sequence(d_link[idx]));
 			}
 
 			@Override

@@ -15,7 +15,6 @@
 package eu.danieldk.dictomaton;
 
 import com.carrotsearch.junitbenchmarks.AbstractBenchmark;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -42,7 +41,7 @@ public class DictionaryBenchmarks extends AbstractBenchmark {
 
     @Test
     public void treeSetConstructionTest() {
-        TreeSet<String> ts = new TreeSet<String>();
+        TreeSet<String> ts = new TreeSet<>();
         ts.addAll(d_wordsLong);
     }
 
@@ -53,18 +52,15 @@ public class DictionaryBenchmarks extends AbstractBenchmark {
 
     private static SortedSet<String> loadWordList(String resourceName) throws IOException {
         InputStream in = ClassLoader.getSystemResourceAsStream(resourceName);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
-        TreeSet<String> words = new TreeSet<String>();
+        TreeSet<String> words = new TreeSet<>();
 
-        try {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 words.add(line.trim());
             }
 
-        } finally {
-            reader.close();
         }
 
         return words;

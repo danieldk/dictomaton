@@ -10,18 +10,15 @@ import java.util.TreeSet;
 public class Util {
     public static SortedSet<String> loadWordList(String resourceName) throws IOException {
         InputStream in = ClassLoader.getSystemResourceAsStream(resourceName);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
-        TreeSet<String> words = new TreeSet<String>();
+        TreeSet<String> words = new TreeSet<>();
 
-        try {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 words.add(line.trim());
             }
 
-        } finally {
-            reader.close();
         }
 
         return words;

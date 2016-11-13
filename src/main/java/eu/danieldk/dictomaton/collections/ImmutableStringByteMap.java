@@ -41,7 +41,7 @@ public class ImmutableStringByteMap extends AbstractMap<String, Byte> implements
         private final TreeMap<String, Byte> d_map;
 
         public Builder() {
-            d_map = new TreeMap<String, Byte>();
+            d_map = new TreeMap<>();
         }
 
         /**
@@ -90,7 +90,7 @@ public class ImmutableStringByteMap extends AbstractMap<String, Byte> implements
 
         public OrderedBuilder() {
             this.dictionaryBuilder = new DictionaryBuilder();
-            this.values = new ArrayList<Byte>();
+            this.values = new ArrayList<>();
         }
 
         /**
@@ -152,7 +152,7 @@ public class ImmutableStringByteMap extends AbstractMap<String, Byte> implements
             public Entry<String, Byte> next() {
                 String key = d_keyIter.next();
                 int idx = d_keys.number(key) - 1;
-                return new SimpleEntry<String, Byte>(key, d_values[idx]);
+                return new SimpleEntry<>(key, d_values[idx]);
             }
 
             @Override
@@ -187,7 +187,7 @@ public class ImmutableStringByteMap extends AbstractMap<String, Byte> implements
             if (hash == -1)
                 return false;
 
-            return d_values[hash - 1] == value.byteValue();
+            return d_values[hash - 1] == value;
 
         }
 

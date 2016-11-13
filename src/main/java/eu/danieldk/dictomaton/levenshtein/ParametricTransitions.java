@@ -20,14 +20,14 @@ interface ParametricTransitions {
      *
      * @return The number of edit operations.
      */
-    public int nEditOperations();
+    int nEditOperations();
 
     /**
      * The number of parametric states in the parametric transition table.
      *
      * @return The number of parametric states.
      */
-    public int nParametricStates();
+    int nParametricStates();
 
     /**
      * The maximum allowed number of offset errors per parametric state.
@@ -35,7 +35,7 @@ interface ParametricTransitions {
      * @param parametricState The parametric state.
      * @return The allowed offset error.
      */
-    public int maxOffsetErrors(int parametricState);
+    int maxOffsetErrors(int parametricState);
 
     /**
      * The transition function.
@@ -46,5 +46,5 @@ interface ParametricTransitions {
      * @param len                  The length of the word.
      * @return
      */
-    public int transition(int parametricState, int offset, int characteristicVector, int len);
+    int transition(int parametricState, int offset, int characteristicVector, int len);
 }

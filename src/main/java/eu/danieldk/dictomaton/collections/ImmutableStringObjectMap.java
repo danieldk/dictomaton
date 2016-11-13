@@ -27,8 +27,8 @@ import java.util.*;
 public class ImmutableStringObjectMap<V> extends AbstractMap<String, V> implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private PerfectHashDictionary d_keys;
-    private V[] d_values;
+    private final PerfectHashDictionary d_keys;
+    private final V[] d_values;
 
     /**
      * A builder for {@link ImmutableStringIntMap}. Mappings
@@ -38,10 +38,10 @@ public class ImmutableStringObjectMap<V> extends AbstractMap<String, V> implemen
      */
     public static class Builder<V> {
 
-        private TreeMap<String, V> d_map;
+        private final TreeMap<String, V> d_map;
 
         public Builder() {
-            d_map = new TreeMap<String, V>();
+            d_map = new TreeMap<>();
         }
 
 
@@ -74,7 +74,7 @@ public class ImmutableStringObjectMap<V> extends AbstractMap<String, V> implemen
             for (V value : d_map.values())
                 values[i++] = value;
 
-            return new ImmutableStringObjectMap<V>(dict, values);
+            return new ImmutableStringObjectMap<>(dict, values);
         }
     }
 
@@ -91,7 +91,7 @@ public class ImmutableStringObjectMap<V> extends AbstractMap<String, V> implemen
 
         public OrderedBuilder() {
             this.dictionaryBuilder = new DictionaryBuilder();
-            this.values = new ArrayList<V>();
+            this.values = new ArrayList<>();
         }
 
         /**
@@ -133,7 +133,7 @@ public class ImmutableStringObjectMap<V> extends AbstractMap<String, V> implemen
             for (int i = 0; i < values.size(); ++i)
                 arr[i] = values.get(i);
 
-            return new ImmutableStringObjectMap<V>(dict, arr);
+            return new ImmutableStringObjectMap<>(dict, arr);
         }
     }
 
@@ -154,7 +154,7 @@ public class ImmutableStringObjectMap<V> extends AbstractMap<String, V> implemen
             public Entry<String, V> next() {
                 String key = d_keyIter.next();
                 int idx = d_keys.number(key) - 1;
-                return new SimpleEntry<String, V>(key, d_values[idx]);
+                return new SimpleEntry<>(key, d_values[idx]);
             }
 
             @Override

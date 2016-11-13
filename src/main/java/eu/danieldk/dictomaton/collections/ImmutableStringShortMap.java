@@ -41,7 +41,7 @@ public class ImmutableStringShortMap extends AbstractMap<String, Short> implemen
         private final TreeMap<String, Short> d_map;
 
         public Builder() {
-            d_map = new TreeMap<String, Short>();
+            d_map = new TreeMap<>();
         }
 
         /**
@@ -90,7 +90,7 @@ public class ImmutableStringShortMap extends AbstractMap<String, Short> implemen
 
         public OrderedBuilder() {
             this.dictionaryBuilder = new DictionaryBuilder();
-            this.values = new ArrayList<Short>();
+            this.values = new ArrayList<>();
         }
 
         /**
@@ -152,7 +152,7 @@ public class ImmutableStringShortMap extends AbstractMap<String, Short> implemen
             public Entry<String, Short> next() {
                 String key = d_keyIter.next();
                 int idx = d_keys.number(key) - 1;
-                return new SimpleEntry<String, Short>(key, d_values[idx]);
+                return new SimpleEntry<>(key, d_values[idx]);
             }
 
             @Override
@@ -187,7 +187,7 @@ public class ImmutableStringShortMap extends AbstractMap<String, Short> implemen
             if (hash == -1)
                 return false;
 
-            return d_values[hash - 1] == value.shortValue();
+            return d_values[hash - 1] == value;
 
         }
 

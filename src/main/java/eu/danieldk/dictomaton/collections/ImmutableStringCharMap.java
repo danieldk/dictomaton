@@ -41,7 +41,7 @@ public class ImmutableStringCharMap extends AbstractMap<String, Character> imple
         private final TreeMap<String, Character> d_map;
 
         public Builder() {
-            d_map = new TreeMap<String, Character>();
+            d_map = new TreeMap<>();
         }
 
         /**
@@ -90,7 +90,7 @@ public class ImmutableStringCharMap extends AbstractMap<String, Character> imple
 
         public OrderedBuilder() {
             this.dictionaryBuilder = new DictionaryBuilder();
-            this.values = new ArrayList<Character>();
+            this.values = new ArrayList<>();
         }
 
         /**
@@ -152,7 +152,7 @@ public class ImmutableStringCharMap extends AbstractMap<String, Character> imple
             public Entry<String, Character> next() {
                 String key = d_keyIter.next();
                 int idx = d_keys.number(key) - 1;
-                return new SimpleEntry<String, Character>(key, d_values[idx]);
+                return new SimpleEntry<>(key, d_values[idx]);
             }
 
             @Override
@@ -187,7 +187,7 @@ public class ImmutableStringCharMap extends AbstractMap<String, Character> imple
             if (hash == -1)
                 return false;
 
-            return d_values[hash - 1] == value.charValue();
+            return d_values[hash - 1] == value;
 
         }
 

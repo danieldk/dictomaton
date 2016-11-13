@@ -95,9 +95,9 @@ public class LevenshteinAutomaton {
      * @return The intersection language.
      */
     public Set<String> intersectionLanguage(Dictionary dictionary) {
-        Set<String> language = new HashSet<String>();
+        Set<String> language = new HashSet<>();
 
-        Queue<StatePair> q = new LinkedList<StatePair>();
+        Queue<StatePair> q = new LinkedList<>();
         q.add(new StatePair(dictionary.startState(), d_startState, ""));
 
         while (!q.isEmpty()) {
@@ -182,7 +182,7 @@ public class LevenshteinAutomaton {
     }
 
     private Set<Character> extractAlphabet(String word) {
-        Set<Character> alphabet = new HashSet<Character>();
+        Set<Character> alphabet = new HashSet<>();
 
         for (int i = 0; i < word.length(); ++i)
             alphabet.add(word.charAt(i));
@@ -200,9 +200,9 @@ public class LevenshteinAutomaton {
     }
 
     private Map<LevenshteinAutomatonState, Integer> numberedStates(LevenshteinAutomatonState startState) {
-        Map<LevenshteinAutomatonState, Integer> states = new HashMap<LevenshteinAutomatonState, Integer>();
+        Map<LevenshteinAutomatonState, Integer> states = new HashMap<>();
 
-        Queue<LevenshteinAutomatonState> stateQueue = new LinkedList<LevenshteinAutomatonState>();
+        Queue<LevenshteinAutomatonState> stateQueue = new LinkedList<>();
         stateQueue.add(startState);
         while (!stateQueue.isEmpty()) {
             LevenshteinAutomatonState s = stateQueue.poll();

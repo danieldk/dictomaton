@@ -30,7 +30,7 @@ class LevenshteinAutomatonState {
      * Construct a state. The state will have no transitions and will be non-final.
      */
     public LevenshteinAutomatonState() {
-        transitions = new TreeMap<Character, LevenshteinAutomatonState>();
+        transitions = new TreeMap<>();
         d_final = false;
         d_recomputeHash = true;
     }
@@ -120,8 +120,8 @@ class LevenshteinAutomatonState {
      * @param otherChar The character representing any other character.
      */
     public void reduce(Character otherChar) {
-        Set<Integer> seen = new HashSet<Integer>();
-        Queue<LevenshteinAutomatonState> q = new LinkedList<LevenshteinAutomatonState>();
+        Set<Integer> seen = new HashSet<>();
+        Queue<LevenshteinAutomatonState> q = new LinkedList<>();
         q.add(this);
 
         while (!q.isEmpty()) {
@@ -144,7 +144,7 @@ class LevenshteinAutomatonState {
             // Find transitions that can be removed, because they are handled by an 'other' transition. This
             // is the case when a transition is not the 'other' transition, but has the same to-state as the
             // 'other' transition.
-            Set<Character> remove = new HashSet<Character>();
+            Set<Character> remove = new HashSet<>();
             for (Entry<Character, LevenshteinAutomatonState> trans : s.transitions.entrySet())
                 if (!trans.getKey().equals(otherChar) && trans.getValue() == otherTo)
                     remove.add(trans.getKey());

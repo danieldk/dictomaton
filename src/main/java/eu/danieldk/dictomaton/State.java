@@ -30,7 +30,7 @@ class State {
      * Construct a state. The state will have no transitions and will be non-final.
      */
     public State() {
-        transitions = new TreeMap<Character, State>();
+        transitions = new TreeMap<>();
         d_final = false;
         d_recomputeHash = true;
     }

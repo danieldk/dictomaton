@@ -59,7 +59,7 @@ public class DictionaryBuilder {
      */
     public DictionaryBuilder() {
         d_startState = new State();
-        d_register = new HashMap<State, State>();
+        d_register = new HashMap<>();
         d_nSeqs = 0;
         d_finalized = false;
     }
@@ -218,8 +218,7 @@ public class DictionaryBuilder {
         State[] sList = stateList(stateNumbers);
 
         int nTransitions = 0;
-        for (int i = 0; i < sList.length; ++i)
-            nTransitions += sList[i].transitions().size();
+        for (State aSList : sList) nTransitions += aSList.transitions().size();
 
         // First compute the offsets of each state in the transition table. Note, we need the width
         // of the number of transitions, since the pointer can be one beyond the last state (if the
@@ -258,9 +257,9 @@ public class DictionaryBuilder {
     }
 
     private Map<State, Integer> numberedStates() {
-        Map<State, Integer> states = new HashMap<State, Integer>();
+        Map<State, Integer> states = new HashMap<>();
 
-        Queue<State> stateQueue = new LinkedList<State>();
+        Queue<State> stateQueue = new LinkedList<>();
         stateQueue.add(d_startState);
         while (!stateQueue.isEmpty()) {
             State s = stateQueue.poll();

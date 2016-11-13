@@ -16,7 +16,6 @@ package eu.danieldk.dictomaton;
 
 import com.carrotsearch.junitbenchmarks.AbstractBenchmark;
 import eu.danieldk.dictomaton.categories.Benchmarks;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -37,7 +36,7 @@ public class DictionaryBuilderBenchmark extends AbstractBenchmark {
 
     @Test
     public void treeSetConstructionTest() {
-        TreeSet<String> ts = new TreeSet<String>();
+        TreeSet<String> ts = new TreeSet<>();
         ts.addAll(d_wordsLong);
     }
 

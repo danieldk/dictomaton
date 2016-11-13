@@ -22,7 +22,7 @@ public class DictionaryBenchmark extends AbstractBenchmark {
 
         d_dict = new DictionaryBuilder().addAll(d_words1).build();
 
-        d_hashSet = new HashSet<String>(d_words1);
+        d_hashSet = new HashSet<>(d_words1);
     }
 
     @Test

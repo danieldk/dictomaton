@@ -59,8 +59,8 @@ public class LevenshteinAutomatonTest {
                                               int distance) throws DictionaryBuilderException {
         String str = randomString(minLength + (maxLength - minLength + 1));
 
-        TreeSet<String> all = new TreeSet<String>();
-        Set<String> shouldHave = new HashSet<String>();
+        TreeSet<String> all = new TreeSet<>();
+        Set<String> shouldHave = new HashSet<>();
 
         for (int i = 0; i < nPermutations; ++i) {
             int n = d_rng.nextInt(nRandomEditOperations);
@@ -84,7 +84,7 @@ public class LevenshteinAutomatonTest {
     }
 
     private interface RandomEditOperation {
-        public void apply(StringBuilder string);
+        void apply(StringBuilder string);
     }
 
     private class RandomSubstitution implements RandomEditOperation {
@@ -104,7 +104,7 @@ public class LevenshteinAutomatonTest {
     private class RanndomInsert implements RandomEditOperation {
         public void apply(StringBuilder sb) {
             sb.insert(d_rng.nextInt(sb.length() + 1),
-                    d_characters[d_rng.nextInt(d_characters.length)]).toString();
+                    d_characters[d_rng.nextInt(d_characters.length)]);
         }
     }
 

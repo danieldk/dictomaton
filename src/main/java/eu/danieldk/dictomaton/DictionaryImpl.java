@@ -181,7 +181,7 @@ class DictionaryImpl extends AbstractSet<String> implements Dictionary {
 
     @Override
     public Set<Character> transitionCharacters(int state) {
-        Set<Character> transChars = new HashSet<Character>();
+        Set<Character> transChars = new HashSet<>();
 
         for (int i = d_stateOffsets.get(state); i < transitionsUpperBound(state); ++i)
             transChars.add(d_transitionChars[i]);
@@ -193,16 +193,14 @@ class DictionaryImpl extends AbstractSet<String> implements Dictionary {
         private final Stack<StateStringPair> d_stack;
 
         public DictionaryIterator() {
-            d_stack = new Stack<StateStringPair>();
+            d_stack = new Stack<>();
             d_stack.push(new StateStringPair(0, ""));
         }
 
         @Override
         public boolean hasNext() {
-            if (d_stack.isEmpty() || d_nSeqs == 0)
-                return false;
+            return !(d_stack.isEmpty() || d_nSeqs == 0);
 
-            return true;
         }
 
         @Override

@@ -62,7 +62,7 @@ public class CompactIntArrayTest {
 
     @Test
     public void fullWidthTest() {
-        List<Integer> check = new ArrayList<Integer>(42);
+        List<Integer> check = new ArrayList<>(42);
         CompactIntArray test = new CompactIntArray(MAX_ARRAY_LEN, 32);
 
         for (int i = 0; i < MAX_ARRAY_LEN; ++i) {
@@ -126,7 +126,7 @@ public class CompactIntArrayTest {
 
     private List<Integer> randomList(Random rng, int bits, int length) {
         int upper = upperNum(bits);
-        List<Integer> check = new ArrayList<Integer>(42);
+        List<Integer> check = new ArrayList<>(42);
 
         for (int i = 0; i < length; ++i) {
             int num = rng.nextInt(upper);

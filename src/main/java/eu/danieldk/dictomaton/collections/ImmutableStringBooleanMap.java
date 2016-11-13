@@ -41,7 +41,7 @@ public class ImmutableStringBooleanMap extends AbstractMap<String, Boolean> impl
         private final TreeMap<String, Boolean> d_map;
 
         public Builder() {
-            d_map = new TreeMap<String, Boolean>();
+            d_map = new TreeMap<>();
         }
 
         /**
@@ -90,7 +90,7 @@ public class ImmutableStringBooleanMap extends AbstractMap<String, Boolean> impl
 
         public OrderedBuilder() {
             this.dictionaryBuilder = new DictionaryBuilder();
-            this.values = new ArrayList<Boolean>();
+            this.values = new ArrayList<>();
         }
 
         /**
@@ -152,7 +152,7 @@ public class ImmutableStringBooleanMap extends AbstractMap<String, Boolean> impl
             public Entry<String, Boolean> next() {
                 String key = d_keyIter.next();
                 int idx = d_keys.number(key) - 1;
-                return new SimpleEntry<String, Boolean>(key, d_values[idx]);
+                return new SimpleEntry<>(key, d_values[idx]);
             }
 
             @Override
@@ -187,7 +187,7 @@ public class ImmutableStringBooleanMap extends AbstractMap<String, Boolean> impl
             if (hash == -1)
                 return false;
 
-            return d_values[hash - 1] == value.booleanValue();
+            return d_values[hash - 1] == value;
 
         }
 

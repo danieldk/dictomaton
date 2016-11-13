@@ -41,7 +41,7 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
         private final TreeMap<String, ##BOXED_TYPE##> d_map;
 
         public Builder() {
-            d_map = new TreeMap<String, ##BOXED_TYPE##>();
+            d_map = new TreeMap<>();
         }
 
         /**
@@ -90,7 +90,7 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
 
         public OrderedBuilder() {
             this.dictionaryBuilder = new DictionaryBuilder();
-            this.values = new ArrayList<##BOXED_TYPE##>();
+            this.values = new ArrayList<>();
         }
 
         /**
@@ -152,7 +152,7 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
             public Entry<String, ##BOXED_TYPE##> next() {
                 String key = d_keyIter.next();
                 int idx = d_keys.number(key) - 1;
-                return new SimpleEntry<String, ##BOXED_TYPE##>(key, d_values[idx]);
+                return new SimpleEntry<>(key, d_values[idx]);
             }
 
             @Override
@@ -187,7 +187,7 @@ public class ImmutableString##TYPE_NAME##Map extends AbstractMap<String, ##BOXED
             if (hash == -1)
                 return false;
 
-            return d_values[hash - 1] == value.##UNBOXED_TYPE##Value();
+            return d_values[hash - 1] == value;
 
         }
 

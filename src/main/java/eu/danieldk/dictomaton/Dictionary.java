@@ -20,14 +20,14 @@ public interface Dictionary extends Set<String>, Serializable {
      *
      * @return Dot representation of the automaton.
      */
-    public String toDot();
+    String toDot();
 
     /**
      * Returns <tt>true</tt> if the state is a final state and <tt>false</tt> otherwise.
      * @param state The state.
      * @return Finalness of the state.
      */
-    public boolean isFinalState(int state);
+    boolean isFinalState(int state);
 
     /**
      * Get the next state, given a character.
@@ -36,14 +36,14 @@ public interface Dictionary extends Set<String>, Serializable {
      * @param c
      * @return
      */
-    public int next(int state, char c);
+    int next(int state, char c);
 
     /**
      * Get the start state.
      *
      * @return The start state.
      */
-    public int startState();
+    int startState();
 
     /**
      * Get the transition characters on outgoing transitions of the current state.
@@ -51,5 +51,5 @@ public interface Dictionary extends Set<String>, Serializable {
      * @param state
      * @return
      */
-    public Set<Character> transitionCharacters(int state);
+    Set<Character> transitionCharacters(int state);
 }

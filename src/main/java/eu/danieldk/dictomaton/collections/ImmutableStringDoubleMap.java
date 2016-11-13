@@ -41,7 +41,7 @@ public class ImmutableStringDoubleMap extends AbstractMap<String, Double> implem
         private final TreeMap<String, Double> d_map;
 
         public Builder() {
-            d_map = new TreeMap<String, Double>();
+            d_map = new TreeMap<>();
         }
 
         /**
@@ -90,7 +90,7 @@ public class ImmutableStringDoubleMap extends AbstractMap<String, Double> implem
 
         public OrderedBuilder() {
             this.dictionaryBuilder = new DictionaryBuilder();
-            this.values = new ArrayList<Double>();
+            this.values = new ArrayList<>();
         }
 
         /**
@@ -152,7 +152,7 @@ public class ImmutableStringDoubleMap extends AbstractMap<String, Double> implem
             public Entry<String, Double> next() {
                 String key = d_keyIter.next();
                 int idx = d_keys.number(key) - 1;
-                return new SimpleEntry<String, Double>(key, d_values[idx]);
+                return new SimpleEntry<>(key, d_values[idx]);
             }
 
             @Override
@@ -187,7 +187,7 @@ public class ImmutableStringDoubleMap extends AbstractMap<String, Double> implem
             if (hash == -1)
                 return false;
 
-            return d_values[hash - 1] == value.doubleValue();
+            return d_values[hash - 1] == value;
 
         }
 

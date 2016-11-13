@@ -31,7 +31,7 @@ public class ImmutableStringObjectMapTest {
 
     @Before
     public void initialize() {
-        d_locations = new HashMap<String, String>();
+        d_locations = new HashMap<>();
         d_locations.put("New York", "USA");
         d_locations.put("Amsterdam", "The Netherlands");
         d_locations.put("Paris", "France");
@@ -39,7 +39,7 @@ public class ImmutableStringObjectMapTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void orderedComparatorTest() throws DictionaryBuilderException {
-        TreeMap<String, String> bogus = new TreeMap<String, String>(Collections.reverseOrder());
+        TreeMap<String, String> bogus = new TreeMap<>(Collections.reverseOrder());
         ImmutableStringObjectMap<String> test = new ImmutableStringObjectMap.OrderedBuilder<String>().putAll(bogus).build();
         Assert.assertEquals(0, test.size());
     }
@@ -55,7 +55,7 @@ public class ImmutableStringObjectMapTest {
         Assert.assertEquals("France", iso.get("Paris"));
 
         // Ordered
-        iso = new ImmutableStringObjectMap.OrderedBuilder<String>().putAll(new TreeMap<String, String>(d_locations))
+        iso = new ImmutableStringObjectMap.OrderedBuilder<String>().putAll(new TreeMap<>(d_locations))
                 .build();
 
         Assert.assertEquals(3, iso.size());
@@ -67,8 +67,8 @@ public class ImmutableStringObjectMapTest {
     @Test
     public void containsOrderedPutTest() throws DictionaryBuilderException {
         // Ordered
-        ImmutableStringObjectMap.OrderedBuilder<String> builder = new ImmutableStringObjectMap.OrderedBuilder<String>();
-        for (Map.Entry<String, String> e : new TreeMap<String, String>(d_locations).entrySet())
+        ImmutableStringObjectMap.OrderedBuilder<String> builder = new ImmutableStringObjectMap.OrderedBuilder<>();
+        for (Map.Entry<String, String> e : new TreeMap<>(d_locations).entrySet())
             builder.put(e.getKey(), e.getValue());
 
         ImmutableStringObjectMap<String> test = builder.build();

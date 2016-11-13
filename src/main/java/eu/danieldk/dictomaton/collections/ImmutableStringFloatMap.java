@@ -41,7 +41,7 @@ public class ImmutableStringFloatMap extends AbstractMap<String, Float> implemen
         private final TreeMap<String, Float> d_map;
 
         public Builder() {
-            d_map = new TreeMap<String, Float>();
+            d_map = new TreeMap<>();
         }
 
         /**
@@ -90,7 +90,7 @@ public class ImmutableStringFloatMap extends AbstractMap<String, Float> implemen
 
         public OrderedBuilder() {
             this.dictionaryBuilder = new DictionaryBuilder();
-            this.values = new ArrayList<Float>();
+            this.values = new ArrayList<>();
         }
 
         /**
@@ -152,7 +152,7 @@ public class ImmutableStringFloatMap extends AbstractMap<String, Float> implemen
             public Entry<String, Float> next() {
                 String key = d_keyIter.next();
                 int idx = d_keys.number(key) - 1;
-                return new SimpleEntry<String, Float>(key, d_values[idx]);
+                return new SimpleEntry<>(key, d_values[idx]);
             }
 
             @Override
@@ -187,7 +187,7 @@ public class ImmutableStringFloatMap extends AbstractMap<String, Float> implemen
             if (hash == -1)
                 return false;
 
-            return d_values[hash - 1] == value.floatValue();
+            return d_values[hash - 1] == value;
 
         }
 

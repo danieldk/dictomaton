@@ -106,7 +106,7 @@ public class DictionaryTest {
 
     @Test
     public void iterationTest() {
-        List<CharSequence> listFromIteration = new LinkedList<CharSequence>();
+        List<CharSequence> listFromIteration = new LinkedList<>();
         for (CharSequence seq : d_dict)
             listFromIteration.add(seq);
         Assert.assertEquals(d_words1, listFromIteration);

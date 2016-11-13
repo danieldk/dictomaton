@@ -19,7 +19,7 @@ public class ImmutableStringStringMapTest
 	@Before
 	public void initialize()
 	{
-		locations = new HashMap<String, String>();
+		locations = new HashMap<>();
 		locations.put("New York", "USA");
 		locations.put("Amsterdam", "The Netherlands");
 	}

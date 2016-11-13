@@ -15,8 +15,6 @@
 package eu.danieldk.dictomaton.collections;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.SortedSet;
 
 import com.carrotsearch.junitbenchmarks.AbstractBenchmark;

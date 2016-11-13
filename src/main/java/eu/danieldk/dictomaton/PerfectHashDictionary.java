@@ -16,7 +16,7 @@ public interface PerfectHashDictionary extends Dictionary {
      * @return The perfect hash value of the sequence or <tt>-1</tt> if the sequence is
      *         not in the automaton.
      */
-    public int number(CharSequence seq);
+    int number(CharSequence seq);
 
     /**
      * Compute the state for traversing the automaton given CharSequence seq. The
@@ -27,7 +27,7 @@ public interface PerfectHashDictionary extends Dictionary {
      * @return A StateInfo object containing the hash code and further information about the state
      *         after the traversal for seq.
      */
-    public StateInfo getStateInfo(CharSequence seq);
+    StateInfo getStateInfo(CharSequence seq);
 
     /**
      * Compute the state for traversing the automaton given CharSequence seq starting 
@@ -38,7 +38,7 @@ public interface PerfectHashDictionary extends Dictionary {
      * @return  A StateInfo object containing the hash code and further information about the state
      *          after the traversal for seq.
      */
-    public StateInfo getStateInfo(CharSequence seq, StateInfo startInfo);
+    StateInfo getStateInfo(CharSequence seq, StateInfo startInfo);
     
     /**
      * Compute the sequence corresponding to the given hash code.
@@ -47,5 +47,5 @@ public interface PerfectHashDictionary extends Dictionary {
      * @return The sequence corresponding to the hash code or <tt>null</tt> if there is
      *         no sequence with that code in the automaton.
      */
-    public String sequence(int hashCode);
+    String sequence(int hashCode);
 }

@@ -92,8 +92,7 @@ public class PerfectHashDictionaryTest {
         for (int i = 0; i < d_words1.size(); i++)
             Assert.assertEquals(i + 1, d_dict.number(d_words1.get(i)));
 
-        for (int i = 0; i < d_words2.size(); i++)
-            Assert.assertEquals(-1, d_dict.number(d_words2.get(i)));
+        for (String aD_words2 : d_words2) Assert.assertEquals(-1, d_dict.number(aD_words2));
     }
     
     @Test
@@ -104,17 +103,17 @@ public class PerfectHashDictionaryTest {
             assertTrue(info.isInFinalState());
             Assert.assertEquals(i + 1, info.getHash());
         }
-        
-        for (int i = 0; i < d_words2.size(); i++) {
-            StateInfo info = d_dict.getStateInfo(d_words2.get(i));
-            if ("avond".equals(d_words2.get(i))) {
-                assertTrue(d_words2.get(i) + ": transistion should end in known state",  info.isInKnownState());
+
+        for (String aD_words21 : d_words2) {
+            StateInfo info = d_dict.getStateInfo(aD_words21);
+            if ("avond".equals(aD_words21)) {
+                assertTrue(aD_words21 + ": transistion should end in known state", info.isInKnownState());
             } else {
-                assertFalse(d_words2.get(i) + ": transistion should end in unknown state",  info.isInKnownState());
+                assertFalse(aD_words21 + ": transistion should end in unknown state", info.isInKnownState());
             }
-            
-            assertFalse(d_words2.get(i) + ": transistion should end in non-final state", info.isInFinalState());
-            
+
+            assertFalse(aD_words21 + ": transistion should end in non-final state", info.isInFinalState());
+
             try {
                 info.getHash();
                 fail();
@@ -123,8 +122,7 @@ public class PerfectHashDictionaryTest {
             }
         }
 
-        for (int i = 0; i < d_words2.size(); i++)
-            Assert.assertEquals(-1, d_dict.number(d_words2.get(i)));
+        for (String aD_words2 : d_words2) Assert.assertEquals(-1, d_dict.number(aD_words2));
     }
 
     @Test
@@ -132,8 +130,7 @@ public class PerfectHashDictionaryTest {
         for (int i = 0; i < d_words1.size(); i++)
             Assert.assertEquals(i + 1, d_dictTransitionCardinality.number(d_words1.get(i)));
 
-        for (int i = 0; i < d_words2.size(); i++)
-            Assert.assertEquals(-1, d_dictTransitionCardinality.number(d_words2.get(i)));
+        for (String aD_words2 : d_words2) Assert.assertEquals(-1, d_dictTransitionCardinality.number(aD_words2));
     }
     
     @Test
@@ -144,18 +141,18 @@ public class PerfectHashDictionaryTest {
             assertTrue(info.isInFinalState());
             Assert.assertEquals(i + 1, info.getHash());
         }
-        
-        for (int i = 0; i < d_words2.size(); i++) {
-            
-            StateInfo info = d_dictTransitionCardinality.getStateInfo(d_words2.get(i));
-            if ("avond".equals(d_words2.get(i))) {
-                assertTrue(d_words2.get(i) + ": transistion should end in known state",  info.isInKnownState());
+
+        for (String aD_words21 : d_words2) {
+
+            StateInfo info = d_dictTransitionCardinality.getStateInfo(aD_words21);
+            if ("avond".equals(aD_words21)) {
+                assertTrue(aD_words21 + ": transistion should end in known state", info.isInKnownState());
             } else {
-                assertFalse(d_words2.get(i) + ": transistion should end in unknown state",  info.isInKnownState());
+                assertFalse(aD_words21 + ": transistion should end in unknown state", info.isInKnownState());
             }
-            
-            assertFalse(d_words2.get(i) + ": transistion should end in non-final state", info.isInFinalState());
-            
+
+            assertFalse(aD_words21 + ": transistion should end in non-final state", info.isInFinalState());
+
             try {
                 info.getHash();
                 fail();
@@ -164,8 +161,7 @@ public class PerfectHashDictionaryTest {
             }
         }
 
-        for (int i = 0; i < d_words2.size(); i++)
-            Assert.assertEquals(-1, d_dictTransitionCardinality.number(d_words2.get(i)));
+        for (String aD_words2 : d_words2) Assert.assertEquals(-1, d_dictTransitionCardinality.number(aD_words2));
     }
     
     @Test
