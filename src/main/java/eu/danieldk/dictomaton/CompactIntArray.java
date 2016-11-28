@@ -67,7 +67,7 @@ class CompactIntArray implements Serializable {
 
         while (toIndex >= fromIndex)
         {
-            int mid = (int) (((long) toIndex + (long) fromIndex) / 2L);
+            int mid = (fromIndex + toIndex) >>> 1;
             int midVal = get(mid);
 
             if (midVal > value)
@@ -96,7 +96,7 @@ class CompactIntArray implements Serializable {
 
         int result = (d_data[startIdx] >>> startBit) & MASK[d_bitsPerElem];
 
-        if ((startBit + d_bitsPerElem) > 32) {
+        if ((startBit + d_bitsPerElem) > INT_SIZE) {
             int done = INT_SIZE - startBit;
             result |= (d_data[startIdx + 1] & MASK[d_bitsPerElem - done]) << done;
         }
@@ -126,7 +126,7 @@ class CompactIntArray implements Serializable {
         d_data[startIdx] |= value << startBit;
 
         // If the integer didn't have enough bits available, write the rest in the next integer.
-        if ((startBit + d_bitsPerElem) > 32) {
+        if ((startBit + d_bitsPerElem) > INT_SIZE) {
             int done = INT_SIZE - startBit;
             d_data[startIdx + 1] &= ~MASK[d_bitsPerElem - done];
             d_data[startIdx + 1] |= value >>> done;
