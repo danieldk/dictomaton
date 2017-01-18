@@ -211,7 +211,6 @@ class PerfectHashDictionaryTransCard extends DictionaryImpl implements PerfectHa
     				}
     				stateNSuffixes.set(currentState, suffixes);
     			} else {
-    				assert d_finalStates.get(currentState) : "leaf "+currentState+" must be a final state";
     				stateNSuffixes.set(currentState, 1);
     			}
     		} // else already computed from a different path in the DAG
