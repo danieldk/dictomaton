@@ -44,15 +44,15 @@ class PerfectHashDictionaryTransCard extends DictionaryImpl implements PerfectHa
         StateInfo info = getStateInfo(seq);
         return info.isInFinalState() ? info.getHash() : -1;
     }
-    
+
     public StateInfo getStateInfo(CharSequence seq) {
         return getStateInfo(seq, null);
     }
-    
+
     public StateInfo getStateInfo(CharSequence seq, StateInfo startInfo) {
-        
+
         StateInfo info;
-        
+
         if (startInfo != null) {
             if (!startInfo.isInKnownState()) {
                 throw new IllegalStateException("Cannot resume transitions from unknown state. Sequence: " + seq);
@@ -61,7 +61,7 @@ class PerfectHashDictionaryTransCard extends DictionaryImpl implements PerfectHa
         } else {
             info = new StateInfo(0, 0, -1, false);
         }
-        
+
         for (int i = 0; i < seq.length(); i++) {
             info.trans = findTransition(info.state, seq.charAt(i));
 
@@ -80,7 +80,7 @@ class PerfectHashDictionaryTransCard extends DictionaryImpl implements PerfectHa
         }
 
         info.inFinalState = d_finalStates.get(info.state);
-        
+
         return info;
     }
 
@@ -189,74 +189,72 @@ class PerfectHashDictionaryTransCard extends DictionaryImpl implements PerfectHa
     }
 
     /**
-     * Iteratively computes the number of suffixes by topological order 
-     * 
+     * Iteratively computes the number of suffixes by topological order
+     *
      * @param initialState the root of the graph
-     * @param magicMarker the value in d_stateNSuffixes indicating that the value has not yet been computed  
+     * @param magicMarker  the value in d_stateNSuffixes indicating that the value has not yet been computed
      */
     private void computeStateSuffixesTopological(final int initialState, final int magicMarker, CompactIntArray stateNSuffixes) {
-    	for (Iterator<Integer> iterator = sortStatesTopological(initialState, stateNSuffixes).iterator(); iterator.hasNext();) {
-			Integer currentState = iterator.next();
+        for (Iterator<Integer> iterator = sortStatesTopological(initialState, stateNSuffixes).iterator(); iterator.hasNext(); ) {
+            Integer currentState = iterator.next();
 
-			int currentSuffixes = stateNSuffixes.get(currentState);
-			if (currentSuffixes == magicMarker) { // is not yet computed
-    			int trans = d_stateOffsets.get(currentState);
-        		int transUpperBound = transitionsUpperBound(currentState);
-    			if (trans < transUpperBound) { // has children
-    				int suffixes = d_finalStates.get(currentState) ? 1 : 0; // add one if current state is final
-    				for (; trans < transUpperBound; ++trans) { // add known number of suffixes of children
-    					int childState = d_transitionTo.get(trans);
-    					assert stateNSuffixes.get(childState) != magicMarker : "suffixes should have been calculated for state "+childState;
-    					suffixes += stateNSuffixes.get(childState);
-    				}
-    				stateNSuffixes.set(currentState, suffixes);
-    			} else {
-    				stateNSuffixes.set(currentState, d_finalStates.get(currentState) ? 1 : 0);
-    			}
-    		} // else already computed from a different path in the DAG
-		}
+            int currentSuffixes = stateNSuffixes.get(currentState);
+            if (currentSuffixes == magicMarker) { // is not yet computed
+                int trans = d_stateOffsets.get(currentState);
+                int transUpperBound = transitionsUpperBound(currentState);
+                if (trans < transUpperBound) { // has children
+                    int suffixes = d_finalStates.get(currentState) ? 1 : 0; // add one if current state is final
+                    for (; trans < transUpperBound; ++trans) { // add known number of suffixes of children
+                        int childState = d_transitionTo.get(trans);
+                        assert stateNSuffixes.get(childState) != magicMarker : "suffixes should have been calculated for state " + childState;
+                        suffixes += stateNSuffixes.get(childState);
+                    }
+                    stateNSuffixes.set(currentState, suffixes);
+                } else {
+                    stateNSuffixes.set(currentState, d_finalStates.get(currentState) ? 1 : 0);
+                }
+            } // else already computed from a different path in the DAG
+        }
     }
 
-	private Collection<Integer> sortStatesTopological(final int initialState, CompactIntArray stateNSuffixes) {
+    private Collection<Integer> sortStatesTopological(final int initialState, CompactIntArray stateNSuffixes) {
 
-		List<Integer> reverseTopologicalOrder = new ArrayList<>(stateNSuffixes.size());
-    	boolean[] marked = new boolean[stateNSuffixes.size()];
-    	Deque<Integer> stack = new ArrayDeque<>(stateNSuffixes.size());
-    	Deque<Integer> head = new ArrayDeque<>(stateNSuffixes.size());
+        List<Integer> reverseTopologicalOrder = new ArrayList<>(stateNSuffixes.size());
+        boolean[] marked = new boolean[stateNSuffixes.size()];
+        Deque<Integer> stack = new ArrayDeque<>(stateNSuffixes.size());
+        Deque<Integer> head = new ArrayDeque<>(stateNSuffixes.size());
 
-    	stack.push(initialState);
-    	while (!stack.isEmpty()) {
-    		Integer currentState = stack.peek();
-    		if (currentState == head.peek()) {
-    			stack.pop();
-    			head.pop();
-    			marked[currentState] = true;
-    			reverseTopologicalOrder.add(currentState);
-    		} else {
-    			head.push(currentState);
-        		int trans = d_stateOffsets.get(currentState);
-        		int transUpperBound = transitionsUpperBound(currentState);
-    			if (trans < transUpperBound) // has children
-    				for (; trans < transUpperBound; ++trans) {
-    					int nextState = d_transitionTo.get(trans);
-    					if (!marked[nextState]) {
-    						stack.push(nextState);
-    					}
-    				}
-    		}
-    	}
+        stack.push(initialState);
+        while (!stack.isEmpty()) {
+            Integer currentState = stack.peek();
+            if (currentState == head.peek()) {
+                stack.pop();
+                head.pop();
+                marked[currentState] = true;
+                reverseTopologicalOrder.add(currentState);
+            } else {
+                head.push(currentState);
+                int trans = d_stateOffsets.get(currentState);
+                int transUpperBound = transitionsUpperBound(currentState);
+                if (trans < transUpperBound) // has children
+                    for (; trans < transUpperBound; ++trans) {
+                        int nextState = d_transitionTo.get(trans);
+                        if (!marked[nextState]) {
+                            stack.push(nextState);
+                        }
+                    }
+            }
+        }
 
-		return reverseTopologicalOrder;
-	}
+        return reverseTopologicalOrder;
+    }
 
-    private CompactIntArray transitionPrecedingTable(int magicMarker, CompactIntArray stateRightCard)
-    {
+    private CompactIntArray transitionPrecedingTable(int magicMarker, CompactIntArray stateRightCard) {
         CompactIntArray table = new CompactIntArray(d_transitionTo.size(), CompactIntArray.width(magicMarker - 1));
 
         for (int state = 0; state < d_stateOffsets.size(); ++state) {
             int preceding = 0;
-            for (int trans = d_stateOffsets.get(state); trans < transitionsUpperBound(state); ++trans)
-            {
+            for (int trans = d_stateOffsets.get(state); trans < transitionsUpperBound(state); ++trans) {
                 table.set(trans, preceding);
                 preceding += stateRightCard.get(d_transitionTo.get(trans));
             }

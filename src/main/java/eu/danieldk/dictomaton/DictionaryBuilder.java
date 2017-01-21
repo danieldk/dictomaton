@@ -92,31 +92,31 @@ public class DictionaryBuilder {
         if (curState.hasOutgoing())
             replaceOrRegisterIterative(curState);
 
-        addSuffix(curState, seq.subSequence(i,  seq.length()));
+        addSuffix(curState, seq.subSequence(i, seq.length()));
 
         ++d_nSeqs;
 
         return this;
     }
-    
+
     public int compareCharacterSequences(CharSequence seq1, CharSequence seq2) {
-        
+
         int len1 = seq1.length();
         int len2 = seq2.length();
-        
+
         for (int i = 0, len = Math.min(len1, len2); i < len; i++) {
-            
+
             char ch1 = seq1.charAt(i);
             char ch2 = seq2.charAt(i);
             if (ch1 != ch2) {
                 return ch1 - ch2;
             }
-            
+
         }
-        
+
         return len1 - len2;
-        
-        
+
+
     }
 
     /**
@@ -131,7 +131,7 @@ public class DictionaryBuilder {
 
         return this;
     }
-    
+
 
     /**
      * Create a dictionary automaton. This also finalizes the {@link DictionaryBuilder}.
@@ -277,32 +277,32 @@ public class DictionaryBuilder {
     }
 
     private void replaceOrRegisterIterative(State initial) {
-    	Deque<State> statePath = new ArrayDeque<>();
-    	Deque<State> childPath = new ArrayDeque<>();
+        Deque<State> statePath = new ArrayDeque<>();
+        Deque<State> childPath = new ArrayDeque<>();
 
-    	State currentState = initial;
-    	while (currentState.hasOutgoing()) {
-    		statePath.push(currentState);
-			State child = currentState.lastState();
-			childPath.push(child);
-			currentState = child; 
-    	}
+        State currentState = initial;
+        while (currentState.hasOutgoing()) {
+            statePath.push(currentState);
+            State child = currentState.lastState();
+            childPath.push(child);
+            currentState = child;
+        }
 
-    	assert statePath.size() == childPath.size();
-    	while (!statePath.isEmpty()) {
-    		State state = statePath.pop();
-    		State child = childPath.pop();
-    		replaceOrRegister(state, child);
-    	}
+        assert statePath.size() == childPath.size();
+        while (!statePath.isEmpty()) {
+            State state = statePath.pop();
+            State child = childPath.pop();
+            replaceOrRegister(state, child);
+        }
     }
 
-	private void replaceOrRegister(State state, State child) {
-		State replacement = d_register.get(child);
-		if (replacement != null)
-			state.setLastState(replacement);
-		else
-			d_register.put(child, child);
-	}
+    private void replaceOrRegister(State state, State child) {
+        State replacement = d_register.get(child);
+        if (replacement != null)
+            state.setLastState(replacement);
+        else
+            d_register.put(child, child);
+    }
 
     private State[] stateList(Map<State, Integer> numberedStates) {
         State[] r = new State[numberedStates.size()];
