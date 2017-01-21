@@ -90,7 +90,7 @@ public class DictionaryBuilder {
         }
 
         if (curState.hasOutgoing())
-            replaceOrRegister(curState);
+            replaceOrRegisterIterative(curState);
 
         addSuffix(curState, seq.subSequence(i,  seq.length()));
 
@@ -157,7 +157,7 @@ public class DictionaryBuilder {
 
     private void finalizeDictionary() {
         if (!d_finalized) {
-            replaceOrRegister(d_startState);
+            replaceOrRegisterIterative(d_startState);
             d_finalized = true;
         }
     }
@@ -276,24 +276,33 @@ public class DictionaryBuilder {
         return states;
     }
 
-    private void replaceOrRegister(State s) {
-        State child = s.lastState();
+    private void replaceOrRegisterIterative(State initial) {
+    	Deque<State> statePath = new ArrayDeque<>();
+    	Deque<State> childPath = new ArrayDeque<>();
 
-        // If someone is constructing an empty lexicon, we don't have any outgoing
-        // transitions on the start state.
-        if (child == null)
-            return;
+    	State currentState = initial;
+    	while (currentState.hasOutgoing()) {
+    		statePath.push(currentState);
+			State child = currentState.lastState();
+			childPath.push(child);
+			currentState = child; 
+    	}
 
-        // Grandchildren may require replacement as well.
-        if (child.hasOutgoing())
-            replaceOrRegister(child);
-
-        State replacement = d_register.get(child);
-        if (replacement != null)
-            s.setLastState(replacement);
-        else
-            d_register.put(child, child);
+    	assert statePath.size() == childPath.size();
+    	while (!statePath.isEmpty()) {
+    		State state = statePath.pop();
+    		State child = childPath.pop();
+    		replaceOrRegister(state, child);
+    	}
     }
+
+	private void replaceOrRegister(State state, State child) {
+		State replacement = d_register.get(child);
+		if (replacement != null)
+			state.setLastState(replacement);
+		else
+			d_register.put(child, child);
+	}
 
     private State[] stateList(Map<State, Integer> numberedStates) {
         State[] r = new State[numberedStates.size()];

@@ -14,7 +14,13 @@
 
 package eu.danieldk.dictomaton;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A finite state dictionary with perfect hashing, that puts right language cardinalities in transitions.
@@ -177,26 +183,71 @@ class PerfectHashDictionaryTransCard extends DictionaryImpl implements PerfectHa
         for (int i = 0; i < stateNSuffixes.size(); ++i)
             stateNSuffixes.set(i, magicMarker);
 
-        computeStateSuffixes(0, magicMarker, stateNSuffixes);
+        computeStateSuffixesTopological(0, magicMarker, stateNSuffixes);
 
         d_transitionNSuffixes = transitionPrecedingTable(magicMarker, stateNSuffixes);
     }
 
-    private int computeStateSuffixes(final int state, final int magicMarker, CompactIntArray stateNSuffixes) {
+    /**
+     * Iteratively computes the number of suffixes by topological order 
+     * 
+     * @param initialState the root of the graph
+     * @param magicMarker the value in d_stateNSuffixes indicating that the value has not yet been computed  
+     */
+    private void computeStateSuffixesTopological(final int initialState, final int magicMarker, CompactIntArray stateNSuffixes) {
+    	for (Iterator<Integer> iterator = sortStatesTopological(initialState, stateNSuffixes).iterator(); iterator.hasNext();) {
+			Integer currentState = iterator.next();
 
-        int suffixes = stateNSuffixes.get(state);
-        if (suffixes != magicMarker)
-            return suffixes;
-
-        suffixes = d_finalStates.get(state) ? 1 : 0;
-
-        for (int trans = d_stateOffsets.get(state); trans < transitionsUpperBound(state); ++trans)
-            suffixes += computeStateSuffixes(d_transitionTo.get(trans), magicMarker, stateNSuffixes);
-
-        stateNSuffixes.set(state, suffixes);
-
-        return suffixes;
+			int currentSuffixes = stateNSuffixes.get(currentState);
+			if (currentSuffixes == magicMarker) { // is not yet computed
+    			int trans = d_stateOffsets.get(currentState);
+        		int transUpperBound = transitionsUpperBound(currentState);
+    			if (trans < transUpperBound) { // has children
+    				int suffixes = d_finalStates.get(currentState) ? 1 : 0; // add one if current state is final
+    				for (; trans < transUpperBound; ++trans) { // add known number of suffixes of children
+    					int childState = d_transitionTo.get(trans);
+    					assert stateNSuffixes.get(childState) != magicMarker : "suffixes should have been calculated for state "+childState;
+    					suffixes += stateNSuffixes.get(childState);
+    				}
+    				stateNSuffixes.set(currentState, suffixes);
+    			} else {
+    				stateNSuffixes.set(currentState, 1);
+    			}
+    		} // else already computed from a different path in the DAG
+		}
     }
+
+	private Collection<Integer> sortStatesTopological(final int initialState, CompactIntArray stateNSuffixes) {
+
+		List<Integer> reverseTopologicalOrder = new ArrayList<>(stateNSuffixes.size());
+    	boolean[] marked = new boolean[stateNSuffixes.size()];
+    	Deque<Integer> stack = new ArrayDeque<>(stateNSuffixes.size());
+    	Deque<Integer> head = new ArrayDeque<>(stateNSuffixes.size());
+
+    	stack.push(initialState);
+    	while (!stack.isEmpty()) {
+    		Integer currentState = stack.peek();
+    		if (currentState == head.peek()) {
+    			stack.pop();
+    			head.pop();
+    			marked[currentState] = true;
+    			reverseTopologicalOrder.add(currentState);
+    		} else {
+    			head.push(currentState);
+        		int trans = d_stateOffsets.get(currentState);
+        		int transUpperBound = transitionsUpperBound(currentState);
+    			if (trans < transUpperBound) // has children
+    				for (; trans < transUpperBound; ++trans) {
+    					int nextState = d_transitionTo.get(trans);
+    					if (!marked[nextState]) {
+    						stack.push(nextState);
+    					}
+    				}
+    		}
+    	}
+
+		return reverseTopologicalOrder;
+	}
 
     private CompactIntArray transitionPrecedingTable(int magicMarker, CompactIntArray stateRightCard)
     {
