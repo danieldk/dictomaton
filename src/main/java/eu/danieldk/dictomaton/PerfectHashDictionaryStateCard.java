@@ -213,7 +213,7 @@ class PerfectHashDictionaryStateCard extends DictionaryImpl implements PerfectHa
     				}
     				d_stateNSuffixes.set(currentState, suffixes);
     			} else {
-    				d_stateNSuffixes.set(currentState, 1);
+    				d_stateNSuffixes.set(currentState, d_finalStates.get(currentState) ? 1 : 0);
     			}
     		} // else already computed from a different path in the DAG
 		}
